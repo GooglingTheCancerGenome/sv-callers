@@ -110,7 +110,6 @@
   pages           = {852--864},
   month           = sep,
   issn            = {1477-4054},
-  __markedentry   = {[cshneider:]},
   abstract        = {From prokaryotes to eukaryotes, phenotypic variation, adaptation and speciation has been associated with structural variation between genomes of individuals within the same species. Many computer algorithms detecting such variations (callers) have recently been developed, spurred by the advent of the next-generation sequencing technology. Such callers mainly exploit split-read mapping or paired-end read mapping. However, as different callers are geared towards different types of structural variation, there is still no single caller that can be considered a community standard; instead, increasingly the various callers are combined in integrated pipelines. In this article, we review a wide range of callers, discuss challenges in the integration step and present a survey of pipelines used in population genomics studies. Based on our findings, we provide general recommendations on how to set-up such pipelines. Finally, we present an outlook on future challenges in structural variation detection.},
   citation-subset = {IM},
   completed       = {2016-07-12},
@@ -137,7 +136,6 @@
   volume          = {15},
   pages           = {488},
   issn            = {1474-760X},
-  __markedentry   = {[cshneider:6]},
   abstract        = {Mobile elements are major drivers in changing genomic architecture and can cause disease. The detection of mobile elements is hindered due to the low mappability of their highly repetitive sequences. We have developed an algorithm, called Mobster, to detect non-reference mobile element insertions in next generation sequencing data from both whole genome and whole exome studies. Mobster uses discordant read pairs and clipped reads in combination with consensus sequences of known active mobile elements. Mobster has a low false discovery rateand high recall rate for both L1 and Alu elements. Mobster is available at http://sourceforge.net/projects/mobster.},
   chemicals       = {DNA Transposable Elements},
   citation-subset = {IM},
@@ -159,10 +157,41 @@
   revised         = {2017-02-20},
 }
 
+@Article{Alkan2011,
+  author          = {Alkan, Can and Coe, Bradley P and Eichler, Evan E},
+  title           = {Genome structural variation discovery and genotyping.},
+  journal         = {Nature reviews. Genetics},
+  year            = {2011},
+  volume          = {12},
+  pages           = {363--376},
+  month           = may,
+  issn            = {1471-0064},
+  __markedentry   = {[arni:6]},
+  abstract        = {Comparisons of human genomes show that more base pairs are altered as a result of structural variation - including copy number variation - than as a result of point mutations. Here we review advances and challenges in the discovery and genotyping of structural variation. The recent application of massively parallel sequencing methods has complemented microarray-based methods and has led to an exponential increase in the discovery of smaller structural-variation events. Some global discovery biases remain, but the integration of experimental and computational approaches is proving fruitful for accurate characterization of the copy, content and structure of variable regions. We argue that the long-term goal should be routine, cost-effective and high quality de novo assembly of human genomes to comprehensively assess all classes of structural variation.},
+  citation-subset = {IM},
+  completed       = {2011-07-06},
+  country         = {England},
+  created         = {2011-04-18},
+  doi             = {10.1038/nrg2958},
+  issn-linking    = {1471-0056},
+  issue           = {5},
+  keywords        = {DNA Copy Number Variations; Genetic Variation; Genome, Human; Genotype; High-Throughput Nucleotide Sequencing, economics, methods; Humans; Oligonucleotide Array Sequence Analysis, economics, methods; Polymorphism, Single Nucleotide; Sequence Analysis, DNA, economics, methods},
+  mid             = {NIHMS605372},
+  nlm             = {PMC4108431},
+  nlm-id          = {100962779},
+  owner           = {NLM},
+  pii             = {nrg2958},
+  pmc             = {PMC4108431},
+  pmid            = {21358748},
+  pubmodel        = {Print-Electronic},
+  pubstatus       = {ppublish},
+  revised         = {2017-02-20},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
-@Comment{jabref-meta: groupstree:
+@Comment{jabref-meta: grouping:
 0 AllEntriesGroup:;
-1 ExplicitGroup:SV_Callers\;0\;;
-1 ExplicitGroup:DREAM_Challenge\;0\;;
+1 StaticGroup:SV_Callers\;0\;1\;\;\;\;;
+1 StaticGroup:DREAM_Challenge\;0\;1\;\;\;\;;
 }
