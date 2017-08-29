@@ -26,5 +26,5 @@ do
     echo "
     samtools view -bh -@ $THREADS -f 2 -o ${c}.bam VCAP_dedup.realigned.bam $c \
     && samtools index -@ $THREADS ${c}.bam ${c}.bai
-    " | qsub -N samtools-${THREADS}-chr${c} -cwd -V -l h_rt=02:00:00 -l h_vmem=100M #-pe threaded $THREADS
+    " | qsub -N samtools-${THREADS}-chr${c} -cwd -V -l h_rt=02:00:00 -l h_vmem=100M -pe threaded $THREADS
 done
