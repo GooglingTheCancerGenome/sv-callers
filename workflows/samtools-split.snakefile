@@ -3,8 +3,8 @@
 # BAM files with proper read pairs only.
 #
 # Example usage on a SGE cluster:
-#  snakemake --cluster "qsub -cwd -V -pe threaded {threads} -l h_rt=600 -l_vmem=1G" \
-#  --use-conda --jobs 10 {A,B}-{1,22}.bai
+#  snakemake --cluster "qsub -cwd -V -pe threaded {threads} -l h_rt=600 -l h_vmem=1G" \
+#  --use-conda --jobs 10 -s samtools-split.snakefile {A,B}-{1,22}.bai
 #
 # This worklow will execute 10 jobs in parallel for two samples (A and B) and
 # two chromosomes (1 and 2), and output four (indexed) BAM files.
