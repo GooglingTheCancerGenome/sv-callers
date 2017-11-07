@@ -1,29 +1,32 @@
 #
-# This workflow writes pairs of I/O files according samples in a config file.
+# This workflow writes output file per sample pair given a config file.
 #
 
+import pandas as pd
+
+shell.executable("/bin/bash")
 configfile: "conf/echo2.yaml"
+
+def get_samples(fname):
+    return pd.read_csv(fname, sep='\t')
+
+SAMPLES = get_samples(config['samples_file'])
 
 rule all:
     input:
-        expand("{sample}.out", sample=config["samples"])
+        [ "test/%s-%s.out" % (row.A, row.B) for row in SAMPLES.itertuples() ]
 
-rule echo_pairs:
-    input:
-        "{id}_A.in",
-        "{id}_B.in"
+rule prep_input:
     output:
-        "{id}_A.out",
-        "{id}_B.out"
-    shell:
-        """
-        echo A: {input[0]} > {output[0]}
-        echo B: {input[1]} > {output[1]}
-        """
-
-rule write_files:
-    output:
-        "{id}_A.in",
-        "{id}_B.in"
+        expand("test/{sample}.in", sample=SAMPLES.values.flatten())
     shell:
         "touch {output}"
+
+rule echo:
+    input:
+        A=expand("test/{A}.in", A=SAMPLES.A),
+        B=expand("test/{B}.in", B=SAMPLES.B)
+    output:
+        "test/{A}-{B}.out"
+    shell:
+        "echo {input} > {output}"

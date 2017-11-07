@@ -1,5 +1,1 @@
-samples:
-  - test/S1_A
-  - test/S1_B
-  - test/S2_A
-  - test/S2_B
+samples_file: conf/samples.tsv
