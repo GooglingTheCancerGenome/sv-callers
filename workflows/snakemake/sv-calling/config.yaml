@@ -1,0 +1,11 @@
+reference_genome:
+    - fasta: Homo_sapiens.GRCh37.GATK.illumina.fasta
+    - fasta_index: Homo_sapiens.GRCh37.GATK.illumina.fai
+
+samples: samples.tsv
+
+outdir:
+    - manta: manta_out
+    - delly: delly_out
+    - lumpy: lumpy_out
+    - gridss: gridss_out

@@ -1,0 +1,32 @@
+#
+# This workflow writes output file per sample pair given a config file.
+#
+
+import pandas as pd
+
+shell.executable("/bin/bash")
+configfile: "config.yaml"
+
+def get_samples(fname):
+    return pd.read_csv(fname, sep='\t')
+
+SAMPLES = get_samples(config['samples'])
+
+rule all:
+    input:
+        [ "test/%s-%s.out" % (row.A, row.B) for row in SAMPLES.itertuples() ]
+
+rule echo:
+    input:
+        A=expand("test/{A}.in", A=SAMPLES.A),
+        B=expand("test/{B}.in", B=SAMPLES.B)
+    output:
+        "test/{A}-{B}.out"
+    shell:
+        "echo {input} > {output}"
+
+include: "rules/samtools.smk"
+include: "rules/manta.smk"
+include: "rules/delly.smk"
+include: "rules/lumpy.smk"
+include: "rules/gridss.smk"
