@@ -1,4 +1,3 @@
 tumor	normal
-T1.bam	N1.bam
-T2.bam	N2.bam
-
+T1	N1
+T2	N2

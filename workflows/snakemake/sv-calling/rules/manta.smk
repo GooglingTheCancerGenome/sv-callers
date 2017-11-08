@@ -1,18 +1,27 @@
 rule manta:
     input:
-        REF_FASTA,
-        REF_FAI,
-        TUMOR_BAM,
-        TUMOR_BAI,
+        fasta=config["ref_genome"] + config["file_exts"]["fasta"],
+        fai=config["ref_genome"] + config["file_exts"]["fai"],
+        tumor_bam="{tumor}" + config["file_exts"]["bam"],
+        tumor_bai="{tumor}" + config["file_exts"]["bai"],
+        normal_bam="{normal}" + config["file_exts"]["bam"],
+        normal_bai="{normal}" + config["file_exts"]["bai"]
     output:
-        dir = "manta_out"
+        log="{tumor}-{normal}.log"
+    params:
+        outdir=config["outdirs"]["manta"]
     conda:
-        "envs/sv_callers.yaml"
-    threads: 16
+        "../environment.yaml"
+    threads: 8
+    # shell:
+    #     """
+    #     echo {params.outdir} {input} > {output}
+    #     """
     shell:
         """
-        configManta.py --tumorBam {TUMOR_BAM} \
-            --reference {REF_FASTA} \
-            --runDir {output.dir}
-        cd {output.dir} && ./runWorkflow.py --quiet -m local -j {threads}
+        configManta.py --runDir {params.outdir} \
+            --reference {input.fasta} \
+            --tumorBam {input.tumor_bam} \
+            --normalBam {input.normal_bam}
+        cd {params.outdir} && ./runWorkflow.py --quiet -m local -j {threads}
         """

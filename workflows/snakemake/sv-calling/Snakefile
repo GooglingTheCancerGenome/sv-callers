@@ -1,5 +1,5 @@
 #
-# This workflow writes output file per sample pair given a config file.
+# This workflow executes SV callers on tumor-normal sample pairs.
 #
 
 import pandas as pd
@@ -7,26 +7,15 @@ import pandas as pd
 shell.executable("/bin/bash")
 configfile: "config.yaml"
 
-def get_samples(fname):
-    return pd.read_csv(fname, sep='\t')
-
-SAMPLES = get_samples(config['samples'])
+def get_samples():
+    return pd.read_csv(config['samples'], sep='\t').itertuples()
 
 rule all:
     input:
-        [ "test/%s-%s.out" % (row.A, row.B) for row in SAMPLES.itertuples() ]
+        [ "{0}-{1}.log".format(row.tumor, row.normal) for row in get_samples() ]
 
-rule echo:
-    input:
-        A=expand("test/{A}.in", A=SAMPLES.A),
-        B=expand("test/{B}.in", B=SAMPLES.B)
-    output:
-        "test/{A}-{B}.out"
-    shell:
-        "echo {input} > {output}"
-
-include: "rules/samtools.smk"
+# include: "rules/samtools.smk"
 include: "rules/manta.smk"
-include: "rules/delly.smk"
-include: "rules/lumpy.smk"
-include: "rules/gridss.smk"
+# include: "rules/delly.smk"
+# include: "rules/lumpy.smk"
+# include: "rules/gridss.smk"
