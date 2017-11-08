@@ -1,4 +1,4 @@
-ref_genome: Homo_sapiens.GRCh37.GATK.illumina
+genome: Homo_sapiens.GRCh37.GATK.illumina
 
 file_exts:
   fasta:  .fasta
@@ -6,9 +6,9 @@ file_exts:
   bam:    .bam
   bai:    .bai
 
-samples: samples.tsv
+samples: samples.csv
 
-outdirs:
+sv_dirs:
   manta:  manta_out
   delly:  delly_out
   lumpy:  lumpy_out

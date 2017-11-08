@@ -2,17 +2,20 @@
 # This workflow executes SV callers on tumor-normal sample pairs.
 #
 
-import pandas as pd
+import csv
 
 shell.executable("/bin/bash")
 configfile: "config.yaml"
 
-def get_samples():
-    return pd.read_csv(config['samples'], sep='\t').itertuples()
+def get_logfiles():
+    with open(config["samples"], 'r') as fin:
+        reader = csv.DictReader(fin)
+        return ["{path}/{sv_dir}/{tumor}-{normal}.log".format(path=r["path"], \
+            sv_dir=dir, tumor=r["tumor"], normal=r["normal"]) for r in reader \
+                for dir in config["sv_dirs"].values()]
 
 rule all:
-    input:
-        [ "{0}-{1}.log".format(row.tumor, row.normal) for row in get_samples() ]
+    input: get_logfiles()
 
 # include: "rules/samtools.smk"
 include: "rules/manta.smk"
