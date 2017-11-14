@@ -1,0 +1,14 @@
+sv_type: BND
+variants: sv.bcf
+excluded_regions:
+  class: File
+  path: regions.excl
+genome:
+  class: File
+  path: human.fasta
+tumor_sample:
+  class: File
+  path: 1/T1.bam
+normal_sample:
+  class: File
+  path: 1/N1.bam
