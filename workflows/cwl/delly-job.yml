@@ -1,11 +1,11 @@
 sv_type: BND
 variants: sv.bcf
-excluded_regions:
+exclude_chromosomes:
   class: File
-  path: regions.excl
+  path: chromosomes.excl
 genome:
   class: File
-  path: human.fasta
+  path: Homo_sapiens.GRCh37.GATK.illumina.fasta
 tumor_sample:
   class: File
   path: 1/T1.bam

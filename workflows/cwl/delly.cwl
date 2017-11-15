@@ -6,14 +6,14 @@ label: "DELLY structural variant caller"
 baseCommand: delly
 arguments: ["call"]
 
-hints:
-  SoftwareRequirement:
-    packages:
-    - package: delly
-      version:
-      - "0.7.7"
-      specs:
-      - https://anaconda.org/bioconda/delly
+#hints:
+#  SoftwareRequirement:
+#    packages:
+#    - package: delly
+#      version:
+#      - "0.7.7"
+#      specs:
+#      - https://anaconda.org/bioconda/delly
 
 inputs:
   - id: sv_type
@@ -22,7 +22,7 @@ inputs:
       position: 1
       prefix: "-t"
       separate: true
-  - id: excluded_regions
+  - id: exclude_chromosomes
     type: File
     inputBinding:
       position: 2
@@ -53,4 +53,4 @@ outputs:
   - id: bcf_output
     type: File
     outputBinding:
-      glob: "*.bcf"
+      glob: "sv.bcf"
