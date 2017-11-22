@@ -1,27 +1,28 @@
 rule manta:
     input:
-        fasta=config["genome"] + config["file_exts"]["fasta"],
-        fai=config["genome"] + config["file_exts"]["fai"],
-        tumor_bam="{path}/{tumor}" + config["file_exts"]["bam"],
-        tumor_bai="{path}/{tumor}" + config["file_exts"]["bai"],
-        normal_bam="{path}/{normal}" + config["file_exts"]["bam"],
-        normal_bai="{path}/{normal}" + config["file_exts"]["bai"]
-    params:
-        config["sv_dirs"]["manta"]
+        fasta=config["ref_genome"] + config["file_exts"]["fasta"],
+        fai=config["ref_genome"] + config["file_exts"]["fai"],
+        tumor_bam="{base_dir}/{tumor}" + config["file_exts"]["bam"],
+        tumor_bai="{base_dir}/{tumor}" + config["file_exts"]["bai"],
+        normal_bam="{base_dir}/{normal}" + config["file_exts"]["bam"],
+        normal_bai="{base_dir}/{normal}" + config["file_exts"]["bai"]
     output:
-        "{path}/{params}/{tumor}-{normal}.log"
+        os.path.join("{base_dir}", get_outdir("manta"), \
+            "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
-    threads: 8
-    # shell:
-    #     """
-    #     echo {input} > {output}
-    #     """
+    threads: 12
     shell:
         """
-        configManta.py --runDir "{path}/{params}" \
-            --reference {input.fasta} \
-            --tumorBam {input.tumor_bam} \
-            --normalBam {input.normal_bam}
-        cd {params} && ./runWorkflow.py --quiet -m local -j {threads}
+        echo {input} > {output}
         """
+#    shell:
+#        """
+#        configManta.py --runDir "{wildcards.base_dir}" \
+#            --reference "{input.fasta}" \
+#            --tumorBam "{input.tumor_bam}" \
+#            --normalBam "{input.normal_bam}"
+#        cd "{wildcards.base_dir}" && ./runWorkflow.py --quiet -m local -j {threads}
+#        date "+%Y-%m-%d %H:%M:%S" > "{output}"
+#        """
+

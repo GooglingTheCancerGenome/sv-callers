@@ -1,23 +1,30 @@
 rule gridss:
     input:
-        REF_FASTA,
-        REF_FAI,
-        TUMOR_BAM,
-        TUMOR_BAI,
+        fasta=config["ref_genome"] + config["file_exts"]["fasta"],
+        fai=config["ref_genome"] + config["file_exts"]["fai"],
+        tumor_bam="{base_dir}/{tumor}" + config["file_exts"]["bam"],
+        tumor_bai="{base_dir}/{tumor}" + config["file_exts"]["bai"],
+        normal_bam="{base_dir}/{normal}" + config["file_exts"]["bam"],
+        normal_bai="{base_dir}/{normal}" + config["file_exts"]["bai"]
         #TODO: Add BWA 0.6.x index files (.amb, .ann, .bwt, .pac, .sa)
     output:
-        dir = "gridss_out",
-        vcf = "gridss_out/%s.vcf" % TUMOR
+        os.path.join("{base_dir}", get_outdir("gridss"), \
+            "{tumor}-{normal}.log")
     conda:
-        "envs/sv_callers.yaml"
-    threads: 8
+        "../environment.yaml"
+    threads: 12
     shell:
         """
-        gridss -Xmx31g gridss.CallVariants WORKER_THREADS={threads} \
-            REFERENCE_SEQUENCE={REF_FASTA} \
-            INPUT={TUMOR_BAM} \
-            OUTPUT={output.vcf} \
-            ASSEMBLY={TUMOR}_assembly.bam \
-            WORKING_DIR={output.dir} \
-            TMP_DIR={output.dir}
+        echo {input} > {output}
         """
+#    shell:
+#        """
+#        gridss -Xmx31g gridss.CallVariants WORKER_THREADS={threads} \
+#            REFERENCE_SEQUENCE={input.fasta} \
+#            INPUT={input.normal_bam} \
+#            INPUT={input.tumor_bam} \
+#            OUTPUT=gridss.vcf \
+#            ASSEMBLY=assembly.bam \
+#            WORKING_DIR={output} \
+#            TMP_DIR={outpu}
+#        """

@@ -1,16 +1,23 @@
 rule lumpy:
     input:
-        REF_FASTA,
-        REF_FAI,
-        TUMOR_BAM,
-        TUMOR_BAI,
+        fasta=config["ref_genome"] + config["file_exts"]["fasta"],
+        fai=config["ref_genome"] + config["file_exts"]["fai"],
+        tumor_bam="{base_dir}/{tumor}" + config["file_exts"]["bam"],
+        tumor_bai="{base_dir}/{tumor}" + config["file_exts"]["bai"],
+        normal_bam="{base_dir}/{normal}" + config["file_exts"]["bam"],
+        normal_bai="{base_dir}/{normal}" + config["file_exts"]["bai"]
     output:
-        #dir = "lumpy_out",
-        vcf = "lumpy_out/%s.vcf" % TUMOR
-    threads: 1
+        os.path.join("{base_dir}", get_outdir("lumpy"), \
+            "{tumor}-{normal}.log")
     conda:
-        "envs/sv_callers.yaml"
+        "../environment.yaml"
+    threads: 1
     shell:
         """
-        lumpyexpress -B {TUMOR_BAM} -o {output.vcf}
+        echo {input} > {output}
         """
+#    shell:
+#        """
+#        lumpyexpress -B {input.tumor_bam},{input.normal_bam} -o lumpy.vcf
+#        """
+
