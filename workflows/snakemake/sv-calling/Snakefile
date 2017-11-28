@@ -7,18 +7,24 @@ import csv
 shell.executable("/bin/bash")
 configfile: "config.yaml"
 
-def get_logfiles():
+CALLERS = ['manta', 'delly', 'lumpy', 'gridss']
+
+def get_outdir(caller):
+    return config["sv_callers"][caller]["outdir"]
+
+def collect_logs(callers):
     with open(config["samples"], 'r') as fin:
         reader = csv.DictReader(fin)
-        return ["{path}/{sv_dir}/{tumor}-{normal}.log".format(path=r["path"], \
-            sv_dir=dir, tumor=r["tumor"], normal=r["normal"]) for r in reader \
-                for dir in config["sv_dirs"].values()]
+        return ["{base_dir}/{caller}/{tumor}-{normal}.log".format(base_dir=r["base_dir"], \
+            caller=get_outdir(c), tumor=r["tumor"], \
+                normal=r["normal"]) for r in reader for c in callers]
+
+localrules: all
 
 rule all:
-    input: get_logfiles()
+    input: collect_logs(CALLERS)
 
-# include: "rules/samtools.smk"
 include: "rules/manta.smk"
-# include: "rules/delly.smk"
-# include: "rules/lumpy.smk"
-# include: "rules/gridss.smk"
+include: "rules/delly.smk"
+include: "rules/lumpy.smk"
+include: "rules/gridss.smk"

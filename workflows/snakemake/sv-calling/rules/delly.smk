@@ -1,30 +1,27 @@
 rule delly:
     input:
-        REF_FASTA,
-        REF_FAI,
-        TUMOR_BAM,
-        TUMOR_BAI,
-        excl = TUMOR + ".excl"
+        fasta=config["ref_genome"] + config["file_exts"]["fasta"],
+        fai=config["ref_genome"] + config["file_exts"]["fai"],
+        tumor_bam="{base_dir}/{tumor}" + config["file_exts"]["bam"],
+        tumor_bai="{base_dir}/{tumor}" + config["file_exts"]["bai"],
+        normal_bam="{base_dir}/{normal}" + config["file_exts"]["bam"],
+        normal_bai="{base_dir}/{normal}" + config["file_exts"]["bai"]
     output:
-        #dir = "delly_out",
-        bcf = "delly_out/%s-%s.bcf" % (TUMOR, SV_TYPE)
+        os.path.join("{base_dir}", get_outdir("delly"), \
+            "{tumor}-{normal}.log")
     conda:
-        "envs/sv_callers.yaml"
+        "../environment.yaml"
     threads: 2
     shell:
         """
-        delly call -t {SV_TYPE} \
-            -g {REF_FASTA} \
-            -x {input.excl} \
-            -o {output.bcf} {TUMOR_BAM}
+        echo {input} > {output}
         """
+#    shell:
+#        """
+#        delly call -t BND \
+#            -g {input.fasta} \
+#            -o {wildcards.base_dir}/{params}/BND.bcf \
+#            {input.tumor_bam} {input.normal_bam}
+#        date "+%Y-%m-%d %H:%M:%S" > {output}
+#        """
 
-rule bcf_to_vcf:
-    input:
-        "delly_out/%s-%s.bcf" % (TUMOR, SV_TYPE)
-    output:
-        "delly_out/%s-%s.vcf" % (TUMOR, SV_TYPE)
-    conda:
-      "envs/sv_callers.yaml"
-    shell:
-      "bcftools view {input} > {output}"
