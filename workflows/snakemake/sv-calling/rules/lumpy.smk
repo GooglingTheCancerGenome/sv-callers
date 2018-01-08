@@ -13,6 +13,8 @@ rule lumpy:
         "../environment.yaml"
     threads:
         config["sv_callers"]["lumpy"]["threads"]
+    resources:
+        mem_mb=config["sv_callers"]["lumpy"]["memory"]
     shell:
         """
         echo {input} > {output}

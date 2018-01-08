@@ -13,6 +13,8 @@ rule manta:
         "../environment.yaml"
     threads:
         config["sv_callers"]["manta"]["threads"]
+    resources:
+        mem_mb=config["sv_callers"]["manta"]["memory"]
     shell:
         """
         echo {input} > {output}

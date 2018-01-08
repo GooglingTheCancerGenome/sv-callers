@@ -14,6 +14,8 @@ rule gridss:
         "../environment.yaml"
     threads:
         config["sv_callers"]["gridss"]["threads"]
+    resources:
+        mem_mb=config["sv_callers"]["gridss"]["memory"]
     shell:
         """
         echo {input} > {output}

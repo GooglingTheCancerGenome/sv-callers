@@ -13,6 +13,8 @@ rule delly:
         "../environment.yaml"
     threads:
         config["sv_callers"]["delly"]["threads"]
+    resources:
+        mem_mb=config["sv_callers"]["delly"]["memory"]
     shell:
         """
         echo {input} > {output}
