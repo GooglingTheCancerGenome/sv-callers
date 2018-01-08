@@ -11,7 +11,8 @@ rule delly:
             "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
-    threads: 2
+    threads:
+        config["sv_callers"]["delly"]["threads"]
     shell:
         """
         echo {input} > {output}
@@ -24,4 +25,3 @@ rule delly:
 #            {input.tumor_bam} {input.normal_bam}
 #        date "+%Y-%m-%d %H:%M:%S" > {output}
 #        """
-

@@ -11,7 +11,8 @@ rule lumpy:
             "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
-    threads: 1
+    threads:
+        config["sv_callers"]["lumpy"]["threads"]
     shell:
         """
         echo {input} > {output}
@@ -20,4 +21,3 @@ rule lumpy:
 #        """
 #        lumpyexpress -B {input.tumor_bam},{input.normal_bam} -o lumpy.vcf
 #        """
-

@@ -10,11 +10,14 @@ samples: samples.csv
 
 sv_callers:
   manta:
+    threads: 1
     outdir: manta_out
   delly:
+    threads: 1
     outdir: delly_out
   lumpy:
+    threads: 1
     outdir: lumpy_out
   gridss:
+    threads: 1
     outdir: gridss_out
-

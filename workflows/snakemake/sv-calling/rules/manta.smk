@@ -11,7 +11,8 @@ rule manta:
             "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
-    threads: 12
+    threads:
+        config["sv_callers"]["manta"]["threads"]
     shell:
         """
         echo {input} > {output}
@@ -25,4 +26,3 @@ rule manta:
 #        cd "{wildcards.base_dir}" && ./runWorkflow.py --quiet -m local -j {threads}
 #        date "+%Y-%m-%d %H:%M:%S" > "{output}"
 #        """
-

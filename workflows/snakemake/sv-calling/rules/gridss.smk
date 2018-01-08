@@ -12,7 +12,8 @@ rule gridss:
             "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
-    threads: 12
+    threads:
+        config["sv_callers"]["gridss"]["threads"]
     shell:
         """
         echo {input} > {output}
