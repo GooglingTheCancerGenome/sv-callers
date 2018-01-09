@@ -13,14 +13,17 @@ sv_callers:
     threads: 1
     memory: 100
     outdir: manta_out
+
   delly:
     threads: 1
     memory: 100
     outdir: delly_out
+
   lumpy:
     threads: 1
     memory: 100
     outdir: lumpy_out
+
   gridss:
     threads: 1
     memory: 100
