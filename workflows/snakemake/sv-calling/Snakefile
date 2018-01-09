@@ -15,7 +15,7 @@ def get_outdir(caller):
 def collect_logs(callers):
     with open(config["samples"], 'r') as fin:
         reader = csv.DictReader(fin)
-        return ["{base_dir}/{caller}/{tumor}-{normal}.log".format(base_dir=r["base_dir"], \
+        return ["{dir}/{caller}/{tumor}-{normal}.log".format(dir=r["dir"], \
             caller=get_outdir(c), tumor=r["tumor"], \
                 normal=r["normal"]) for r in reader for c in callers]
 
@@ -28,3 +28,4 @@ include: "rules/manta.smk"
 include: "rules/delly.smk"
 include: "rules/lumpy.smk"
 include: "rules/gridss.smk"
+
