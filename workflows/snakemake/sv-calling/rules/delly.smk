@@ -12,9 +12,9 @@ rule delly:
     conda:
         "../environment.yaml"
     threads:
-        config["sv_callers"]["delly"]["threads"]
+        get_nthreads("delly")
     resources:
-        mem_mb=config["sv_callers"]["delly"]["memory"]
+        mem_mb=get_maxmem("delly")
     shell:
         """
         echo {input} > {output}

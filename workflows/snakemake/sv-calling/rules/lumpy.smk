@@ -12,9 +12,9 @@ rule lumpy:
     conda:
         "../environment.yaml"
     threads:
-        config["sv_callers"]["lumpy"]["threads"]
+        get_nthreads("lumpy")
     resources:
-        mem_mb=config["sv_callers"]["lumpy"]["memory"]
+        mem_mb=get_maxmem("lumpy")
     shell:
         """
         echo {input} > {output}

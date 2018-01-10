@@ -13,9 +13,9 @@ rule gridss:
     conda:
         "../environment.yaml"
     threads:
-        config["sv_callers"]["gridss"]["threads"]
+        get_nthreads("gridss")
     resources:
-        mem_mb=config["sv_callers"]["gridss"]["memory"]
+        mem_mb=get_maxmem("gridss")
     shell:
         """
         echo {input} > {output}

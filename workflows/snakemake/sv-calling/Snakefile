@@ -7,10 +7,20 @@ import csv
 shell.executable("/bin/bash")
 configfile: "config.yaml"
 
-CALLERS = ['manta', 'delly', 'lumpy', 'gridss']
+CALLERS = config["sv_callers"].keys()
+#CALLERS = ["manta"]
 
 def get_outdir(caller):
+    """Get the output directory for a caller."""
     return config["sv_callers"][caller]["outdir"]
+
+def get_nthreads(caller):
+    """Get the number of threads to be used by a caller."""
+    return config["sv_callers"][caller]["threads"]
+
+def get_maxmem(caller):
+    """Get the amount of memory to be allocated (MB) for a caller."""
+    return config["sv_callers"][caller]["memory"]
 
 def collect_logs(callers):
     with open(config["samples"], 'r') as fin:
@@ -28,4 +38,3 @@ include: "rules/manta.smk"
 include: "rules/delly.smk"
 include: "rules/lumpy.smk"
 include: "rules/gridss.smk"
-

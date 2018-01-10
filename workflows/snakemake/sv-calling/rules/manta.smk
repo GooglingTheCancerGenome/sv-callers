@@ -12,9 +12,9 @@ rule manta:
     conda:
         "../environment.yaml"
     threads:
-        config["sv_callers"]["manta"]["threads"]
+        get_nthreads("manta")
     resources:
-        mem_mb=config["sv_callers"]["manta"]["memory"]
+        mem_mb=get_maxmem("manta")
     shell:
         """
         echo {input} > {output}
