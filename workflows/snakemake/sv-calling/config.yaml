@@ -10,7 +10,7 @@ file_exts:
     - .fasta.pac #
     - .fasta.sa  #
   bam:  .bam
-  bai:  .bam.bai
+  bam_idx:  .bam.bai
 
 samples: samples.csv # list of tumor-normal sample pairs
 

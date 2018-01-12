@@ -12,7 +12,7 @@ callers = config["sv_callers"].keys()
 
 def get_filext(fmt):
     """Get file extension(s) given file type/format:
-        ['fasta', 'faidx', 'bwaidx', 'bam', 'bai']
+        ['fasta', 'fasta_idx', 'bam', 'bam_idx']
     """
     assert fmt in config["file_exts"].keys(), \
         "Unknown input file format '{}'.".format(fmt.lower())
