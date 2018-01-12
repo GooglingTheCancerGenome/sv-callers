@@ -2,11 +2,17 @@ ref_genome: Homo_sapiens.GRCh37.GATK.illumina
 
 file_exts:
   fasta:  .fasta
-  fai:    .fasta.fai
-  bam:    .bam
-  bai:    .bam.bai
+  fasta_idx:
+    - .fasta.fai # faidx index file
+    - .fasta.bwt # bwa v0.6.x
+    - .fasta.amb # index files
+    - .fasta.ann #
+    - .fasta.pac #
+    - .fasta.sa  #
+  bam:  .bam
+  bai:  .bam.bai
 
-samples: samples.csv
+samples: samples.csv # list of tumor-normal sample pairs
 
 sv_callers:
   manta:
