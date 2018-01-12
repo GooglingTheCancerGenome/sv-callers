@@ -1,3 +1,4 @@
 SAMPLE_DIR,TUMOR,NORMAL
-1,T1,N1
-2,T2,N2
+data/bam/1,T1,N1
+data/bam/2,T2,N2
+

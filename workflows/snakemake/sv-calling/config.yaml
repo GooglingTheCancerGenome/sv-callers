@@ -1,4 +1,4 @@
-ref_genome: Homo_sapiens.GRCh37.GATK.illumina
+ref_genome: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
 
 file_exts:
   fasta:  .fasta
