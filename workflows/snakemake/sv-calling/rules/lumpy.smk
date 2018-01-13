@@ -17,9 +17,10 @@ rule lumpy:
         mem_mb=get_maxmem("lumpy")
     shell:
         """
-        echo {input} > {output}
+        if [ "{config[echo_run]}" = "1" ]; then
+            echo "{input}" > "{output}"
+        else
+            lumpyexpress -B "{input.tumor_bam}","{input.normal_bam}" \
+                -o "{wildcards.sampledir}/lumpy.vcf"
+        fi
         """
-#    shell:
-#        """
-#        lumpyexpress -B {input.tumor_bam},{input.normal_bam} -o lumpy.vcf
-#        """

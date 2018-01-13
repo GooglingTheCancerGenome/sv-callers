@@ -17,14 +17,15 @@ rule manta:
         mem_mb=get_maxmem("manta")
     shell:
         """
-        echo {input} > {output}
+        if [ "{config[echo_run]}" = "1" ]; then
+            echo "{input}" > "{output}"
+        else
+            configManta.py --runDir "{wildcards.sampledir}" \
+                --reference "{input.fasta}" \
+                --tumorBam "{input.tumor_bam}" \
+                --normalBam "{input.normal_bam}"
+            cd "{wildcards.sampledir}" && ./runWorkflow.py --quiet -m local -j {threads}
+            # TODO: rename output to 'manta.vcf'
+            date "+%Y-%m-%d %H:%M:%S" > "{output}"
+        fi
         """
-#    shell:
-#        """
-#        configManta.py --runDir "{wildcards.sampledir}" \
-#            --reference "{input.fasta}" \
-#            --tumorBam "{input.tumor_bam}" \
-#            --normalBam "{input.normal_bam}"
-#        cd "{wildcards.sampledir}" && ./runWorkflow.py --quiet -m local -j {threads}
-#        date "+%Y-%m-%d %H:%M:%S" > "{output}"
-#        """

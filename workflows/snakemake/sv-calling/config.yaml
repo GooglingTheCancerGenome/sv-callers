@@ -1,7 +1,8 @@
+echo_run: 0
 genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina # reference in FASTA
 
 file_exts:
-  fasta:  .fasta
+  fasta: .fasta
   fasta_idx:
     - .fasta.fai # faidx index file
     - .fasta.bwt # bwa v0.6.x
@@ -9,8 +10,8 @@ file_exts:
     - .fasta.ann #
     - .fasta.pac #
     - .fasta.sa  #
-  bam:  .bam
-  bam_idx:  .bam.bai
+  bam: .bam
+  bam_idx: .bam.bai
 
 samples: samples.csv # list of tumor-normal sample pairs
 

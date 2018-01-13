@@ -17,16 +17,16 @@ rule gridss:
         mem_mb=get_maxmem("gridss")
     shell:
         """
-        echo {input} > {output}
+        if [ "{config[echo_run]}" = "1" ]; then
+            echo "{input}" > "{output}"
+        else
+            gridss -Xmx31g gridss.CallVariants WORKER_THREADS={threads} \
+                REFERENCE_SEQUENCE="{input.fasta}" \
+                INPUT="{input.normal_bam}" \
+                INPUT="{input.tumor_bam}" \
+                OUTPUT="{wildcards.sampledir}/gridss.vcf" \
+                ASSEMBLY="{wildcards.sampledir}/assembly.bam" \
+                WORKING_DIR="{output}" \
+                TMP_DIR="{output}"
+        fi
         """
-#    shell:
-#        """
-#        gridss -Xmx31g gridss.CallVariants WORKER_THREADS={threads} \
-#            REFERENCE_SEQUENCE={input.fasta} \
-#            INPUT={input.normal_bam} \
-#            INPUT={input.tumor_bam} \
-#            OUTPUT=gridss.vcf \
-#            ASSEMBLY=assembly.bam \
-#            WORKING_DIR={output} \
-#            TMP_DIR={outpu}
-#        """
