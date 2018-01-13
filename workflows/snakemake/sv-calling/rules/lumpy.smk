@@ -6,8 +6,10 @@ rule lumpy:
         tumor_bai="{sampledir}/{tumor}" + get_filext("bam_idx"),
         normal_bam="{sampledir}/{normal}" + get_filext("bam"),
         normal_bai="{sampledir}/{normal}" + get_filext("bam_idx")
+    params:
+        outdir=os.path.join("{sampledir}", get_outdir("lumpy"))
     output:
-        os.path.join("{sampledir}", get_outdir("lumpy"), \
+        log=os.path.join("{sampledir}", get_outdir("lumpy"), \
             "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
@@ -21,6 +23,6 @@ rule lumpy:
             echo "{input}" > "{output}"
         else
             lumpyexpress -B "{input.tumor_bam}","{input.normal_bam}" \
-                -o "{wildcards.sampledir}/lumpy.vcf"
+                -o "{params}/lumpy.vcf" 2>&1
         fi
         """

@@ -6,8 +6,10 @@ rule gridss:
         tumor_bai="{sampledir}/{tumor}" + get_filext("bam_idx"),
         normal_bam="{sampledir}/{normal}" + get_filext("bam"),
         normal_bai="{sampledir}/{normal}" + get_filext("bam_idx")
+    params:
+        outdir=os.path.join("{sampledir}", get_outdir("gridss"))
     output:
-        os.path.join("{sampledir}", get_outdir("gridss"), \
+        log=os.path.join("{sampledir}", get_outdir("gridss"), \
             "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
@@ -24,9 +26,9 @@ rule gridss:
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
-                OUTPUT="{wildcards.sampledir}/gridss.vcf" \
-                ASSEMBLY="{wildcards.sampledir}/assembly.bam" \
-                WORKING_DIR="{output}" \
-                TMP_DIR="{output}"
+                OUTPUT="{params}/gridss.vcf" \
+                ASSEMBLY="{params}/assembly.bam" \
+                WORKING_DIR="{params}" \
+                TMP_DIR="{params}" 2>&1
         fi
         """

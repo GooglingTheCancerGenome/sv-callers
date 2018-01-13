@@ -6,8 +6,10 @@ rule manta:
         tumor_bai="{sampledir}/{tumor}" + get_filext("bam_idx"),
         normal_bam="{sampledir}/{normal}" + get_filext("bam"),
         normal_bai="{sampledir}/{normal}" + get_filext("bam_idx")
+    params:
+        outdir=os.path.join("{sampledir}", get_outdir("manta"))
     output:
-        os.path.join("{sampledir}", get_outdir("manta"), \
+        log=os.path.join("{sampledir}", get_outdir("manta"), \
             "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
@@ -20,11 +22,13 @@ rule manta:
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" > "{output}"
         else
-            configManta.py --runDir "{wildcards.sampledir}" \
+            configManta.py \
+                --runDir "{params}" \
                 --reference "{input.fasta}" \
                 --tumorBam "{input.tumor_bam}" \
-                --normalBam "{input.normal_bam}"
-            cd "{wildcards.sampledir}" && ./runWorkflow.py --quiet -m local -j {threads}
+                --normalBam "{input.normal_bam}" 2>&1
+            cd "{params}" && \
+            ./runWorkflow.py --quiet -m local -j {threads} 2>&1
             # TODO: rename output to 'manta.vcf'
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
