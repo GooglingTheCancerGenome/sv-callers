@@ -46,12 +46,25 @@ def get_maxmem(caller):
 def collect_logs(callers):
     """Generate (dummy) logs for all sample pairs to drive the workflow.
     """
+    sv_types = config["sv_callers"]["delly"]["sv_types"]
     with open(config["samples"], 'r') as fin:
         reader = DictReader(fin)
-        return ["{sampledir}/{caller}/{tumor}-{normal}.log" \
-            .format(sampledir=r["SAMPLE_DIR"], caller=get_outdir(c), \
-                tumor=r["TUMOR"], normal=r["NORMAL"]) for r in reader \
-                    for c in callers]
+        logs = []
+        for r in reader:
+            smpdir = r["SAMPLE_DIR"]
+            tumor = r["TUMOR"]
+            normal = r["NORMAL"]
+            for c in callers:
+                if "delly" in c: # delly: generate *.log for each SV type
+                    for sv in sv_types:
+                        log = "{}/{}/{}-{}_{}.log" \
+                            .format(smpdir, get_outdir(c), tumor, normal, sv)
+                        logs.append(log)
+                else: # generate one *.log for each (other) caller
+                    log = "{}/{}/{}-{}.log" \
+                        .format(smpdir, get_outdir(c), tumor, normal)
+                    logs.append(log)
+        return logs
 
 localrules: all
 
