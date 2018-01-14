@@ -23,6 +23,9 @@ rule lumpy:
             echo "{input}" > "{output}"
         else
             lumpyexpress -B "{input.tumor_bam}","{input.normal_bam}" \
+                -m 4
+                -r 0
+                -T {params}
                 -o "{params}/lumpy.vcf" 2>&1
         fi
         """
