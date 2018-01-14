@@ -11,27 +11,28 @@ file_exts:
     - .fasta.pac #
     - .fasta.sa  #
   bam: .bam
-  bam_idx: .bam.bai
+  bam_idx: .bai
 
 samples: samples.csv # list of tumor-normal sample pairs
 
 sv_callers:
   manta:
-    threads: 1
-    memory: 100 #MB
+    threads: 32
+    memory: 10240 #MB
     outdir: manta_out
 
   delly:
-    threads: 1
-    memory: 100 #MB
+    threads: 2
+    memory: 3072 #MB
     outdir: delly_out
 
   lumpy:
     threads: 1
-    memory: 100 #MB
+    memory: 10240 #MB
     outdir: lumpy_out
 
   gridss:
-    threads: 1
-    memory: 100 #MB
+    threads: 16
+    memory: 63488 #MB
     outdir: gridss_out
+
