@@ -22,6 +22,7 @@ rule gridss:
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" > "{output}"
         else
+            rm -f {input.fasta}.dict # otherwise GRIDSS won't run
             gridss -Xmx31g gridss.CallVariants WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.normal_bam}" \
