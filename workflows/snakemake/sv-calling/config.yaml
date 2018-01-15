@@ -1,5 +1,7 @@
-echo_run: 0
-genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina # reference in FASTA
+echo_run: 0 # run sv callers [0] or vanilla jobs [1]
+
+# filepath to the reference genome in FASTA (excl. file suffix)
+genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
 
 file_exts:
   fasta: .fasta
@@ -13,13 +15,13 @@ file_exts:
   bam: .bam
   bam_idx: .bai
 
-samples: samples.csv # list of tumor-normal sample pairs
+samples: samples.csv # list of tumor-normal sample pairs (*.bam files)
 
 sv_callers:
   manta:
     threads: 32
     memory: 10240 #MB
-    outdir: manta_out
+    outdir: manta_out # relative to SAMPLE_DIR (see samples.csv)
 
   delly:
     threads: 2
