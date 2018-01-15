@@ -12,20 +12,6 @@ rule delly_DUP:
         log=os.path.join("{sampledir}", get_outdir("delly"), \
             "{tumor}-{normal}_{sv_type, DUP}.log")
     conda:
-      "../environment.yaml"
+        "../environment.yaml"
     shell:
-        """
-        if [ "{config[echo_run]}" = "1" ]; then
-            echo "{input}" > "{output}"
-        else
-            # TODO: run all SV types in parallel
-            delly call -t {wildcards.sv_type} \
-                -g "{input.fasta}" \
-                -o "{params}/delly-{wildcards.sv_type}.bcf" \
-                "{input.tumor_bam}" "{input.normal_bam}" 2>&1
-            # TODO:
-            # delly filter?
-            # bcf2vcf
-            date "+%Y-%m-%d %H:%M:%S" > "{output}"
-        fi
-        """
+        delly_cmd()

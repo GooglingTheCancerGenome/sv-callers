@@ -29,7 +29,7 @@ rule manta:
                 --normalBam "{input.normal_bam}" 2>&1
             cd "{params}" && \
             ./runWorkflow.py --quiet -m local -j {threads} 2>&1
-            # TODO: rename output to 'manta.vcf'
+            # TODO: rename/unpack outfile 'somaticSV.vcf.gz' to 'manta*.vcf'
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

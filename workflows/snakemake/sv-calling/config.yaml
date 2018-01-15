@@ -41,4 +41,3 @@ sv_callers:
     threads: 16
     memory: 63488 #MB
     outdir: gridss_out
-
