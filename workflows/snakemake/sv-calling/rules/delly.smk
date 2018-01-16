@@ -22,13 +22,21 @@ rule delly:
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" > "{output}"
         else
+            PREFIX="{params}/delly-{wildcards.sv_type}"
+            TSV="sample_pairs.tsv"
+            # somatic SV calling
             delly call -t {wildcards.sv_type} \
                 -g "{input.fasta}" \
-                -o "{params}/delly-{wildcards.sv_type}.bcf" \
-                "{input.tumor_bam}" "{input.normal_bam}" 2>&1
-            # TODO:
-            # 1. delly filter -f somatic -o *.pre.bcf -s samples.tsv *.bcf
-            # 2. bcftools view *.pre.bcf -o *.pre.vcf -O v
+                -o "${{PREFIX}}.bcf" \
+                "{input.tumor_bam}" "{input.normal_bam}" && \
+            # somatic pre-filtering
+            printf "{wildcards.tumor}\ttumor\n{wildcards.normal}\tcontrol" \
+                > "${{TSV}}" && \
+            delly filter -f somatic -s "${{TSV}}" -o "${{PREFIX}}.pre.bcf" \
+                "${{PREFIX}}.bcf" && \
+            # BCF to VCF format conversion
+            bcftools view "${{outfile_prefix}}.pre.bcf" -O v \
+                -o "${{PREFIX}}.vcf" 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

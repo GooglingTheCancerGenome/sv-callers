@@ -26,10 +26,10 @@ rule manta:
                 --runDir "{params}" \
                 --reference "{input.fasta}" \
                 --tumorBam "{input.tumor_bam}" \
-                --normalBam "{input.normal_bam}" 2>&1
+                --normalBam "{input.normal_bam}" && \
             cd "{params}" && \
-            ./runWorkflow.py --quiet -m local -j {threads} 2>&1
-            # TODO: rename/unpack outfile 'somaticSV.vcf.gz' to 'manta*.vcf'
+            ./runWorkflow.py --quiet -m local -j {threads} && \
+            zcat results/variants/somaticSV.vcf.gz > manta.vcf 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

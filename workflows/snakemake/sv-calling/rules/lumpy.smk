@@ -7,7 +7,7 @@ rule lumpy:
         normal_bam="{sampledir}/{normal}" + get_filext("bam"),
         normal_bai="{sampledir}/{normal}" + get_filext("bam_idx")
     params:
-        outdir=os.path.join("{sampledir}", get_outdir("lumpy"))
+        outfile_prefix=os.path.join("{sampledir}", get_outdir("lumpy"), "lumpy")
     output:
         log=os.path.join("{sampledir}", get_outdir("lumpy"), \
             "{tumor}-{normal}.log")
@@ -23,9 +23,9 @@ rule lumpy:
             echo "{input}" > "{output}"
         else
             lumpyexpress -B "{input.tumor_bam}","{input.normal_bam}" \
-                -m 4
-                -r 0
-                -T {params}
-                -o "{params}/lumpy.vcf" 2>&1
+                -T $(dirname "{params}") \
+                -o "{params}.vcf" \
+                -m 4 \
+                -r 0 2>&1
         fi
         """
