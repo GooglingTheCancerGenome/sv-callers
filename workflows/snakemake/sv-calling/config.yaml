@@ -20,12 +20,12 @@ samples: samples.csv # list of tumor-normal sample pairs (*.bam files)
 sv_callers:
   manta:
     threads: 32
-    memory: 10240 #MB
+    memory: 8192 #MB
     outdir: manta_out # relative to SAMPLE_DIR (see samples.csv)
 
   delly:
     threads: 2
-    memory: 3072 #MB
+    memory: 4096 #MB
     outdir: delly_out
     sv_types:
         - BND
@@ -36,10 +36,10 @@ sv_callers:
 
   lumpy:
     threads: 1
-    memory: 10240 #MB
+    memory: 16384 #MB
     outdir: lumpy_out
 
   gridss:
     threads: 16
-    memory: 63488 #MB
+    memory: 65536 #MB
     outdir: gridss_out
