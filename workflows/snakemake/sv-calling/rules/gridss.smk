@@ -1,22 +1,22 @@
 rule gridss:
     input:
-        fasta=get_fasta(),
-        fai=get_faidx(), # bwa index files also required
-        tumor_bam="{sampledir}/{tumor}" + get_filext("bam"),
-        tumor_bai="{sampledir}/{tumor}" + get_filext("bam_idx"),
-        normal_bam="{sampledir}/{normal}" + get_filext("bam"),
-        normal_bai="{sampledir}/{normal}" + get_filext("bam_idx")
+        fasta = get_fasta(),
+        fai = get_faidx(),  # bwa index files also required
+        tumor_bam = "{sampledir}/{tumor}" + get_filext("bam"),
+        tumor_bai = "{sampledir}/{tumor}" + get_filext("bam_idx"),
+        normal_bam = "{sampledir}/{normal}" + get_filext("bam"),
+        normal_bai = "{sampledir}/{normal}" + get_filext("bam_idx")
     params:
-        outdir=os.path.join("{sampledir}", get_outdir("gridss"))
+        outdir = os.path.join("{sampledir}", get_outdir("gridss"))
     output:
-        log=os.path.join("{sampledir}", get_outdir("gridss"), \
-            "{tumor}-{normal}.log")
+        log = os.path.join("{sampledir}", get_outdir("gridss"),
+                           "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
     threads:
         get_nthreads("gridss")
     resources:
-        mem_mb=get_maxmem("gridss")
+        mem_mb = get_maxmem("gridss")
     shell:
         """
         if [ "{config[echo_run]}" = "1" ]; then

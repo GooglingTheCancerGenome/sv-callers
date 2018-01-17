@@ -1,22 +1,22 @@
 rule manta:
     input:
-        fasta=get_fasta(),
-        fai=get_faidx()[0],
-        tumor_bam="{sampledir}/{tumor}" + get_filext("bam"),
-        tumor_bai="{sampledir}/{tumor}" + get_filext("bam_idx"),
-        normal_bam="{sampledir}/{normal}" + get_filext("bam"),
-        normal_bai="{sampledir}/{normal}" + get_filext("bam_idx")
+        fasta = get_fasta(),
+        fai = get_faidx()[0],
+        tumor_bam = "{sampledir}/{tumor}" + get_filext("bam"),
+        tumor_bai = "{sampledir}/{tumor}" + get_filext("bam_idx"),
+        normal_bam = "{sampledir}/{normal}" + get_filext("bam"),
+        normal_bai = "{sampledir}/{normal}" + get_filext("bam_idx")
     params:
-        outdir=os.path.join("{sampledir}", get_outdir("manta"))
+        outdir = os.path.join("{sampledir}", get_outdir("manta"))
     output:
-        log=os.path.join("{sampledir}", get_outdir("manta"), \
-            "{tumor}-{normal}.log")
+        log = os.path.join("{sampledir}", get_outdir("manta"),
+                           "{tumor}-{normal}.log")
     conda:
         "../environment.yaml"
     threads:
         get_nthreads("manta")
     resources:
-        mem_mb=get_maxmem("manta")
+        mem_mb = get_maxmem("manta")
     shell:
         """
         if [ "{config[echo_run]}" = "1" ]; then
