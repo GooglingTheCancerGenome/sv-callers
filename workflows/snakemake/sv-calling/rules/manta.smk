@@ -27,9 +27,12 @@ rule manta:
                 --runDir "{params}" \
                 --reference "{input.fasta}" \
                 --tumorBam "{input.tumor_bam}" \
-                --normalBam "{input.normal_bam}" && \
-            cd "{params}" && \
-            ./runWorkflow.py --quiet -m local -j {threads} && \
+                --normalBam "{input.normal_bam}" &&
+            cd "{params}" &&
+            ./runWorkflow.py \
+                --quiet \
+                -m local \
+                -j {threads} &&
             zcat results/variants/somaticSV.vcf.gz > manta.vcf 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi

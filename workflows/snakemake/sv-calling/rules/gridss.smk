@@ -24,8 +24,9 @@ rule gridss:
             echo "{input}" > "{output}"
         else
             # clean-up prior to SV calling
-            rm -f "{input.fasta}.dict" && \
-            gridss -Xmx31g gridss.CallVariants WORKER_THREADS={threads} \
+            rm -f "{input.fasta}.dict" &&
+            gridss -Xmx31g gridss.CallVariants \
+                WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \

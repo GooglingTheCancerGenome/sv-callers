@@ -26,19 +26,25 @@ rule delly:
             PREFIX="{params}/delly-{wildcards.sv_type}"
             TSV="sample_pairs.tsv"
             # somatic SV calling
-            delly call -t {wildcards.sv_type} \
+            delly call \
+                -t "{wildcards.sv_type}" \
                 -g "{input.fasta}" \
                 -o "${{PREFIX}}.bcf" \
-                -q 1 \ # min.paired-end mapping quality
-                -s 9 \ # insert size cutoff (DELs only)
-                "{input.tumor_bam}" "{input.normal_bam}" && \
+                -q 1 `# min.paired-end mapping quality` \
+                -s 9 `# insert size cutoff, DELs only` \
+                "{input.tumor_bam}" "{input.normal_bam}" &&
             # somatic pre-filtering
-            printf "{wildcards.tumor}\ttumor\n{wildcards.normal}\tcontrol" \
-                > "${{TSV}}" && \
-            delly filter -f somatic -s "${{TSV}}" -o "${{PREFIX}}.pre.bcf" \
-                "${{PREFIX}}.bcf" && \
+            printf "{wildcards.tumor}\ttumor\n{wildcards.normal}\tcontrol\n" \
+                > "${{TSV}}" &&
+            delly filter \
+                -f somatic \
+                -s "${{TSV}}" \
+                -o "${{PREFIX}}.pre.bcf" \
+                "${{PREFIX}}.bcf" &&
             # BCF to VCF format conversion
-            bcftools view "${{outfile_prefix}}.pre.bcf" -O v \
+            bcftools view \
+                "${{PREFIX}}.pre.bcf"
+                -O v `# VCF format` \
                 -o "${{PREFIX}}.vcf" 2>&1
             # TODO: merge SV VCF files
             date "+%Y-%m-%d %H:%M:%S" > "{output}"

@@ -23,10 +23,11 @@ rule lumpy:
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" > "{output}"
         else
-            lumpyexpress -B "{input.tumor_bam}","{input.normal_bam}" \
+            lumpyexpress \
+                -B "{input.tumor_bam}","{input.normal_bam}" \
                 -o "{params}/lumpy.vcf" \
-                -m 4 \ # min. sample weight
-                -r 0 \ # trim threshold
+                -m 4 `# min. sample weight` \
+                -r 0 `# trim threshold` \
                 -T "${{TMPDIR}}" 2>&1
         fi
         """
