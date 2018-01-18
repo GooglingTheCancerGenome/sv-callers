@@ -16,16 +16,17 @@ rule lumpy:
     threads:
         get_nthreads("lumpy")
     resources:
-        mem_mb = get_maxmem("lumpy")
+        mem_mb = get_memory("lumpy"),
+        tmp_mb = get_tmpspace("lumpy")
     shell:
         """
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" > "{output}"
         else
             lumpyexpress -B "{input.tumor_bam}","{input.normal_bam}" \
-                -T "{params}" \
                 -o "{params}/lumpy.vcf" \
-                -m 4 \
-                -r 0 2>&1
+                -m 4 \ # min. sample weight
+                -r 0 \ # trim threshold
+                -T "${{TMPDIR}}" 2>&1
         fi
         """

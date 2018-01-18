@@ -38,15 +38,21 @@ def get_outdir(caller):
 
 
 def get_nthreads(caller):
-    """Get the number of threads to be used by a caller.
+    """Get the number of threads used by a caller.
     """
     return config["sv_callers"][caller]["threads"]
 
 
-def get_maxmem(caller):
-    """Get the amount of memory to be allocated (MB) for a caller.
+def get_memory(caller):
+    """Get the amount of memory (MB) allocated for a caller.
     """
     return config["sv_callers"][caller]["memory"]
+
+
+def get_tmpspace(caller):
+    """Get the amount of temporary disk space (MB) requested for a caller.
+    """
+    return config["sv_callers"][caller]["tmp"]
 
 
 def collect_logs(callers):

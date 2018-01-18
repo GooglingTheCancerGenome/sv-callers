@@ -16,7 +16,8 @@ rule gridss:
     threads:
         get_nthreads("gridss")
     resources:
-        mem_mb = get_maxmem("gridss")
+        mem_mb = get_memory("gridss"),
+        tmp_mb = get_tmpspace("gridss")
     shell:
         """
         if [ "{config[echo_run]}" = "1" ]; then
@@ -31,6 +32,6 @@ rule gridss:
                 OUTPUT="{params}/gridss.vcf" \
                 ASSEMBLY="{params}/assembly.bam" \
                 WORKING_DIR="{params}" \
-                TMP_DIR="{params}" 2>&1
+                TMP_DIR="${{TMPDIR}}" 2>&1
         fi
         """

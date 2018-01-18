@@ -16,7 +16,8 @@ rule delly:
     threads:
         get_nthreads("delly")
     resources:
-        mem_mb = get_maxmem("delly")
+        mem_mb = get_memory("delly")
+        # tmp_mb = get_tmpspace("delly")
     shell:
         """
         if [ "{config[echo_run]}" = "1" ]; then
@@ -28,6 +29,8 @@ rule delly:
             delly call -t {wildcards.sv_type} \
                 -g "{input.fasta}" \
                 -o "${{PREFIX}}.bcf" \
+                -q 1 \ # min.paired-end mapping quality
+                -s 9 \ # insert size cutoff (DELs only)
                 "{input.tumor_bam}" "{input.normal_bam}" && \
             # somatic pre-filtering
             printf "{wildcards.tumor}\ttumor\n{wildcards.normal}\tcontrol" \
@@ -37,6 +40,7 @@ rule delly:
             # BCF to VCF format conversion
             bcftools view "${{outfile_prefix}}.pre.bcf" -O v \
                 -o "${{PREFIX}}.vcf" 2>&1
+            # TODO: merge SV VCF files
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """
