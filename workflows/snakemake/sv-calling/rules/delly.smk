@@ -16,8 +16,8 @@ rule delly:
     threads:
         get_nthreads("delly")
     resources:
-        mem_mb = get_memory("delly")
-        # tmp_mb = get_tmpspace("delly")
+        mem_mb = get_memory("delly"),
+        tmp_mb = get_tmpspace("delly")
     shell:
         """
         if [ "{config[echo_run]}" = "1" ]; then

@@ -16,8 +16,8 @@ rule manta:
     threads:
         get_nthreads("manta")
     resources:
-        mem_mb = get_memory("manta")
-        # tmp_mb = get_tmpspace("manta")
+        mem_mb = get_memory("manta"),
+        tmp_mb = get_tmpspace("manta")
     shell:
         """
         if [ "{config[echo_run]}" = "1" ]; then

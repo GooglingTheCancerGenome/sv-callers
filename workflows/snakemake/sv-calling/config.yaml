@@ -21,13 +21,13 @@ sv_callers:
   manta:
     threads: 24
     memory: 10240 # MB
-    # tmp: 1024 # min. temporary disk space in MB
+    tmp: 0 # min. temporary disk space in MB
     outdir: manta_out # relative to SAMPLE_DIR (see samples.csv)
 
   delly:
     threads: 2
     memory: 10240 # MB
-    # tmp: 1024 # MB
+    tmp: 0 # MB
     outdir: delly_out
     sv_types:
         - BND
