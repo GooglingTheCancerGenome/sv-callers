@@ -34,5 +34,6 @@ rule gridss:
                 ASSEMBLY="{params}/assembly.bam" \
                 WORKING_DIR="{params}" \
                 TMP_DIR="${{TMPDIR}}" 2>&1
+            date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

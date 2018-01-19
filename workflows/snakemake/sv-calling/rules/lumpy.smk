@@ -29,5 +29,6 @@ rule lumpy:
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -T "${{TMPDIR}}" 2>&1
+            date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """
