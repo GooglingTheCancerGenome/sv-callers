@@ -24,7 +24,7 @@ rule delly:
             echo "{input}" > "{output}"
         else
             PREFIX="{params}/delly-{wildcards.sv_type}"
-            TSV="sample_pairs.tsv"
+            TSV="{params}/sample_pairs.tsv"
             # somatic SV calling
             delly call \
                 -t "{wildcards.sv_type}" \
