@@ -31,7 +31,7 @@ rule gridss:
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
                 OUTPUT="{params}/gridss.vcf" \
-                ASSEMBLY="{params}/assembly.bam" \
+                ASSEMBLY="{params}/gridss_assembly.bam" \
                 WORKING_DIR="{params}" \
                 TMP_DIR="${{TMPDIR}}" 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
