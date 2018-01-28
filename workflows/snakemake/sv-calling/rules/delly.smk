@@ -20,6 +20,12 @@ rule delly:
         tmp_mb = get_tmpspace("delly")
     shell:
         """
+        function get_samp_id() {{
+            echo "$(samtools view -H ${{1}} | \
+                   perl -lne 'print ${{1}} if /\sLB:(\S+)/' | \
+                   head -n 1)"
+        }}
+
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" > "{output}"
         else
@@ -34,8 +40,10 @@ rule delly:
                 -s 9 `# insert size cutoff, DELs only` \
                 "{input.tumor_bam}" "{input.normal_bam}" &&
             # somatic pre-filtering
-            printf "{wildcards.tumor}\ttumor\n{wildcards.normal}\tcontrol\n" \
-                > "${{TSV}}" &&
+            #   create sample list
+            ID1=$(get_samp_id "{input.tumor_bam}")
+            ID2=$(get_samp_id "{input.normal_bam}")
+            printf "${{ID1}}\ttumor\n${{ID2}}\tcontrol\n" > ${{TSV}} &&
             delly filter \
                 -f somatic \
                 -s "${{TSV}}" \
@@ -43,9 +51,9 @@ rule delly:
                 "${{PREFIX}}.bcf" &&
             # BCF to VCF format conversion
             bcftools view \
-                "${{PREFIX}}.pre.bcf"
                 -O v `# VCF format` \
-                -o "${{PREFIX}}.vcf" 2>&1
+                -o "${{PREFIX}}.vcf" \
+                "${{PREFIX}}.pre.bcf" 2>&1
             # TODO: merge SV VCF files
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
