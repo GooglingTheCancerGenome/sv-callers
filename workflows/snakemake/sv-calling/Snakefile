@@ -63,19 +63,16 @@ def collect_logs(callers):
         reader = DictReader(fin)
         logs = []
         for r in reader:
-            smpdir = r["SAMPLE_DIR"]
+            samp_dir = r["SAMPLE_DIR"]
             tumor = r["TUMOR"]
             normal = r["NORMAL"]
             for c in callers:
-                if "delly" in c:  # delly: generate *.log for each SV type
+                log = os.path.join(samp_dir, get_outdir(c), tumor + "-" + normal)
+                if "delly" in c:  # generate *.log per delly SV type
                     for sv in sv_types:
-                        log = "{}/{}/{}-{}_{}.log" \
-                            .format(smpdir, get_outdir(c), tumor, normal, sv)
-                        logs.append(log)
-                else:  # generate one *.log for each (other) caller
-                    log = "{}/{}/{}-{}.log" \
-                        .format(smpdir, get_outdir(c), tumor, normal)
-                    logs.append(log)
+                        logs.append(log + "_" + sv + ".log")
+                else:  # generate *.log per caller
+                    logs.append(log + ".log")
         return logs
 
 
