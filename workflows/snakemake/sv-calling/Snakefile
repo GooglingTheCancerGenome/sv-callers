@@ -41,19 +41,28 @@ def get_outdir(caller):
 def get_nthreads(caller):
     """Get the number of threads used by a caller.
     """
-    return config["sv_callers"][caller]["threads"]
+    if "threads" in config["sv_callers"][caller]:
+        return config["sv_callers"][caller]["threads"]
+    else:
+        return 1 # default
 
 
 def get_memory(caller):
     """Get the amount of memory (MB) allocated for a caller.
     """
-    return config["sv_callers"][caller]["memory"]
+    if "memory" in config["sv_callers"][caller]:
+        return config["sv_callers"][caller]["memory"]
+    else:
+        return 1024 # default
 
 
 def get_tmpspace(caller):
     """Get the amount of temporary disk space (MB) requested for a caller.
     """
-    return config["sv_callers"][caller]["tmp"]
+    if "tmp" in config["sv_callers"][caller]:
+        return config["sv_callers"][caller]["tmp"]
+    else:
+        return 1024 # default
 
 
 def collect_logs(callers):
