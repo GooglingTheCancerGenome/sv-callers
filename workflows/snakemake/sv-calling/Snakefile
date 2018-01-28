@@ -7,7 +7,8 @@ from csv import DictReader
 shell.executable("/bin/bash")
 configfile: "config.yaml"
 
-callers = config["sv_callers"].keys()
+CALLERS = [ c for c in config["sv_callers"].keys() \
+            if config["sv_callers"][c]["enabled"] is True ]
 
 
 def get_filext(fmt):
@@ -80,7 +81,7 @@ localrules: all
 
 rule all:
     input:
-        collect_logs(callers)
+        collect_logs(CALLERS)
 
 
 include: "rules/manta.smk"

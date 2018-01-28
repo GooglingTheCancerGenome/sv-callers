@@ -19,12 +19,14 @@ samples: samples.csv # list of tumor-normal sample pairs (*.bam files)
 
 sv_callers:
   manta:
+    enabled: true
     threads: 24
     memory: 10240 # MB
     tmp: 0 # min. temporary disk space in MB
     outdir: manta_out # relative to SAMPLE_DIR (see samples.csv)
 
   delly:
+    enabled: true
     threads: 2
     memory: 10240 # MB
     tmp: 0 # MB
@@ -37,12 +39,14 @@ sv_callers:
         - INV
 
   lumpy:
+    enabled: true
     threads: 1
     memory: 16384 # MB
     tmp: 1024 # MB
     outdir: lumpy_out
 
   gridss:
+    enabled: true
     threads: 24
     memory: 49152 # MB
     tmp: 10240 # MB
