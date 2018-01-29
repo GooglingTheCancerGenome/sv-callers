@@ -20,15 +20,18 @@ rule lumpy:
         tmp_mb = get_tmpspace("lumpy")
     shell:
         """
+        # TMPDIR used only if 'tmp' is >0 MB in config
+        TMP=$([ "{resources.tmp_mb}" = "0" ] && echo "{params}" ||
+            echo "${{TMPDIR}}")
         if [ "{config[echo_run]}" = "1" ]; then
-            echo "{input}" > "{output}"
+            echo "{input}" "${{TMP}}"> "{output}"
         else
             lumpyexpress \
                 -B "{input.tumor_bam}","{input.normal_bam}" \
                 -o "{params}/lumpy.vcf" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
-                -T "${{TMPDIR}}" 2>&1
+                -T "${{TMP}}" 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

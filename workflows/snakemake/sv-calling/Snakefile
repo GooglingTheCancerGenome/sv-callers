@@ -62,7 +62,7 @@ def get_tmpspace(caller):
     if "tmp" in config["sv_callers"][caller]:
         return config["sv_callers"][caller]["tmp"]
     else:
-        return 1024 # default
+        return 0 # default
 
 
 def collect_logs(callers):

@@ -20,8 +20,11 @@ rule gridss:
         tmp_mb = get_tmpspace("gridss")
     shell:
         """
+        # TMPDIR used only if 'tmp' is >0 MB in config
+        TMP=$([ "{resources.tmp_mb}" = "0" ] && echo "{params}" ||
+            echo "${{TMPDIR}}")
         if [ "{config[echo_run]}" = "1" ]; then
-            echo "{input}" > "{output}"
+            echo "{input}" "${{TMP}}"> "{output}"
         else
             # clean-up prior to SV calling
             rm -f "{input.fasta}.dict" &&
@@ -33,7 +36,7 @@ rule gridss:
                 OUTPUT="{params}/gridss.vcf" \
                 ASSEMBLY="{params}/gridss_assembly.bam" \
                 WORKING_DIR="{params}" \
-                TMP_DIR="${{TMPDIR}}" 2>&1
+                TMP_DIR="${{TMP}}" 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """
