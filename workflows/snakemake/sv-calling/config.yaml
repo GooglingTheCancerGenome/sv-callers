@@ -22,14 +22,14 @@ sv_callers:
     enabled: true
     threads: 24
     memory: 10240 # MB
-    tmp: 0 # min. temporary disk space in MB
+    tmpspace: 0 # min. temporary disk space in MB
     outdir: manta_out # relative to SAMPLE_DIR (see samples.csv)
 
   delly:
     enabled: true
     threads: 2
     memory: 10240 # MB
-    tmp: 0 # MB
+    tmpspace: 0 # MB
     outdir: delly_out
     sv_types:
         - BND
@@ -42,12 +42,12 @@ sv_callers:
     enabled: true
     threads: 1
     memory: 16384 # MB
-    tmp: 1024 # MB
+    tmpspace: 1024 # MB
     outdir: lumpy_out
 
   gridss:
     enabled: true
     threads: 24
     memory: 49152 # MB
-    tmp: 10240 # MB
+    tmpspace: 10240 # MB
     outdir: gridss_out

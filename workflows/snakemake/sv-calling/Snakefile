@@ -59,8 +59,8 @@ def get_memory(caller):
 def get_tmpspace(caller):
     """Get the amount of temporary disk space (MB) requested for a caller.
     """
-    if "tmp" in config["sv_callers"][caller]:
-        return config["sv_callers"][caller]["tmp"]
+    if "tmpspace" in config["sv_callers"][caller]:
+        return config["sv_callers"][caller]["tmpspace"]
     else:
         return 0 # default
 

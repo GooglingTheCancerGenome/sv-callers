@@ -20,7 +20,7 @@ rule lumpy:
         tmp_mb = get_tmpspace("lumpy")
     shell:
         """
-        # TMPDIR used only if 'tmp' is >0 MB in config
+        # use TMPDIR if 'tmpspace' set to >0MB otherwise use 'outdir'
         TMP=$([ "{resources.tmp_mb}" = "0" ] && echo "{params}" ||
             echo "${{TMPDIR}}")
         if [ "{config[echo_run]}" = "1" ]; then
