@@ -21,17 +21,19 @@ rule lumpy:
     shell:
         """
         # use TMPDIR if 'tmpspace' set to >0MB otherwise use 'outdir'
-        TMP=$([ "{resources.tmp_mb}" = "0" ] && echo "{params}" ||
+        TMP=$([ "{resources.tmp_mb}" = "0" ] &&
+            echo "{params}" ||
             echo "${{TMPDIR}}")
         if [ "{config[echo_run]}" = "1" ]; then
-            echo "{input}" "${{TMP}}"> "{output}"
+            echo "{input}" "${{TMP}}" > "{output}"
         else
             lumpyexpress \
                 -B "{input.tumor_bam}","{input.normal_bam}" \
                 -o "{params}/lumpy.vcf" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
-                -T "${{TMP}}" 2>&1
+                -k `# keep tmp files` \
+                -T "${{TMP}}/lumpy.${{RANDOM}}" 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """
