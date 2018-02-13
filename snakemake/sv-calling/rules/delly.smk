@@ -29,9 +29,14 @@ rule delly:
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" > "{output}"
         else
+            # use OpenMP for threaded jobs
+            export OMP_NUM_THREADS={threads}
+            #export OMP_PROC_BIND=true
+            #export OMP_PLACES=threads
+
+            # somatic SV calling
             PREFIX="{params}/delly-{wildcards.sv_type}"
             TSV="{params}/sample_pairs.tsv"
-            # somatic SV calling
             delly call \
                 -t "{wildcards.sv_type}" \
                 -g "{input.fasta}" \
