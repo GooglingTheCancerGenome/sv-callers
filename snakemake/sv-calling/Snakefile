@@ -7,8 +7,8 @@ from csv import DictReader
 shell.executable("/bin/bash")
 configfile: "config.yaml"
 
-CALLERS = [ c for c in config["sv_callers"].keys() \
-            if config["sv_callers"][c]["enabled"] is True ]
+CALLERS = [c for c in config["sv_callers"].keys()
+           if config["sv_callers"][c]["enabled"] is True]
 
 
 def get_filext(fmt):
@@ -44,7 +44,7 @@ def get_nthreads(caller):
     if "threads" in config["sv_callers"][caller]:
         return config["sv_callers"][caller]["threads"]
     else:
-        return 1 # default
+        return 1  # default: one thread
 
 
 def get_memory(caller):
@@ -53,7 +53,7 @@ def get_memory(caller):
     if "memory" in config["sv_callers"][caller]:
         return config["sv_callers"][caller]["memory"]
     else:
-        return 1024 # default
+        return 1024  # default: 1GB
 
 
 def get_tmpspace(caller):
@@ -62,7 +62,7 @@ def get_tmpspace(caller):
     if "tmpspace" in config["sv_callers"][caller]:
         return config["sv_callers"][caller]["tmpspace"]
     else:
-        return 0 # default
+        return 0  # default: no temp space
 
 
 def collect_logs(callers):
@@ -73,16 +73,14 @@ def collect_logs(callers):
         reader = DictReader(fin)
         logs = []
         for r in reader:
-            samp_dir = r["SAMPLE_DIR"]
-            tumor = r["TUMOR"]
-            normal = r["NORMAL"]
             for c in callers:
-                log = os.path.join(samp_dir, get_outdir(c), tumor + "-" + normal)
-                if "delly" in c:  # generate *.log per delly SV type
+                path = os.path.join(r["SAMPLE_DIR"], get_outdir(c),
+                                    r["TUMOR"] + "-" + r["NORMAL"])
+                if "delly" in c:  # *.log per delly SV type
                     for sv in sv_types:
-                        logs.append(log + "_" + sv + ".log")
-                else:  # generate *.log per caller
-                    logs.append(log + ".log")
+                        logs.append(os.path.join(path, c + "-" + sv + ".log"))
+                else:  # *.log per caller
+                    logs.append(os.path.join(path, c + ".log"))
         return logs
 
 

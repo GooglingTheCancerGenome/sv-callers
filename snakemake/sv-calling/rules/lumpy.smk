@@ -6,11 +6,9 @@ rule lumpy:
         tumor_bai = "{sampledir}/{tumor}" + get_filext("bam_idx"),
         normal_bam = "{sampledir}/{normal}" + get_filext("bam"),
         normal_bai = "{sampledir}/{normal}" + get_filext("bam_idx")
-    params:
-        outdir = os.path.join("{sampledir}", get_outdir("lumpy"))
     output:
         log = os.path.join("{sampledir}", get_outdir("lumpy"),
-                           "{tumor}-{normal}.log")
+                           "{tumor}-{normal}", "lumpy.log")
     conda:
         "../environment.yaml"
     threads:
@@ -20,16 +18,17 @@ rule lumpy:
         tmp_mb = get_tmpspace("lumpy")
     shell:
         """
-        # use TMPDIR if 'tmpspace' set to >0MB otherwise use 'outdir'
+        # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
+        OUTDIR="$(dirname "{output}")"
         TMP=$([ "{resources.tmp_mb}" = "0" ] &&
-            echo "{params}" ||
+            echo "${{OUTDIR}}" ||
             echo "${{TMPDIR}}")
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
         else
             lumpyexpress \
                 -B "{input.tumor_bam}","{input.normal_bam}" \
-                -o "{params}/lumpy.vcf" \
+                -o "${{OUTDIR}}/lumpy.vcf" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \

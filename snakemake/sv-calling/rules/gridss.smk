@@ -6,11 +6,9 @@ rule gridss:
         tumor_bai = "{sampledir}/{tumor}" + get_filext("bam_idx"),
         normal_bam = "{sampledir}/{normal}" + get_filext("bam"),
         normal_bai = "{sampledir}/{normal}" + get_filext("bam_idx")
-    params:
-        outdir = os.path.join("{sampledir}", get_outdir("gridss"))
     output:
         log = os.path.join("{sampledir}", get_outdir("gridss"),
-                           "{tumor}-{normal}.log")
+                           "{tumor}-{normal}", "gridss.log")
     conda:
         "../environment.yaml"
     threads:
@@ -20,8 +18,10 @@ rule gridss:
         tmp_mb = get_tmpspace("gridss")
     shell:
         """
-        # use TMPDIR if 'tmpspace' set to >0MB otherwise use 'outdir'
-        TMP=$([ "{resources.tmp_mb}" = "0" ] && echo "{params}" ||
+        # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
+        OUTDIR="$(dirname "{output}")"
+        TMP=$([ "{resources.tmp_mb}" = "0" ] &&
+            echo "${{OUTDIR}}" ||
             echo "${{TMPDIR}}")
         if [ "{config[echo_run]}" = "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
@@ -33,9 +33,9 @@ rule gridss:
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
-                OUTPUT="{params}/gridss.vcf" \
-                ASSEMBLY="{params}/gridss_assembly.bam" \
-                WORKING_DIR="{params}" \
+                OUTPUT="${{OUTDIR}}/gridss.vcf" \
+                ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
+                WORKING_DIR="${{OUTDIR}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" 2>&1
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi

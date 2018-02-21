@@ -6,11 +6,9 @@ rule delly:
         tumor_bai = "{sampledir}/{tumor}" + get_filext("bam_idx"),
         normal_bam = "{sampledir}/{normal}" + get_filext("bam"),
         normal_bai = "{sampledir}/{normal}" + get_filext("bam_idx")
-    params:
-        outdir = os.path.join("{sampledir}", get_outdir("delly"))
     output:
         log = os.path.join("{sampledir}", get_outdir("delly"),
-                           "{tumor}-{normal}_{sv_type}.log")
+                           "{tumor}-{normal}", "delly-{sv_type}.log")
     conda:
         "../environment.yaml"
     threads:
@@ -20,6 +18,8 @@ rule delly:
         tmp_mb = get_tmpspace("delly")
     shell:
         """
+        OUTDIR="$(dirname "{output}")"
+
         function get_samp_id() {{
             echo "$(samtools view -H ${{1}} | \
                    perl -lne 'print ${{1}} if /\sLB:(\S+)/' | \
@@ -35,8 +35,8 @@ rule delly:
             #export OMP_PLACES=threads
 
             # somatic SV calling
-            PREFIX="{params}/delly-{wildcards.sv_type}"
-            TSV="{params}/sample_pairs.tsv"
+            PREFIX="${{OUTDIR}}/delly-{wildcards.sv_type}"
+            TSV="${{OUTDIR}}/sample_pairs.tsv"
             delly call \
                 -t "{wildcards.sv_type}" \
                 -g "{input.fasta}" \
@@ -46,9 +46,9 @@ rule delly:
                 "{input.tumor_bam}" "{input.normal_bam}" &&
             # somatic pre-filtering
             #   create sample list
-            ID1=$(get_samp_id "{input.tumor_bam}")
-            ID2=$(get_samp_id "{input.normal_bam}")
-            printf "${{ID1}}\ttumor\n${{ID2}}\tcontrol\n" > ${{TSV}} &&
+            TID=$(get_samp_id "{input.tumor_bam}")
+            CID=$(get_samp_id "{input.normal_bam}")
+            printf "${{TID}}\ttumor\n${{CID}}\tcontrol\n" > ${{TSV}} &&
             delly filter \
                 -f somatic \
                 -s "${{TSV}}" \
