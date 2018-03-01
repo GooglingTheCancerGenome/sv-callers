@@ -1,4 +1,4 @@
-echo_run: 0 # run SV callers [0] or vanilla jobs [1]
+echo_run: 0  # run SV callers [0] or vanilla jobs [1]
 
 # file path to the reference genome in FASTA (excl. file suffix)
 genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
@@ -6,25 +6,24 @@ genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
 file_exts:
   fasta: .fasta
   fasta_idx:
-    - .fasta.fai # faidx index file
-    - .fasta.bwt # bwa v0.6.x
-    - .fasta.amb # index files
-    - .fasta.ann #
-    - .fasta.pac #
-    - .fasta.sa  #
+    - .fasta.fai  # faidx index file
+    - .fasta.bwt  # bwa v0.6.x
+    - .fasta.amb  # index files
+    - .fasta.ann  #
+    - .fasta.pac  #
+    - .fasta.sa   #
   bam: .bam
   bam_idx: .bai
 
-samples: samples.csv # list of tumor-normal sample pairs (*.bam files)
+samples: samples.csv  # TUMOR/NORMAL sample pairs (*.bam files incl. PATH)
 
 sv_callers:
   manta:
     enabled: true
     threads: 24
-    memory: 10240 # MB
-    tmpspace: 0 # min. temporary disk space in MB
-    outdir: manta_out # relative to SAMPLE_DIR (see samples.csv)
-
+    memory: 10240  # MB
+    tmpspace: 0  # min. temporary disk space in MB
+    outdir: manta_out  # abspath or relative to current working dir
   delly:
     enabled: true
     threads: 2
@@ -42,12 +41,12 @@ sv_callers:
     enabled: true
     threads: 1
     memory: 16384
-    tmpspace: 0 # 1024
+    tmpspace: 0  # 1024
     outdir: lumpy_out
 
   gridss:
     enabled: true
     threads: 24
     memory: 49152
-    tmpspace: 0 # 10240
+    tmpspace: 0  # 10240
     outdir: gridss_out

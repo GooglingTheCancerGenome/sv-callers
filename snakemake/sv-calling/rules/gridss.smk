@@ -2,13 +2,13 @@ rule gridss:
     input:
         fasta = get_fasta(),
         fai = get_faidx(),  # bwa index files also required
-        tumor_bam = "{sampledir}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{sampledir}/{tumor}" + get_filext("bam_idx"),
-        normal_bam = "{sampledir}/{normal}" + get_filext("bam"),
-        normal_bai = "{sampledir}/{normal}" + get_filext("bam_idx")
+        tumor_bam = "{path}/{tumor}" + get_filext("bam"),
+        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
+        normal_bam = "{path}/{normal}" + get_filext("bam"),
+        normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        log = os.path.join("{sampledir}", get_outdir("gridss"),
-                           "{tumor}-{normal}", "gridss.log")
+        log = os.path.join("{path}", "{tumor}--{normal}", get_outdir("gridss"),
+                           "{rule}.log")
     conda:
         "../environment.yaml"
     threads:

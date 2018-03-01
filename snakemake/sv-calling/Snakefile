@@ -33,7 +33,7 @@ def get_faidx():
 
 
 def get_outdir(caller):
-    """Get the caller's output directory relative to SAMPLE_DIR.
+    """Get the caller's output directory.
     """
     return config["sv_callers"][caller]["outdir"]
 
@@ -74,8 +74,8 @@ def collect_logs(callers):
         logs = []
         for r in reader:
             for c in callers:
-                path = os.path.join(r["SAMPLE_DIR"], get_outdir(c),
-                                    r["TUMOR"] + "-" + r["NORMAL"])
+                path = os.path.join(r["PATH"], r["TUMOR"] + "--" + r["NORMAL"],
+                                    get_outdir(c))
                 if "delly" in c:  # *.log per delly SV type
                     for sv in sv_types:
                         logs.append(os.path.join(path, c + "-" + sv + ".log"))

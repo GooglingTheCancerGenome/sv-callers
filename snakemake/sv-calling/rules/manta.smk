@@ -2,13 +2,13 @@ rule manta:
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
-        tumor_bam = "{sampledir}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{sampledir}/{tumor}" + get_filext("bam_idx"),
-        normal_bam = "{sampledir}/{normal}" + get_filext("bam"),
-        normal_bai = "{sampledir}/{normal}" + get_filext("bam_idx")
+        tumor_bam = "{path}/{tumor}" + get_filext("bam"),
+        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
+        normal_bam = "{path}/{normal}" + get_filext("bam"),
+        normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        log = os.path.join("{sampledir}", get_outdir("manta"),
-                           "{tumor}-{normal}", "manta.log")
+        log = os.path.join("{path}", "{tumor}--{normal}", get_outdir("manta"),
+                           "{rule}.log")
     conda:
         "../environment.yaml"
     threads:
