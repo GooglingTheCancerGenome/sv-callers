@@ -13,7 +13,7 @@ file_exts:
     - .fasta.pac  #
     - .fasta.sa   #
   bam: .bam
-  bam_idx: .bai
+  bam_idx: .bam.bai
 
 samples: samples.csv  # TUMOR/NORMAL sample pairs (*.bam files incl. PATH)
 
@@ -21,13 +21,14 @@ sv_callers:
   manta:
     enabled: true
     threads: 24
-    memory: 10240  # MB
+    memory: 16384  # MB
     tmpspace: 0  # min. temporary disk space in MB
     outdir: manta_out  # abspath or relative to current working dir
+
   delly:
     enabled: true
     threads: 2
-    memory: 10240
+    memory: 4096
     tmpspace: 0
     outdir: delly_out
     sv_types:
@@ -40,7 +41,7 @@ sv_callers:
   lumpy:
     enabled: true
     threads: 1
-    memory: 16384
+    memory: 32768
     tmpspace: 0  # 1024
     outdir: lumpy_out
 
