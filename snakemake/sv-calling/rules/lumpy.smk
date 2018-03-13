@@ -20,10 +20,11 @@ rule lumpy:
         """
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
-        TMP=$([ "{resources.tmp_mb}" = "0" ] &&
-            echo "${{OUTDIR}}" ||
-            echo "${{TMPDIR}}")
-        if [ "{config[echo_run]}" = "1" ]; then
+        TMP=$([ "{resources.tmp_mb}" -eq "0" ] &&
+            echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
+
+        # run dummy or real job
+        if [ "{config[echo_run]}" -eq "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
         else
             lumpyexpress \
