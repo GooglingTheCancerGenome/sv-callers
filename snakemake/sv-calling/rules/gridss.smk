@@ -21,14 +21,21 @@ rule gridss:
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
         TMP=$([ "{resources.tmp_mb}" = "0" ] &&
-            echo "${{OUTDIR}}" ||
-            echo "${{TMPDIR}}")
-        if [ "{config[echo_run]}" = "1" ]; then
+            echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
+
+        # set JVM max. heap size dynamically (in GB)
+        # N.B. take into account 'Compressed Oops'!!!
+        MAX_HEAP=$(printf "%.f" $(bc <<< "scale=2;.8*{resources.mem_mb}/1024"))
+        MAX_HEAP=$([[ "${{MAX_HEAP}}" -gt "31" &&
+            "${{MAX_HEAP}}" -lt "49" ]] && echo "49g" || echo "${{MAX_HEAP}}g")
+
+        # run dummy or real job
+        if [ "{config[echo_run]}" -eq "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
         else
-            # clean-up prior to SV calling
-            rm -f "{input.fasta}.dict" &&
-            gridss -Xmx31g gridss.CallVariants \
+            # clean-up outdir prior to SV calling
+            rm -fr "${{TMP}}/*gridss*" "{input.fasta}.dict" &&
+            gridss -Xmx${{MAX_HEAP}} gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.normal_bam}" \
