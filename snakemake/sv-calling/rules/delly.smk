@@ -18,6 +18,7 @@ rule delly:
         tmp_mb = get_tmpspace("delly")
     shell:
         """
+        set -x
         OUTDIR="$(dirname "{output}")"
 
         # fetch sample ID from a BAM file

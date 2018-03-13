@@ -18,6 +18,7 @@ rule manta:
         tmp_mb = get_tmpspace("manta")
     shell:
         """
+        set -x
         OUTDIR="$(dirname "{output}")"
 
         # run dummy or real job

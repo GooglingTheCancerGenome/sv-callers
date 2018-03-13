@@ -18,6 +18,8 @@ rule lumpy:
         tmp_mb = get_tmpspace("lumpy")
     shell:
         """
+        set -x
+
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
         TMP=$([ "{resources.tmp_mb}" -eq "0" ] &&
