@@ -19,7 +19,9 @@ rule manta:
     shell:
         """
         OUTDIR="$(dirname "{output}")"
-        if [ "{config[echo_run]}" = "1" ]; then
+
+        # run dummy or real job
+        if [ "{config[echo_run]}" -eq "1" ]; then
             echo "{input}" > "{output}"
         else
             configManta.py \
