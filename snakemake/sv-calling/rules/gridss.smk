@@ -43,7 +43,7 @@ rule gridss:
                 OUTPUT="${{OUTDIR}}/gridss.vcf" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{OUTDIR}}" \
-                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" 2>&1
+                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

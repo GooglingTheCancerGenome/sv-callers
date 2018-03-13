@@ -60,7 +60,7 @@ rule delly:
             bcftools view \
                 -O v `# VCF format` \
                 -o "${{PREFIX}}.vcf" \
-                "${{PREFIX}}.pre.bcf" 2>&1
+                "${{PREFIX}}.pre.bcf"
             # TODO: merge SV VCF files
             date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi

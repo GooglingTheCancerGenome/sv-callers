@@ -34,7 +34,7 @@ rule manta:
                 --quiet \
                 -m local \
                 -j {threads} &&
-            zcat results/variants/somaticSV.vcf.gz > manta.vcf 2>&1
+            zcat results/variants/somaticSV.vcf.gz > manta.vcf
             date "+%Y-%m-%d %H:%M:%S" > "$(basename "{output}")"
         fi
         """
