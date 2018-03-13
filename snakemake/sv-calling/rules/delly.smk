@@ -20,13 +20,15 @@ rule delly:
         """
         OUTDIR="$(dirname "{output}")"
 
+        # fetch sample ID from a BAM file
         function get_samp_id() {{
             echo "$(samtools view -H ${{1}} | \
                    perl -lne 'print ${{1}} if /\sLB:(\S+)/' | \
                    head -n 1)"
         }}
 
-        if [ "{config[echo_run]}" = "1" ]; then
+        # run dummy or real job
+        if [ "{config[echo_run]}" -eq "1" ]; then
             echo "{input}" > "{output}"
         else
             # use OpenMP for threaded jobs
