@@ -48,6 +48,6 @@ sv_callers:
   gridss:
     enabled: true
     threads: 24
-    memory: 49152
+    memory: 63488
     tmpspace: 0  # 10240
     outdir: gridss_out
