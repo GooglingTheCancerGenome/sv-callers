@@ -1,4 +1,9 @@
 echo_run: 0  # run SV callers [0] or vanilla jobs [1]
+enable_callers:
+    - manta
+    - delly
+    - lumpy
+    - gridss
 
 # file path to the reference genome in FASTA (excl. file suffix)
 genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
@@ -17,16 +22,14 @@ file_exts:
 
 samples: samples.csv  # TUMOR/NORMAL sample pairs (*.bam files incl. PATH)
 
-sv_callers:
+callers:
   manta:
-    enabled: true
     threads: 24
     memory: 16384  # MB
     tmpspace: 0  # min. temporary disk space in MB
     outdir: manta_out  # abspath or relative to current working dir
 
   delly:
-    enabled: true
     threads: 2
     memory: 4096
     tmpspace: 0
@@ -39,14 +42,12 @@ sv_callers:
         - INV
 
   lumpy:
-    enabled: true
     threads: 1
     memory: 32768
     tmpspace: 0  # 1024
     outdir: lumpy_out
 
   gridss:
-    enabled: true
     threads: 24
     memory: 63488
     tmpspace: 0  # 10240

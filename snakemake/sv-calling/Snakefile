@@ -2,13 +2,23 @@
 # This workflow executes SV callers on tumor-normal sample pairs.
 #
 
+import warnings
 from csv import DictReader
 
 shell.executable("/bin/bash")
 configfile: "config.yaml"
 
-CALLERS = [c for c in config["sv_callers"].keys()
-           if config["sv_callers"][c]["enabled"] is True]
+
+def get_callers():
+    """Get a list of enabled SV callers.
+    """
+    callers = []
+    for c in config["enable_callers"]:
+        if c in config["callers"]:
+            callers.append(c)
+        else:
+            warnings.warn("SV caller '{}' is not supported!".format(c))
+    return callers
 
 
 def get_filext(fmt):
@@ -35,45 +45,45 @@ def get_faidx():
 def get_outdir(caller):
     """Get the caller's output directory.
     """
-    return config["sv_callers"][caller]["outdir"]
+    return config["callers"][caller]["outdir"]
 
 
 def get_nthreads(caller):
     """Get the number of threads used by a caller.
     """
-    if "threads" in config["sv_callers"][caller]:
-        return config["sv_callers"][caller]["threads"]
+    if "threads" in config["callers"][caller]:
+        return config["callers"][caller]["threads"]
     else:
         return 1  # default: one thread
 
 
 def get_memory(caller):
-    """Get the amount of memory (MB) allocated for a caller.
+    """Get the amount of allocated memory (MB) by a caller.
     """
-    if "memory" in config["sv_callers"][caller]:
-        return config["sv_callers"][caller]["memory"]
+    if "memory" in config["callers"][caller]:
+        return config["callers"][caller]["memory"]
     else:
         return 1024  # default: 1GB
 
 
 def get_tmpspace(caller):
-    """Get the amount of temporary disk space (MB) requested for a caller.
+    """Get the amount of temporary disk space (MB) requested by a caller.
     """
-    if "tmpspace" in config["sv_callers"][caller]:
-        return config["sv_callers"][caller]["tmpspace"]
+    if "tmpspace" in config["callers"][caller]:
+        return config["callers"][caller]["tmpspace"]
     else:
         return 0  # default: no temp space
 
 
-def collect_logs(callers):
+def collect_logs():
     """Generate (dummy) logs for all sample pairs to drive the workflow.
     """
-    sv_types = config["sv_callers"]["delly"]["sv_types"]
+    sv_types = config["callers"]["delly"]["sv_types"]
     with open(config["samples"], 'r') as fin:
         reader = DictReader(fin)
         logs = []
         for r in reader:
-            for c in callers:
+            for c in get_callers():
                 path = os.path.join(r["PATH"], r["TUMOR"] + "--" + r["NORMAL"],
                                     get_outdir(c))
                 if "delly" in c:  # *.log per delly SV type
@@ -88,7 +98,7 @@ localrules: all
 
 rule all:
     input:
-        collect_logs(CALLERS)
+        collect_logs()
 
 
 include: "rules/manta.smk"
