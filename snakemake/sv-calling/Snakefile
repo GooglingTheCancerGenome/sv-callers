@@ -24,7 +24,7 @@ rule all:
         collect_logs()
 
 # include rules per SV caller
-include: "rules/manta.smk"
+#include: "rules/manta.smk"
 include: "rules/delly.smk"
-include: "rules/lumpy.smk"
-include: "rules/gridss.smk"
+#include: "rules/lumpy.smk"
+#include: "rules/gridss.smk"

@@ -7,8 +7,10 @@ rule delly:
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        log = os.path.join("{path}", "{tumor}--{normal}", get_outdir("delly"),
-                           "{rule}-{sv_type}.log")
+        vcf = [os.path.join("{path}", "{tumor}--{normal}", get_outdir("delly"),
+               "{rule}-" + sv + ".vcf")
+               sv for sv in config["sv_callers"]["delly"]["sv_types"]]
+
     conda:
         "../environment.yaml"
     threads:
@@ -63,6 +65,22 @@ rule delly:
                 -o "${{PREFIX}}.vcf" \
                 "${{PREFIX}}.pre.bcf"
             # TODO: merge SV VCF files
-            date "+%Y-%m-%d %H:%M:%S" > "{output}"
+            #date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
+        """
+
+rule delly_merge:
+    input:
+        [os.path.join("{path}", "{tumor}--{normal}", "{outdir}",
+         "delly-" + sv + ".vcf")
+         sv for sv in config["sv_callers"]["delly"]["sv_types"]]
+    output:
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "delly.vcf")
+    shell:
+        """
+        set -x
+        bcftools merge \
+            -O v \
+            -o "{output}" \
+            "{input}"
         """

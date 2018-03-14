@@ -82,9 +82,9 @@ def collect_logs():
             for c in get_callers():
                 path = os.path.join(r["PATH"], r["TUMOR"] + "--" + r["NORMAL"],
                                     get_outdir(c))
-                if "delly" in c:  # *.log per delly SV type
-                    for sv in sv_types:
-                        logs.append(os.path.join(path, c + "-" + sv + ".log"))
-                else:  # *.log per caller
-                    logs.append(os.path.join(path, c + ".log"))
+                #if "delly" in c:  # *.log per delly SV type
+                #    for sv in sv_types:
+                #        logs.append(os.path.join(path, c + "-" + sv + ".log"))
+                #else:  # *.log per caller
+                logs.append(os.path.join(path, c + ".vcf"))
         return logs
