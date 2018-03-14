@@ -26,8 +26,9 @@ rule gridss:
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
 
         # set JVM max. heap size dynamically (in GB)
-        # N.B. take into account 'Compressed Oops'!!!
-        MAX_HEAP=$(printf "%.f" $(bc <<< "scale=2;.8*{resources.mem_mb}/1024"))
+        # N.B. don't allocate values between 32-48G (see Compressed Oops)!!!
+        MAX_HEAP=$(LC_ALL=C printf "%.f" $(bc <<< "scale=2; \
+            {resources.mem_mb} / 1024 * .8"))
         MAX_HEAP=$([[ "${{MAX_HEAP}}" -gt "31" &&
             "${{MAX_HEAP}}" -lt "49" ]] && echo "49g" || echo "${{MAX_HEAP}}g")
 
