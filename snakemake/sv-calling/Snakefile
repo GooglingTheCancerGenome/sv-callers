@@ -2,7 +2,6 @@
 # This workflow executes SV callers on tumor-normal sample pairs.
 #
 
-import warnings
 from csv import DictReader
 
 shell.executable("/bin/bash")
@@ -10,14 +9,13 @@ configfile: "config.yaml"
 
 
 def get_callers():
-    """Get a list of enabled SV callers.
+    """Get a list of SV callers enabled by a user.
     """
     callers = []
     for c in config["enable_callers"]:
-        if c in config["callers"]:
-            callers.append(c)
-        else:
-            warnings.warn("SV caller '{}' is not supported!".format(c))
+        assert c in config["callers"], \
+            "SV caller '{}' is not supported!".format(c)
+        callers.append(c)
     return callers
 
 
