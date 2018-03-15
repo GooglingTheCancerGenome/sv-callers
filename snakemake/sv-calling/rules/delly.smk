@@ -71,6 +71,12 @@ rule delly_merge:
          sv + ".vcf.gz" for sv in config["callers"]["delly"]["sv_types"]]
     output:
         "{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly.vcf"
+    conda:
+        "../environment.yaml"
+    threads: 1
+    resources:
+        mem_mb = 1024,
+        tmp_mb = 0
     shell:
         """
         set -x
