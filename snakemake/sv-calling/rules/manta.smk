@@ -34,6 +34,6 @@ rule manta:
                 --quiet \
                 -m local \
                 -j {threads} &&
-            zcat results/variants/somaticSV.vcf.gz > {output}
+            zcat results/variants/somaticSV.vcf.gz > "$(basename "${output}")"
         fi
         """

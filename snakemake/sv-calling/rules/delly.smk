@@ -8,7 +8,7 @@ rule delly:
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
         "{path}/{tumor}--{normal}/" + get_outdir("delly") +
-        "/{rule}-{sv_type}.vcf"
+        "/{rule}-{sv_type}.vcf.gz"
     conda:
         "../environment.yaml"
     threads:
@@ -57,10 +57,10 @@ rule delly:
                 -s "${{TSV}}" \
                 -o "${{PREFIX}}.pre.bcf" \
                 "${{PREFIX}}.bcf" &&
-            # BCF to VCF format conversion
-            bcftools view \
-                -O v `# VCF format` \
-                -o "${{PREFIX}}.vcf" \
+            # convert BCF to compressed VCF file
+            bcftools convert \
+                -O z `# compressed VCF format` \
+                -o "${{PREFIX}}.vcf.gz" \
                 "${{PREFIX}}.pre.bcf"
         fi
         """
@@ -68,7 +68,7 @@ rule delly:
 rule delly_merge:
     input:
         ["{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly-" +
-         sv + ".vcf" for sv in config["callers"]["delly"]["sv_types"]]
+         sv + ".vcf.gz" for sv in config["callers"]["delly"]["sv_types"]]
     output:
         "{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly.vcf"
     shell:
@@ -80,8 +80,8 @@ rule delly_merge:
             cat {input} > "{output}"
         else
             bcftools merge \
-               -O v \
+               -O z \
                -o "{output}" \
-               "{input}"
+               {input}
        fi
        """
