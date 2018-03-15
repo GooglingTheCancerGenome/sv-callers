@@ -34,6 +34,9 @@ rule manta:
                 --quiet \
                 -m local \
                 -j {threads} &&
-            zcat results/variants/somaticSV.vcf.gz > "$(basename "${output}")"
+            bcftools convert \
+                -O v `# uncompressed VCF format` \
+                -o "$(basename "{output}")" \
+                results/variants/somaticSV.vcf.gz
         fi
         """
