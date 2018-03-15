@@ -8,7 +8,7 @@ rule delly:
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
         "{path}/{tumor}--{normal}/" + get_outdir("delly") +
-        "/{rule}-{sv_type}.vcf.gz"
+        "/{rule}-{sv_type}.filtered.bcf"
     conda:
         "../environment.yaml"
     threads:
@@ -38,7 +38,7 @@ rule delly:
             #export OMP_PLACES=threads
 
             # somatic SV calling
-            PREFIX="${{OUTDIR}}/delly-{wildcards.sv_type}"
+            PREFIX="${{OUTDIR}}/$(basename "{output}" .filtered.bcf)"
             TSV="${{OUTDIR}}/sample_pairs.tsv"
             delly call \
                 -t "{wildcards.sv_type}" \
@@ -55,20 +55,15 @@ rule delly:
             delly filter \
                 -f somatic \
                 -s "${{TSV}}" \
-                -o "${{PREFIX}}.pre.bcf" \
-                "${{PREFIX}}.bcf" &&
-            # convert BCF to compressed VCF file
-            bcftools convert \
-                -O z `# compressed VCF format` \
-                -o "${{PREFIX}}.vcf.gz" \
-                "${{PREFIX}}.pre.bcf"
+                -o "{output}" \
+                "${{PREFIX}}.bcf"
         fi
         """
 
 rule delly_merge:
     input:
         ["{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly-" +
-         sv + ".vcf.gz" for sv in config["callers"]["delly"]["sv_types"]]
+         sv + ".filtered.bcf" for sv in config["callers"]["delly"]["sv_types"]]
     output:
         "{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly.vcf"
     conda:
@@ -85,8 +80,10 @@ rule delly_merge:
         if [ "{config[echo_run]}" -eq "1" ]; then
             cat {input} > "{output}"
         else
-            bcftools merge \
-               -O z \
+            # concatenate rather than merge BCF files
+            bcftools concat \
+               -a `# allow overlaps` \
+               -O v `# uncompressed VCF format` \
                -o "{output}" \
                {input}
        fi
