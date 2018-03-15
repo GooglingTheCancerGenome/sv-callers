@@ -7,8 +7,7 @@ rule gridss:
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        log = os.path.join("{path}", "{tumor}--{normal}", get_outdir("gridss"),
-                           "{rule}.log")
+        "{path}/{tumor}--{normal}/" + get_outdir("gridss") + "/{rule}.vcf"
     conda:
         "../environment.yaml"
     threads:
@@ -43,10 +42,9 @@ rule gridss:
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
-                OUTPUT="${{OUTDIR}}/gridss.vcf" \
+                OUTPUT="{output}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{OUTDIR}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
-            date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

@@ -7,8 +7,7 @@ rule lumpy:
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        log = os.path.join("{path}", "{tumor}--{normal}", get_outdir("lumpy"),
-                           "{rule}.log")
+        "{path}/{tumor}--{normal}/" + get_outdir("lumpy") + "/{rule}.vcf"
     conda:
         "../environment.yaml"
     threads:
@@ -31,11 +30,10 @@ rule lumpy:
         else
             lumpyexpress \
                 -B "{input.tumor_bam}","{input.normal_bam}" \
-                -o "${{OUTDIR}}/lumpy.vcf" \
+                -o "{output}" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \
                 -T "${{TMP}}/lumpy.${{RANDOM}}"
-            date "+%Y-%m-%d %H:%M:%S" > "{output}"
         fi
         """

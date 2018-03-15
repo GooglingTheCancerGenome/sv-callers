@@ -71,20 +71,15 @@ def get_tmpspace(caller):
         return 0  # default: no temp space
 
 
-def collect_logs():
-    """Generate (dummy) logs for all sample pairs to drive the workflow.
+def make_output():
+    """Collect output filenames (.vcf) to drive the workflow.
     """
-    sv_types = config["callers"]["delly"]["sv_types"]
     with open(config["samples"], 'r') as fin:
         reader = DictReader(fin)
-        logs = []
+        outfiles = []
         for r in reader:
             for c in get_callers():
                 path = os.path.join(r["PATH"], r["TUMOR"] + "--" + r["NORMAL"],
                                     get_outdir(c))
-                #if "delly" in c:  # *.log per delly SV type
-                #    for sv in sv_types:
-                #        logs.append(os.path.join(path, c + "-" + sv + ".log"))
-                #else:  # *.log per caller
-                logs.append(os.path.join(path, c + ".vcf"))
-        return logs
+                outfiles.append(os.path.join(path, c + ".vcf"))
+        return outfiles

@@ -7,8 +7,7 @@ rule manta:
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        log = os.path.join("{path}", "{tumor}--{normal}", get_outdir("manta"),
-                           "{rule}.log")
+        "{path}/{tumor}--{normal}/" + get_outdir("manta") + "/{rule}.vcf"
     conda:
         "../environment.yaml"
     threads:
@@ -35,7 +34,6 @@ rule manta:
                 --quiet \
                 -m local \
                 -j {threads} &&
-            zcat results/variants/somaticSV.vcf.gz > manta.vcf
-            date "+%Y-%m-%d %H:%M:%S" > "$(basename "{output}")"
+            zcat results/variants/somaticSV.vcf.gz > {output}
         fi
         """
