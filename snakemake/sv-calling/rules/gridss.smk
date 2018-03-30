@@ -36,7 +36,7 @@ rule gridss:
             echo "{input}" "${{TMP}}" > "{output}"
         else
             # clean-up outdir prior to SV calling
-            rm -fr ${{TMP}}/*gridss* {input.fasta}.dict &&
+            rm -fr ${{OUTDIR}}/*gridss* {input.fasta}.dict &&
             gridss -Xmx${{MAX_HEAP}} gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
