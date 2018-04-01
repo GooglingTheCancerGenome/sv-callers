@@ -44,7 +44,7 @@ rule gridss:
                 INPUT="{input.tumor_bam}" \
                 OUTPUT="{output}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
-                WORKING_DIR="${{OUTDIR}}" \
+                WORKING_DIR="${{TMP}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
         fi
         """
