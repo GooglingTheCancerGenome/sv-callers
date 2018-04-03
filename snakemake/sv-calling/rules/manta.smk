@@ -7,7 +7,8 @@ rule manta:
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        "{path}/{tumor}--{normal}/" + get_outdir("manta") + "/{rule}.vcf"
+        os.path.join("{path}/{tumor}--{normal}", get_outdir("manta"),
+                     "{rule}" + get_filext("vcf"))
     conda:
         "../environment.yaml"
     threads:

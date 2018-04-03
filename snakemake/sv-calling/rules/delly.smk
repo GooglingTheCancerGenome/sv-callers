@@ -65,7 +65,8 @@ rule delly_merge:
         ["{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly-" +
          sv + ".filtered.bcf" for sv in config["callers"]["delly"]["sv_types"]]
     output:
-        "{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly.vcf"
+        os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
+                     "delly" + get_filext("vcf"))
     conda:
         "../environment.yaml"
     threads: 1

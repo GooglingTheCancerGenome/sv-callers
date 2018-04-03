@@ -19,7 +19,7 @@ def get_callers():
 
 def get_filext(fmt):
     """Get file extension(s) given file type/format:
-        ['fasta', 'fasta_idx', 'bam', 'bam_idx']
+        ['fasta', 'fasta_idx', 'bam', 'bam_idx', 'vcf']
     """
     assert fmt in config["file_exts"].keys(), \
         "Unknown input file format '{}'.".format(fmt.lower())
@@ -81,5 +81,5 @@ def make_output():
             for c in get_callers():
                 path = os.path.join(r["PATH"], r["TUMOR"] + "--" + r["NORMAL"],
                                     get_outdir(c))
-                outfiles.append(os.path.join(path, c + ".vcf"))
+                outfiles.append(os.path.join(path, c + get_filext("vcf")))
         return outfiles

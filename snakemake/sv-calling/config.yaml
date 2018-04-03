@@ -19,6 +19,7 @@ file_exts:
     - .fasta.sa   #
   bam: .bam
   bam_idx: .bam.bai
+  vcf: .vcf
 
 samples: samples.csv  # TUMOR/NORMAL sample pairs (*.bam files incl. PATH)
 

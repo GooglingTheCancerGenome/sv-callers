@@ -7,7 +7,8 @@ rule lumpy:
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     output:
-        "{path}/{tumor}--{normal}/" + get_outdir("lumpy") + "/{rule}.vcf"
+        os.path.join("{path}/{tumor}--{normal}", get_outdir("lumpy"),
+                     "{rule}" + get_filext("vcf"))
     conda:
         "../environment.yaml"
     threads:
