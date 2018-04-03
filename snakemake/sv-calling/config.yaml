@@ -32,7 +32,7 @@ callers:
 
   delly:
     threads: 2
-    memory: 4096
+    memory: 8192
     tmpspace: 0
     outdir: delly_out
     sv_types:
