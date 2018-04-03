@@ -18,7 +18,7 @@ with open(sqlfile, "w") as fout:
     fout.write(stmts)
 
 dt = '2018-03-18'
-cmd = "sacct -u akuzniar -r normal -j -s CD -S {} -P --delimiter={} \
+cmd = "sacct -u akuzniar -r normal -s CD -S {} -P --delimiter={} \
       -X -o jobid,jobname,start,end,state > {} && \
       sqlite3 {} < {}".format(dt, sep, csvfile, dbfile, sqlfile)
 os.system(cmd)
