@@ -24,6 +24,7 @@ rule gridss:
         OUTDIR="$(dirname "{output}")"
         TMP=$([ "{resources.tmp_mb}" -eq "0" ] &&
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
+        export _JAVA_OPTIONS=-Djava.io.tmpdir=${{TMP}} # default: /tmp
 
         # set JVM max. heap size dynamically (in GB)
         # N.B. don't allocate values between 32-48G (see Compressed Oops)!!!
