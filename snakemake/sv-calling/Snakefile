@@ -10,7 +10,7 @@
 from helper_functions import *
 
 shell.executable("/bin/bash")
-configfile: "config.yaml"
+configfile: "analysis.yaml"
 
 __author__ = 'Arnold Kuzniar'
 __version__ = '0.9.6'
