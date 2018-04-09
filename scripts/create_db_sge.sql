@@ -14,8 +14,8 @@ CREATE VIEW V_JOB AS
 SELECT
     CAST(jobnumber AS INTEGER) AS jobid,
     jobname,
-    start_time AS start,
-    end_time AS end,
+    strftime('%Y-%m-%d %H:%M:%S', start_time, 'unixepoch') AS start,
+    strftime('%Y-%m-%d %H:%M:%S', end_time, 'unixepoch') AS end,
     CAST(ru_wallclock AS INTEGER) AS rtime_s,
     strftime('%Y-%m-%d %H:00:00', start_time, 'unixepoch') AS start_bin,
     strftime('%Y-%m-%d %H:00:00', end_time, 'unixepoch') AS end_bin,
@@ -36,4 +36,3 @@ SELECT
     CAST(ROUND(AVG(mem_mb)) AS INT) AS mean_mem
 FROM V_JOB
 GROUP BY jobname, state
-
