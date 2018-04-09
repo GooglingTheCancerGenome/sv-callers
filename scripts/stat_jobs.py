@@ -12,7 +12,7 @@ csvfile = "jobs.csv"
 sqlfile = "create_db.sql"
 dbfile = "jobs.db"
 stmts = """
-CREATE TABLE {0} (jobid, jobname, start, end, mem, state);
+CREATE TABLE {0} (jobid, jobname, submit, start, end, mem, state);
 .separator {1}
 .import {2} {0}
 DELETE FROM {0} WHERE jobid = 'JobID';
@@ -75,6 +75,6 @@ with open(sqlfile, "w") as fout:
     fout.write(stmts)
 
 cmd = "sacct -u akuzniar -r normal -S {} -E {} -P --delimiter={} \
-      -o jobid,jobname,start,end,maxvmsize,state > {} && \
+      -o jobid,jobname,submit,start,end,maxvmsize,state > {} && \
       sqlite3 {} < {}".format(period[0], period[1], sep, csvfile, dbfile, sqlfile)
 os.system(cmd)
