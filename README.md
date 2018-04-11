@@ -1,5 +1,7 @@
 # sv-callers
 
+[![Build Status](https://travis-ci.org/GooglingTheCancerGenome/sv-callers.svg?branch=dev)](https://travis-ci.org/GooglingTheCancerGenome/sv-callers)
+
 Structural variants (SVs) are an important class of genetic variation implicated in a wide array of genetic diseases. _sv-callers_ is a Snakemake-based workflow that combines several state-of-the-art tools for detecting SVs in whole genome sequencing (WGS) data. The workflow is easy to use and deploy on any Linux-based machine. In particular, the workflow supports automated software deployment, easy configuration and addition of new analysis tools as well as enables to scale from a single computer to different HPC clusters with minimal effort.
 
 ### Dependencies
