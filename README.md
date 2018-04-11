@@ -23,8 +23,8 @@ git clone https://github.com/GooglingTheCancerGenome/sv-callers.git
 **2. Install dependencies.**
 
 ```bash
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh # python 3
-bash Miniconda3-latest-Linux-x86_64.sh # install & add conda to your PATH
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh # python 3
+bash miniconda.sh # install & add conda to your PATH
 source ~/.bashrc
 conda update -y conda # update conda
 conda create -n wf activate wf # create & activate a new environment
