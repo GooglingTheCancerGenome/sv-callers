@@ -16,5 +16,5 @@ install:
   - source activate wf
   - conda install -y xenon-cli snakemake
 script:
-  - snakemake -C echo_run=1
+  - snakemake -C echo_run=1 enable_callers="['manta','delly','lumpy','gridss']"
   - find data -name *.vcf
