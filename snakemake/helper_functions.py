@@ -4,7 +4,7 @@ from snakemake import load_configfile
 from csv import DictReader
 
 
-config = load_configfile('config.yaml')
+config = load_configfile('analysis.yaml')
 
 def get_callers():
     """Get a list of SV callers enabled by a user.
