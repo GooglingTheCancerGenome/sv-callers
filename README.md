@@ -29,7 +29,7 @@ wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O mi
 bash miniconda.sh # install & add conda to your PATH
 source ~/.bashrc
 conda update -y conda # update conda
-conda create -n wf activate wf # create & activate a new environment
+conda create -n wf && source activate wf # create & activate the environment
 conda install snakemake
 conda install -c nlesc xenon-cli # optional but recommended;)
 ```
