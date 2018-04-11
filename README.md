@@ -8,8 +8,13 @@ Structural variants (SVs) are an important class of genetic variation implicated
 - [conda](https://conda.io/) (>=4.5)
 - [snakemake](https://snakemake.readthedocs.io/) (>=4.7)
 - [xenon-cli](https://github.com/NLeSC/xenon-cli) (2.4)
+- SV callers (installed via the [bioconda](https://bioconda.github.io/) channel):
+  - [Manta](https://github.com/Illumina/manta) (1.1.0)
+  - [DELLY](https://github.com/dellytools/delly) (0.7.7)
+  - [LUMPY](https://github.com/arq5x/lumpy-sv) (0.2.13)
+  - [GRIDSS](https://github.com/PapenfussLab/gridss) (1.3.4)
 
-**1. Clone this git repo.**
+**1. Clone this repo.**
 
 ```bash
 git clone https://github.com/GooglingTheCancerGenome/sv-callers.git
@@ -27,28 +32,32 @@ conda install snakemake
 conda install -c nlesc xenon-cli # optional but recommended;)
 ```
 
-**3. Execute the workflow.**
-- **input**:
-   - tumor/normal (T/N) sample pairs in `.bam` (incl. index files)
-   - reference genome in `.fasta` (incl. index files)
-- **output**: somatic SVs in `.vcf` (incl. index files)
+**3. Configure and execute the workflow.**
 
-Note: One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one DELLY post-processing job that merges the SV type calls into one VCF file. See an instance of the workflow [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
+- **config files**: `analysis.yaml` and `environment.yaml` 
+- **input files**:
+   - tumor/normal (T/N) sample pairs in `*.bam` (incl. index files)
+   - reference genome in `.fasta` (incl. index files)
+- **output files**: somatic SVs in `.vcf` (incl. index files)
+
+Note: Example files to test the workflow are located in the `data` directory. One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one DELLY post-processing job that merges the SV type calls into one VCF file. See an instance of this workflow [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
 
 
 ```bash
 cd sv-callers/snakemake
-snakemake -np # dry run doesn't execute anything only checks I/O files
-snakemake -C echo_run=1 # dummy run executes 'echo' for each caller and outputs (dummy) *.vcf files
+# dry run doesn't execute anything only checks I/O files
+snakemake -np
+# dummy run (default) executes 'echo' for each caller and outputs (dummy) *.vcf files
+snakemake -C echo_run=1
+
 ```
 
 _Submit to Grid Engine-based cluster_
 
 ```bash
-#   dummy run: set echo_run=1 (default)
 #   SV calling:
 #     set echo_run=0 and increase the runtime limit e.g. to 60 (in minutes)
-#     or selectively enable_callers="['manta','delly']" etc.
+#     and/or selectively enable_callers="['manta','delly']" etc.
 snakemake -C echo_run=1 --use-conda --latency-wait 30 --jobs  9 \
 --cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --option parallel.environment=threaded --option parallel.slots={threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-\\\$JOB_ID.log --stdout stdout-\\\$JOB_ID.log' &>smk.log&
 ```
