@@ -20,6 +20,7 @@ Structural variants (SVs) are an important class of genetic variation implicated
 
 ```bash
 git clone https://github.com/GooglingTheCancerGenome/sv-callers.git
+cd sv-callers/snakemake
 ```
 
 **2. Install dependencies.**
@@ -29,24 +30,23 @@ wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O mi
 bash miniconda.sh # install & add conda to your PATH
 source ~/.bashrc
 conda update -y conda # update conda
-conda create -n wf && source activate wf # create & activate the environment
-conda install snakemake
-conda install -c nlesc xenon-cli # optional but recommended;)
+conda create -y -n wf && source activate wf # create & activate the environment
+conda install -y -c bioconda snakemake
+conda install -y -c nlesc xenon-cli # optional but recommended;)
 ```
 
 **3. Configure and execute the workflow.**
 
 - **config files**: `analysis.yaml` and `environment.yaml` 
 - **input files**:
-   - tumor/normal (T/N) sample pairs in `*.bam` (incl. index files)
-   - reference genome in `.fasta` (incl. index files)
+  - example data provided in the `sv-callers/data` directory
+  - tumor/normal (T/N) sample pairs in `*.bam` (incl. index files)
+  - reference genome in `.fasta` (incl. index files)
 - **output files**: somatic SVs in `.vcf` (incl. index files)
 
-Note: Example files to test the workflow are located in the `data` directory. One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one DELLY post-processing job that merges the SV type calls into one VCF file. See an instance of this workflow [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
-
+Note: One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one DELLY post-processing job that merges the SV type calls into one VCF file. See an instance of this workflow [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
 
 ```bash
-cd sv-callers/snakemake
 # dry run doesn't execute anything only checks I/O files
 snakemake -np
 # dummy run (default) executes 'echo' for each caller and outputs (dummy) *.vcf files
