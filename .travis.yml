@@ -11,10 +11,11 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update -y conda
+  - conda config --add channels bioconda
   - conda config --add channels nlesc
   - conda create -y -n wf
   - source activate wf
-  - conda install -y xenon-cli snakemake
+  - conda install -y snakemake xenon-cli
 script:
   - snakemake -C echo_run=1 enable_callers="['manta','delly','lumpy','gridss']"
   - find data -name *.vcf
