@@ -41,11 +41,12 @@ conda install -y -c nlesc xenon-cli # optional but recommended;)
 - **config files**: `analysis.yaml` and `environment.yaml` 
 - **input files**:
   - example data provided in the `sv-callers/data` directory
-  - tumor/normal (T/N) sample pairs in `*.bam` (incl. index files)
+  - tumor/normal (T/N) samples in `*.bam` (incl. index files)
+     - list T/N sample pairs to compare in `samples.csv`
   - reference genome in `.fasta` (incl. index files)
 - **output files**: somatic SVs in `.vcf` (incl. index files)
 
-Note: One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one DELLY post-processing job that merges the SV type calls into one VCF file. See an instance of this workflow [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
+Note: One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job that merges DELLY (per SV type) call sets into one VCF file. A workflow instance can be found [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
 
 ```bash
 # dry run doesn't execute anything only checks I/O files
