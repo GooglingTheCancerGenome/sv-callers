@@ -18,4 +18,6 @@ install:
   - conda install -y snakemake xenon-cli
 script:
   - snakemake -C echo_run=1 enable_callers="['manta','delly','lumpy','gridss']"
-  - [ $(find data -name *.vcf|wc -l) -eq '12' ] && exit 0 || exit 1
+  - |
+    [ $(find data -name *.vcf|wc -l) -eq '12' ] && exit 0 || exit 1;
+
