@@ -11,6 +11,7 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update -y conda
+  - conda config --add channels gtcg
   - conda config --add channels bioconda
   - conda config --add channels nlesc
   - conda create -y -n wf
