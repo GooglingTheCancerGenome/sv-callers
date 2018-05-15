@@ -31,7 +31,7 @@ rule gridss:
             {resources.mem_mb} / 1024 * .8")) # max. 80% of requested mem
         MAX_HEAP=$([ "${{MAX_HEAP}}" -gt "31" ] && echo "31g" ||
             echo "${{MAX_HEAP}}g")
-        export _JAVA_OPTIONS=-Djava.io.tmpdir=${{TMP}} -Xmx ${{MAX_HEAP}}
+        export _JAVA_OPTIONS="-Djava.io.tmpdir=${{TMP}} -Xmx${{MAX_HEAP}}"
 
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
