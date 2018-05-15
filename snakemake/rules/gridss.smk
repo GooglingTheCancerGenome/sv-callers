@@ -24,14 +24,14 @@ rule gridss:
         OUTDIR="$(dirname "{output}")"
         TMP=$([ "{resources.tmp_mb}" -eq "0" ] &&
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
-        export _JAVA_OPTIONS=-Djava.io.tmpdir=${{TMP}} # default: /tmp
 
         # set JVM max. heap size dynamically (in GB)
-        # N.B. don't allocate values between 32-48G (see Compressed Oops)!!!
+        # N.B. don't allocate >31G due to Compressed Oops and JDK-8029679
         MAX_HEAP=$(LC_ALL=C printf "%.f" $(bc <<< "scale=2; \
-            {resources.mem_mb} / 1024 * .8"))
-        MAX_HEAP=$([[ "${{MAX_HEAP}}" -gt "31" &&
-            "${{MAX_HEAP}}" -lt "49" ]] && echo "49g" || echo "${{MAX_HEAP}}g")
+            {resources.mem_mb} / 1024 * .8")) # max. 80% of requested mem
+        MAX_HEAP=$([ "${{MAX_HEAP}}" -gt "31" ] && echo "31g" ||
+            echo "${{MAX_HEAP}}g")
+        export _JAVA_OPTIONS=-Djava.io.tmpdir=${{TMP}} -Xmx ${{MAX_HEAP}}
 
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
