@@ -74,8 +74,8 @@ def get_tmpspace(caller):
 def make_output():
     """Collect output filenames (.vcf) to drive the workflow.
     """
-    with open(config["samples"], 'r') as fin:
-        reader = DictReader(fin)
+    with open(config["samples"], "r") as fp:
+        reader = DictReader(line for line in fp if not line.startswith("#"))
         outfiles = []
         for r in reader:
             for c in get_callers():
