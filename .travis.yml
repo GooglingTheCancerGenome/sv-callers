@@ -5,6 +5,9 @@ python:
   - "3.6"
 services:
   - docker
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y sshpass
 install:
   - docker pull gtcg/sv-callers-gridengine
   - docker pull gtcg/sv-callers-slurm
