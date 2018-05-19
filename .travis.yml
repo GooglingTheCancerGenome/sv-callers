@@ -13,9 +13,9 @@ install:
 script:
   - |
     sshpass -p javagat ssh -p 10022 xenon@localhost \
-      "/bin/bash -l -c '. activate wf;snakemake -v; qinfo"
+      "/bin/bash -l -c '. activate wf; snakemake -v; qinfo"
   - |
-    sshpass -p javagat ssh -p 10022 xenon@localhost \
+    sshpass -p javagat ssh -p 10023 xenon@localhost \
       "/bin/bash -l -c '. activate wf; snakemake -v; sinfo'"
   - |
     [ $(find data -name *.vcf|wc -l) -eq '12' ] && exit 0 || exit 1;
