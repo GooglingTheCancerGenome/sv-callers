@@ -1,23 +1,21 @@
-language: python
-sudo: false
+sudo: true
 dist: trusty
+language: python
 python:
   - "3.6"
-before_install:
-  - cd snakemake/
+services:
+  - docker
 install:
-  - sudo apt-get update
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - conda update -y conda
-  - conda config --add channels bioconda
-  - conda config --add channels nlesc
-  - conda create -y -n wf
-  - source activate wf
-  - conda install -y snakemake xenon-cli
+  - docker pull gtcg/sv-callers-gridengine
+  - docker pull gtcg/sv-callers-slurm
+  - docker run -d -p 10022:22 --name wf-ge gtcg/sv-callers-gridengine
+  - docker run -d -p 10023:22 --name wf-slurm gtcg/sv-callers-slurm
 script:
-  - snakemake -C echo_run=1 enable_callers="['manta','delly','lumpy','gridss']"
+  - |
+    sshpass -p javagat ssh -p 10022 xenon@localhost \
+      "/bin/bash -l -c '. activate wf;snakemake -v; qinfo"
+  - |
+    sshpass -p javagat ssh -p 10022 xenon@localhost \
+      "/bin/bash -l -c '. activate wf; snakemake -v; sinfo'"
   - |
     [ $(find data -name *.vcf|wc -l) -eq '12' ] && exit 0 || exit 1;
-
