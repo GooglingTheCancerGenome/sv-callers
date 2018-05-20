@@ -11,14 +11,14 @@ before_install:
 install:
   - docker pull gtcg/sv-callers-gridengine
   - docker pull gtcg/sv-callers-slurm
-  - docker run -d -p 10022:22 --name wf-ge gtcg/sv-callers-gridengine
-  - docker run -d -p 10023:22 --name wf-slurm gtcg/sv-callers-slurm
+  - docker run -d -p 10022:22 gtcg/sv-callers-gridengine
+  - docker run -d -p 10023:22 gtcg/sv-callers-slurm
 script:
   - |
-    sshpass -p javagat ssh -p 10022 xenon@localhost \
+    sshpass -p javagat ssh -v -p 10022 xenon@localhost \
       "/bin/bash -l -c '. activate wf; snakemake -v; qinfo"
   - |
-    sshpass -p javagat ssh -p 10023 xenon@localhost \
+    sshpass -p javagat ssh -v -p 10023 xenon@localhost \
       "/bin/bash -l -c '. activate wf; snakemake -v; sinfo'"
   - |
     [ $(find data -name *.vcf|wc -l) -eq '12' ] && exit 0 || exit 1;
