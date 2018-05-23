@@ -11,6 +11,7 @@ before_install:
 install:
   - docker pull gtcg/sv-callers-gridengine
   - docker run -d -p 10022:22 gtcg/sv-callers-gridengine
+  - sleep 10
 #  - docker pull gtcg/sv-callers-slurm
 #  - docker run -d -p 10023:22 gtcg/sv-callers-slurm
 script:
