@@ -18,7 +18,7 @@ script:
   - |
     sshpass -p javagat ssh -o UserKnownHostsFile=/dev/null \
       -o StrictHostKeyChecking=no -p 10022 xenon@localhost \
-      "/bin/bash -l -c '. activate wf; qinfo"
+      "/bin/bash -l -c '. activate wf; qinfo'"
 #  - |
 #    sshpass -p javagat ssh -o "StrictHostKeyChecking no" -p 10023 xenon@localhost \
 #      "/bin/bash -l -c '. activate wf; snakemake -v; sinfo'"
