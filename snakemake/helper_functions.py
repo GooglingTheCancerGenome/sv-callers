@@ -19,7 +19,7 @@ def get_callers():
 
 def get_filext(fmt):
     """Get file extension(s) given file type/format:
-        ['fasta', 'fasta_idx', 'bam', 'bam_idx', 'vcf']
+        ['fasta', 'fasta_idx', 'bam', 'bam_idx', 'vcf', 'bcf']
     """
     assert fmt in config["file_exts"].keys(), \
         "Unknown input file format '{}'.".format(fmt.lower())

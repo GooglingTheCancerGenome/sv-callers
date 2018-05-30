@@ -21,6 +21,7 @@ file_exts:
   bam: .bam
   bam_idx: .bam.bai
   vcf: .vcf
+  bcf: .bcf
 
 samples: samples.csv  # TUMOR/NORMAL sample pairs (*.bam files incl. PATH)
 
