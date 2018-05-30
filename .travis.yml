@@ -10,17 +10,17 @@ before_install:
   - sudo apt-get install -y sshpass
 install:
   - docker pull gtcg/sv-callers-gridengine
+  - docker pull gtcg/sv-callers-slurm
   - docker run -d -p 10022:22 gtcg/sv-callers-gridengine
+  - docker run -d -p 10023:22 gtcg/sv-callers-slurm
   - sleep 10
-#  - docker pull gtcg/sv-callers-slurm
-#  - docker run -d -p 10023:22 gtcg/sv-callers-slurm
+  - docker ps -a
 script:
   - |
     sshpass -p javagat ssh -o StrictHostKeyChecking=no \
       -p 10022 xenon@localhost \
       "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -np'"
-#  - |
-#    sshpass -p javagat ssh -o "StrictHostKeyChecking no" -p 10023 xenon@localhost \
-#      "/bin/bash -l -c '. activate wf; snakemake -v; sinfo'"
-#  - |
-#    [ $(find data -name *.vcf|wc -l) -eq '12' ] && exit 0 || exit 1;
+  - |
+    sshpass -p javagat ssh -o StrictHostKeyChecking=no \
+      -p 10023 xenon@localhost \
+      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -np'"
