@@ -4,6 +4,7 @@ enable_callers:
     - delly
     - lumpy
     - gridss
+mode: s # (s)omatic or (g)ermline
 
 # file path to the reference genome in FASTA (excl. file suffix)
 genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
@@ -31,7 +32,7 @@ callers:
     outdir: manta_out  # abspath or relative to current working dir
 
   delly:
-    threads: 2
+    threads: 2 # max. 2 if somatic mode otherwise defaults to 1
     memory: 8192
     tmpspace: 0
     outdir: delly_out
@@ -43,7 +44,7 @@ callers:
         - INV
 
   lumpy:
-    threads: 1
+    threads: 1 # multi-threading not supported!
     memory: 32768
     tmpspace: 0  # 1024
     outdir: lumpy_out
