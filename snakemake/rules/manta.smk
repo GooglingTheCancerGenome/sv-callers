@@ -70,7 +70,7 @@ rule manta_g:  # germline mode
             configManta.py \
                 --runDir "${{OUTDIR}}" \
                 --reference "{input.fasta}" \
-                --tumorBam "{input.tumor_bam}" \
+                --tumorBam "{input.tumor_bam}" &&
             cd "${{OUTDIR}}" &&
             ./runWorkflow.py \
                 --quiet \
