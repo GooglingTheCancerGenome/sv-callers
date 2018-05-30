@@ -15,6 +15,7 @@ install:
   - docker run -d -p 10023:22 gtcg/sv-callers-slurm
   - sleep 10
   - docker ps -a
+  - ssh-keygen -R xenon@localhost
 script:
   - |
     sshpass -p javagat ssh -o StrictHostKeyChecking=no \
