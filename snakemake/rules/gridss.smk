@@ -39,7 +39,7 @@ rule gridss_s:  # somatic mode
         else
             # clean-up outdir prior to SV calling
             rm -fr ${{OUTDIR}}/*gridss* {input.fasta}.dict &&
-            gridss -Xmx${{MAX_HEAP}} gridss.CallVariants \
+            gridss gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.normal_bam}" \
@@ -90,7 +90,7 @@ rule gridss_g:  # germline mode
         else
             # clean-up outdir prior to SV calling
             rm -fr ${{OUTDIR}}/*gridss* {input.fasta}.dict &&
-            gridss -Xmx${{MAX_HEAP}} gridss.CallVariants \
+            gridss gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.tumor_bam}" \
