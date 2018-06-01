@@ -4,7 +4,7 @@ enable_callers:
     - delly
     - lumpy
     - gridss
-mode: s # (s)omatic or (g)ermline
+mode: 0 # 0 = somatic, 1 = germline
 
 # file path to the reference genome in FASTA (excl. file suffix)
 genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina

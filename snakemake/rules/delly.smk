@@ -103,12 +103,12 @@ rule delly_merge:  # both somatic and germline modes
         ["{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly-" + sv +
          ".filtered" + get_filext("bcf")
          for sv in config["callers"]["delly"]["sv_types"]] \
-         if config["mode"].startswith("s") else
+         if config["mode"] == 0 else
         ["{path}/{tumor}/" + get_outdir("delly") + "/delly-" + sv +
          get_filext("bcf") for sv in config["callers"]["delly"]["sv_types"]]
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"), "delly" +
-                     get_filext("vcf")) if config["mode"].startswith("s") else
+                     get_filext("vcf")) if config["mode"] == 0 else
         os.path.join("{path}/{tumor}", get_outdir("delly"), "delly" +
                      get_filext("vcf"))
     conda:
