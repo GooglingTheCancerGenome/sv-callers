@@ -5,12 +5,12 @@ python:
   - "3.6"
 services:
   - docker
-before_install:
+install:
   - sudo apt-get -qq update
   - sudo apt-get install -y sshpass
-install:
   - docker pull gtcg/sv-callers-gridengine
   - docker pull gtcg/sv-callers-slurm
+before_script:
   - docker run -d -p 10022:22 gtcg/sv-callers-gridengine
   - docker run -d -p 10023:22 gtcg/sv-callers-gridengine
   - docker run -d -p 10024:22 gtcg/sv-callers-slurm
@@ -23,19 +23,19 @@ script:
     echo "=== Run workflow in somatic mode on GridEngine cluster ==="
     sshpass -p javagat ssh -o StrictHostKeyChecking=no \
       -p 10022 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=s'"
+      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=0'"
   - |
     echo "=== Run workflow in germline mode on GridEngine cluster ==="
     sshpass -p javagat ssh -o StrictHostKeyChecking=no \
       -p 10023 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=g'"
+      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=1'"
   - |
     echo "=== Run workflow in somatic mode on Slurm cluster ==="
     sshpass -p javagat ssh -o StrictHostKeyChecking=no \
       -p 10024 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=s'"
+      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=0'"
   - |
     echo "=== Run workflow in germline mode on Slurm cluster ==="
     sshpass -p javagat ssh -o StrictHostKeyChecking=no \
       -p 10025 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=g'"
+      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=1'"
