@@ -56,7 +56,7 @@ rule gridss_g:  # germline mode
         fasta = get_fasta(),
         fai = get_faidx(),  # bwa index files also required
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
+        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
     output:
         os.path.join("{path}/{tumor}", get_outdir("gridss"), "{rule}" +
                      get_filext("vcf"))

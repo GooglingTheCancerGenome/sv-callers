@@ -1,36 +1,37 @@
-echo_run: 0  # run SV callers [0] or vanilla jobs [1]
+echo_run: 0  # run SV callers (0) or vanilla jobs (1)
 enable_callers:
     - manta
     - delly
     - lumpy
     - gridss
-mode: 0 # 0 = somatic, 1 = germline
+mode: s # (s)omatic or (g)ermline SV calling
 
-# file path to the reference genome in FASTA (excl. file suffix)
-genome_path: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
+# filepath of the reference genome in FASTA format (excl. file suffix)
+genome: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
 
+# list of file extensions
 file_exts:
   fasta: .fasta
   fasta_idx:
     - .fasta.fai  # faidx index file
-    - .fasta.bwt  # bwa v0.6.x
-    - .fasta.amb  # index files
-    - .fasta.ann  #
-    - .fasta.pac  #
-    - .fasta.sa   #
+    - .fasta.bwt  # BWA v0.6.x index files
+    - .fasta.amb  # |
+    - .fasta.ann  # |
+    - .fasta.pac  # |
+    - .fasta.sa   # |
   bam: .bam
   bam_idx: .bam.bai
   vcf: .vcf
   bcf: .bcf
 
-samples: samples.csv  # TUMOR/NORMAL sample pairs (*.bam files incl. PATH)
-
+samples: samples.csv  # list of WGS samples (pairs) in BAM format
+                      # PATH TUMOR NORMAL
 callers:
   manta:
-    threads: 24
-    memory: 16384  # MB
-    tmpspace: 0  # min. temporary disk space in MB
-    outdir: manta_out  # abspath or relative to current working dir
+    threads: 24        # number of threads used
+    memory: 16384      # allocated memory in MB
+    tmpspace: 0        # min. temporary disk space in MB
+    outdir: manta_out  # output dir relative to PATH/sample (see above)
 
   delly:
     threads: 2 # max. 2 if somatic mode otherwise defaults to 1

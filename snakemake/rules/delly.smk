@@ -65,7 +65,7 @@ rule delly_g:  # germline mode
         fasta = get_fasta(),
         fai = get_faidx()[0],
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
+        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
     output:
         "{path}/{tumor}/" + get_outdir("delly") + "/{rule}-{sv_type}" +
         get_filext("bcf")
@@ -103,12 +103,12 @@ rule delly_merge:  # both somatic and germline modes
         ["{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly-" + sv +
          ".filtered" + get_filext("bcf")
          for sv in config["callers"]["delly"]["sv_types"]] \
-         if config["mode"] == 0 else
+         if config["mode"].startswith("s") else
         ["{path}/{tumor}/" + get_outdir("delly") + "/delly-" + sv +
          get_filext("bcf") for sv in config["callers"]["delly"]["sv_types"]]
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"), "delly" +
-                     get_filext("vcf")) if config["mode"] == 0 else
+                     get_filext("vcf")) if config["mode"].startswith("s") else
         os.path.join("{path}/{tumor}", get_outdir("delly"), "delly" +
                      get_filext("vcf"))
     conda:

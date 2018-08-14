@@ -44,7 +44,7 @@ rule lumpy_g:  # germline mode
         fasta = get_fasta(),
         fai = get_faidx()[0],
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
+        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
     output:
         os.path.join("{path}/{tumor}", get_outdir("lumpy"), "{rule}" +
                      get_filext("vcf"))
