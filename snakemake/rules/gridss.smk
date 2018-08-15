@@ -6,9 +6,11 @@ rule gridss_s:  # somatic mode
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
+    params:
+        excl_opt = "BLACKLIST=" + get_bed("gridss") if get_bed("gridss") else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("gridss"),
-                     "{rule}" + get_filext("vcf"))
+                     "gridss" + get_filext("vcf"))
     conda:
         "../environment.yaml"
     threads:
@@ -45,6 +47,7 @@ rule gridss_s:  # somatic mode
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
                 OUTPUT="{output}" \
+                "{params.excl_opt}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
@@ -57,8 +60,10 @@ rule gridss_g:  # germline mode
         fai = get_faidx(),  # bwa index files also required
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+    params:
+        excl_opt = "BLACKLIST=" + get_bed("gridss") if get_bed("gridss") else ""
     output:
-        os.path.join("{path}/{tumor}", get_outdir("gridss"), "{rule}" +
+        os.path.join("{path}/{tumor}", get_outdir("gridss"), "gridss" +
                      get_filext("vcf"))
     conda:
         "../environment.yaml"
@@ -95,6 +100,7 @@ rule gridss_g:  # germline mode
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 INPUT="{input.tumor_bam}" \
                 OUTPUT="{output}" \
+                "{params.excl_opt}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"

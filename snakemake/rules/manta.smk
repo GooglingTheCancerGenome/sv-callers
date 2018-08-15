@@ -6,9 +6,11 @@ rule manta_s:  # somatic mode
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
+    #params:
+    #    excl_opt = "-XXX " + get_bed("manta") if get_bed("manta") else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("manta"),
-                     "{rule}" + get_filext("vcf"))
+                     "manta" + get_filext("vcf"))
     conda:
         "../environment.yaml"
     threads:
@@ -49,7 +51,7 @@ rule manta_g:  # germline mode
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
     output:
-        os.path.join("{path}/{tumor}", get_outdir("manta"), "{rule}" +
+        os.path.join("{path}/{tumor}", get_outdir("manta"), "manta" +
                      get_filext("vcf"))
     conda:
         "../environment.yaml"

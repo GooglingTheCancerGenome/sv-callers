@@ -9,7 +9,11 @@ mode: s # (s)omatic or (g)ermline SV calling
 # filepath of the reference genome in FASTA format (excl. file suffix)
 genome: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
 
-# list of file extensions
+# filepath of the optional blacklist of genomic regions in BED format
+# (excl. file suffix)
+blacklist: data/ENCFF001TDO
+
+# list of file extensions in use
 file_exts:
   fasta: .fasta
   fasta_idx:
@@ -23,36 +27,41 @@ file_exts:
   bam_idx: .bam.bai
   vcf: .vcf
   bcf: .bcf
+  bed: .bed
 
 samples: samples.csv  # list of WGS samples (pairs) in BAM format
                       # PATH TUMOR NORMAL
 callers:
   manta:
-    threads: 24        # number of threads used
-    memory: 16384      # allocated memory in MB
-    tmpspace: 0        # min. temporary disk space in MB
-    outdir: manta_out  # output dir relative to PATH/sample (see above)
+    threads: 24         # number of threads used
+    memory: 16384       # allocated memory in MB
+    tmpspace: 0         # min. temporary disk space in MB
+    outdir: manta_out   # output dir relative to PATH/sample (see above)
+    exclude_regions: 0  # using the blacklist: false (0) or true (1)
 
   delly:
-    threads: 2 # max. 2 if somatic mode otherwise defaults to 1
+    threads: 2  # max. 2 if somatic mode otherwise defaults to 1
     memory: 8192
     tmpspace: 0
     outdir: delly_out
+    exclude_regions: 0
     sv_types:
-        - BND
-        - DEL
-        - DUP
-        - INS
-        - INV
+        - BND  # translocation
+        - DEL  # deletion
+        - DUP  # duplication
+        - INS  # insertion
+        - INV  # inversion
 
   lumpy:
-    threads: 1 # multi-threading not supported!
+    threads: 1  # does not support multi-threading
     memory: 32768
     tmpspace: 0  # 1024
     outdir: lumpy_out
+    exclude_regions: 0
 
   gridss:
     threads: 24
     memory: 63488
     tmpspace: 0  # 10240
     outdir: gridss_out
+    exclude_regions: 0

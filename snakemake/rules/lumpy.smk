@@ -6,9 +6,11 @@ rule lumpy_s:  # somatic mode
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
+    params:
+        excl_opt = "-x " + get_bed("lumpy") if get_bed("lumpy") else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("lumpy"),
-                     "{rule}" + get_filext("vcf"))
+                     "lumpy" + get_filext("vcf"))
     conda:
         "../environment.yaml"
     threads:
@@ -32,6 +34,7 @@ rule lumpy_s:  # somatic mode
             lumpyexpress \
                 -B "{input.tumor_bam}","{input.normal_bam}" \
                 -o "{output}" \
+                "{params.excl_opt}" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \
@@ -45,8 +48,10 @@ rule lumpy_g:  # germline mode
         fai = get_faidx()[0],
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+    params:
+        excl_opt = "-x " + get_bed("lumpy") if get_bed("lumpy") else ""
     output:
-        os.path.join("{path}/{tumor}", get_outdir("lumpy"), "{rule}" +
+        os.path.join("{path}/{tumor}", get_outdir("lumpy"), "lumpy" +
                      get_filext("vcf"))
     conda:
         "../environment.yaml"
@@ -71,6 +76,7 @@ rule lumpy_g:  # germline mode
             lumpyexpress \
                 -B "{input.tumor_bam}" \
                 -o "{output}" \
+                "{params.excl_opt}" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \

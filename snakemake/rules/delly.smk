@@ -6,9 +6,11 @@ rule delly_s:  # somatic mode
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
+    params:
+        excl_opt = "-x " + get_bed("delly") if get_bed("delly") else ""
     output:
-        "{path}/{tumor}--{normal}/" + get_outdir("delly") +
-        "/{rule}-{sv_type}.filtered" + get_filext("bcf")
+        os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
+                     "delly-{sv_type}.filtered" + get_filext("bcf"))
     conda:
         "../environment.yaml"
     threads:
@@ -46,6 +48,7 @@ rule delly_s:  # somatic mode
                 -o "${{PREFIX}}.bcf" \
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
+                "{params.excl_opt}" \
                 "{input.tumor_bam}" "{input.normal_bam}" &&
             # somatic pre-filtering
             #   create sample list
@@ -66,9 +69,11 @@ rule delly_g:  # germline mode
         fai = get_faidx()[0],
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+    params:
+        excl_opt = "-x " + get_bed("delly") if get_bed("delly") else ""
     output:
-        "{path}/{tumor}/" + get_outdir("delly") + "/{rule}-{sv_type}" +
-        get_filext("bcf")
+        os.path.join("{path}/{tumor}", get_outdir("delly"), "delly-{sv_type}" +
+                     get_filext("bcf"))
     conda:
         "../environment.yaml"
     threads: 1
@@ -94,21 +99,24 @@ rule delly_g:  # germline mode
                 -o "{output}" \
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
+                "{params.excl_opt}" \
                 "{input.tumor_bam}"
         fi
         """
 
 rule delly_merge:  # both somatic and germline modes
     input:
-        ["{path}/{tumor}--{normal}/" + get_outdir("delly") + "/delly-" + sv +
-         ".filtered" + get_filext("bcf")
-         for sv in config["callers"]["delly"]["sv_types"]] \
-         if config["mode"].startswith("s") else
-        ["{path}/{tumor}/" + get_outdir("delly") + "/delly-" + sv +
-         get_filext("bcf") for sv in config["callers"]["delly"]["sv_types"]]
+        [os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
+                      "delly-" + sv + ".filtered" + get_filext("bcf"))
+         for sv in config["callers"]["delly"]["sv_types"]]
+         if config["mode"].startswith("s") is True else
+        [os.path.join("{path}/{tumor}" , get_outdir("delly"), "delly-" + sv +
+                      get_filext("bcf"))
+         for sv in config["callers"]["delly"]["sv_types"]]
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"), "delly" +
-                     get_filext("vcf")) if config["mode"].startswith("s") else
+                     get_filext("vcf"))
+        if config["mode"].startswith("s") is True else
         os.path.join("{path}/{tumor}", get_outdir("delly"), "delly" +
                      get_filext("vcf"))
     conda:
