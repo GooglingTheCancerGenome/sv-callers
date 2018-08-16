@@ -5,37 +5,27 @@ python:
   - "3.6"
 services:
   - docker
+env:
+  - PORT=10022 SCH=gridengine JID="\$JOB_ID"
+  - PORT=10023 SCH=slurm JID="%j"
+addons:
+  apt:
+    update: true
+    packages:
+      - sshpass
 install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y sshpass
-  - docker pull gtcg/sv-callers-gridengine
-  - docker pull gtcg/sv-callers-slurm
-before_script:
-  - docker run -d -p 10022:22 gtcg/sv-callers-gridengine
-  - docker run -d -p 10023:22 gtcg/sv-callers-gridengine
-  - docker run -d -p 10024:22 gtcg/sv-callers-slurm
-  - docker run -d -p 10025:22 gtcg/sv-callers-slurm
+  - docker pull gtcg/sv-callers-$SCH
+  - docker run -d -p $PORT:22 gtcg/sv-callers-$SCH
   - sleep 10
   - docker ps -a
-  - ssh-keygen -R xenon@localhost
+before_script:
+  - ssh-keygen -R [localhost]:$PORT
 script:
   - |
-    echo "=== Run workflow in somatic mode on GridEngine cluster ==="
-    sshpass -p javagat ssh -o StrictHostKeyChecking=no \
-      -p 10022 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=0'"
-  - |
-    echo "=== Run workflow in germline mode on GridEngine cluster ==="
-    sshpass -p javagat ssh -o StrictHostKeyChecking=no \
-      -p 10023 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=1'"
-  - |
-    echo "=== Run workflow in somatic mode on Slurm cluster ==="
-    sshpass -p javagat ssh -o StrictHostKeyChecking=no \
-      -p 10024 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=0'"
-  - |
-    echo "=== Run workflow in germline mode on Slurm cluster ==="
-    sshpass -p javagat ssh -o StrictHostKeyChecking=no \
-      -p 10025 xenon@localhost \
-      "/bin/bash -l -c 'cd sv-callers/snakemake; . activate wf; snakemake -C echo_run=1 mode=1'"
+    sshpass -p javagat ssh xenon@localhost -p $PORT \
+      -o StrictHostKeyChecking=no \
+      "/bin/bash -lc \"cd sv-callers/snakemake && snakemake -C echo_run=1 \
+      --use-conda --latency-wait 30 --jobs --cluster \
+      'xenon -vvv scheduler $SCH --location local:// submit --name smk.{rule} \
+      --inherit-env --max-run-time 1 --working-directory . \
+      --stderr stderr-$JID.log --stdout stdout-$JID.log' && ls\""
