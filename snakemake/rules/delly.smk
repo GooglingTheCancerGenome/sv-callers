@@ -7,7 +7,7 @@ rule delly_s:  # somatic mode
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     params:
-        excl_opt = "-x " + get_bed("delly") if get_bed("delly") else ""
+        excl_opt = '-x "%s"' % get_bed("delly") if get_bed("delly") else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
                      "delly-{sv_type}.filtered" + get_filext("bcf"))
@@ -48,7 +48,7 @@ rule delly_s:  # somatic mode
                 -o "${{PREFIX}}.bcf" \
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
-                "{params.excl_opt}" \
+                {params.excl_opt} \
                 "{input.tumor_bam}" "{input.normal_bam}" &&
             # somatic pre-filtering
             #   create sample list
@@ -70,7 +70,7 @@ rule delly_g:  # germline mode
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
     params:
-        excl_opt = "-x " + get_bed("delly") if get_bed("delly") else ""
+        excl_opt = '-x "%s"' % get_bed("delly") if get_bed("delly") else ""
     output:
         os.path.join("{path}/{tumor}", get_outdir("delly"), "delly-{sv_type}" +
                      get_filext("bcf"))
@@ -99,7 +99,7 @@ rule delly_g:  # germline mode
                 -o "{output}" \
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
-                "{params.excl_opt}" \
+                {params.excl_opt} \
                 "{input.tumor_bam}"
         fi
         """

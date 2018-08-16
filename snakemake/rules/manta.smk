@@ -7,7 +7,7 @@ rule manta_s:  # somatic mode
         normal_bam = "{path}/{normal}" + get_filext("bam"),
         normal_bai = "{path}/{normal}" + get_filext("bam_idx")
     #params:
-    #    excl_opt = "-XXX " + get_bed("manta") if get_bed("manta") else ""
+    #    excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("manta"),
                      "manta" + get_filext("vcf"))
@@ -50,6 +50,8 @@ rule manta_g:  # germline mode
         fai = get_faidx()[0],
         tumor_bam = "{path}/{tumor}" + get_filext("bam"),
         tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+    #params:
+    #    excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
     output:
         os.path.join("{path}/{tumor}", get_outdir("manta"), "manta" +
                      get_filext("vcf"))

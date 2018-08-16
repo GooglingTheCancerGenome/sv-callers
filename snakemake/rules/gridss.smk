@@ -44,10 +44,10 @@ rule gridss_s:  # somatic mode
             gridss gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
+                {params.excl_opt} \
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
                 OUTPUT="{output}" \
-                "{params.excl_opt}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
@@ -98,9 +98,9 @@ rule gridss_g:  # germline mode
             gridss gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
+                {params.excl_opt} \
                 INPUT="{input.tumor_bam}" \
                 OUTPUT="{output}" \
-                "{params.excl_opt}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
