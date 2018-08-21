@@ -1,6 +1,5 @@
 channels:
   - conda-forge
-  - gtcg
   - bioconda
 
 dependencies:

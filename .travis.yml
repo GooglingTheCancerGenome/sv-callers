@@ -18,8 +18,8 @@ install:
   - docker run -d -p $PORT:22 gtcg/sv-callers-$SCH
   - sleep 10
   - docker ps -a
-before_script:
-  - ssh-keygen -R [localhost]:$PORT
+#before_script:
+#  - ssh-keygen -R localhost
 script:
   - |
     sshpass -p javagat ssh xenon@localhost -p $PORT \
