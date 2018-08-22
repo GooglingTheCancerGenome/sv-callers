@@ -1,5 +1,5 @@
-sudo: true
 dist: trusty
+sudo: required
 language: python
 python:
   - "3.6"
@@ -10,23 +10,16 @@ env:
   - MODE=g PORT=10023 SCH=gridengine JID="\$JOB_ID"
   - MODE=s PORT=10024 SCH=slurm JID="%j"
   - MODE=g PORT=10025 SCH=slurm JID="%j"
-addons:
-  apt:
-    update: true
-    packages:
-      - sshpass
-install:
+#addons:
+#  apt:
+#    update: true
+#    packages:
+#      - sshpass
+before_install:
   - docker pull gtcg/sv-callers-$SCH
-  - docker run -d -p $PORT:22 gtcg/sv-callers-$SCH
+  - docker run -d -p $PORT:22 --name $SCH-$MODE gtcg/sv-callers-$SCH
   - sleep 10
   - docker ps -a
+install: true
 script:
-  - |
-    sshpass -p javagat ssh xenon@localhost -p $PORT \
-      -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-      "/bin/bash -lc \"cd sv-callers/snakemake && \
-      git checkout dev && snakemake -C echo_run=1 mode=$MODE --use-conda \
-      --latency-wait 30 --jobs --cluster 'xenon -vvv scheduler $SCH \
-      --location local:// submit --name smk.{rule} --inherit-env \
-      --max-run-time 1 --working-directory . --stderr stderr-$JID.log \
-      --stdout stdout-$JID.log' && ls\""
+  - docker exec -t $SCH-$MODE "printenv && echo $(hostname) | qsub"
