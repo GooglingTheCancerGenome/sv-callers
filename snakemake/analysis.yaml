@@ -1,4 +1,4 @@
-echo_run: 0  # run SV callers (0) or vanilla jobs (1)
+echo_run: 1  # run SV callers (0) or vanilla jobs (1)
 enable_callers:
     - manta
     - delly
