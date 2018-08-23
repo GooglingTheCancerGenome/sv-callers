@@ -48,12 +48,12 @@ rule manta_g:  # germline mode
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
-        tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+        bam = "{path}/{sample}" + get_filext("bam"),
+        bai = "{path}/{sample}" + get_filext("bam_idx")
     #params:
     #    excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
     output:
-        os.path.join("{path}/{tumor}", get_outdir("manta"), "manta" +
+        os.path.join("{path}/{sample}", get_outdir("manta"), "manta" +
                      get_filext("vcf"))
     conda:
         "../environment.yaml"
@@ -74,7 +74,7 @@ rule manta_g:  # germline mode
             configManta.py \
                 --runDir "${{OUTDIR}}" \
                 --reference "{input.fasta}" \
-                --tumorBam "{input.tumor_bam}" &&
+                --tumorBam "{input.bam}" &&
             cd "${{OUTDIR}}" &&
             ./runWorkflow.py \
                 --quiet \

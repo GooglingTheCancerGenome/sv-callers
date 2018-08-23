@@ -109,9 +109,9 @@ def make_output():
         outfiles = []
         for i, r in enumerate(reader):
             try:
-                path = os.path.join(is_ok(r["PATH"]), is_ok(r["TUMOR"]))
-                if mode.startswith('s') is True:  # somatic mode
-                    path += "--" + is_ok(r["NORMAL"])
+                path = os.path.join(is_ok(r["PATH"]), is_ok(r["SAMPLE1"]))
+                if mode.startswith('s') is True:  # in somatic mode
+                    path += "--" + is_ok(r["SAMPLE2"])
             except TypeError as err:
                 print("Missing value(s) in '{}' at record #{}: {}"
                       .format(config["samples"], i + 1, list(r.values())),

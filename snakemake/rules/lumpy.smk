@@ -46,12 +46,12 @@ rule lumpy_g:  # germline mode
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
-        tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+        bam = "{path}/{sample}" + get_filext("bam"),
+        bai = "{path}/{sample}" + get_filext("bam_idx")
     params:
         excl_opt = '-x "%s"' % get_bed("lumpy") if get_bed("lumpy") else ""
     output:
-        os.path.join("{path}/{tumor}", get_outdir("lumpy"), "lumpy" +
+        os.path.join("{path}/{sample}", get_outdir("lumpy"), "lumpy" +
                      get_filext("vcf"))
     conda:
         "../environment.yaml"
@@ -74,7 +74,7 @@ rule lumpy_g:  # germline mode
             echo "{input}" "${{TMP}}" > "{output}"
         else
             lumpyexpress \
-                -B "{input.tumor_bam}" \
+                -B "{input.bam}" \
                 {params.excl_opt} \
                 -o "{output}" \
                 -m 4 `# min. sample weight` \

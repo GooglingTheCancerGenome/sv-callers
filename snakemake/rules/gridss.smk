@@ -58,12 +58,12 @@ rule gridss_g:  # germline mode
     input:
         fasta = get_fasta(),
         fai = get_faidx(),  # bwa index files also required
-        tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+        bam = "{path}/{sample}" + get_filext("bam"),
+        bai = "{path}/{sample}" + get_filext("bam_idx")
     params:
         excl_opt = "BLACKLIST=" + get_bed("gridss") if get_bed("gridss") else ""
     output:
-        os.path.join("{path}/{tumor}", get_outdir("gridss"), "gridss" +
+        os.path.join("{path}/{sample}", get_outdir("gridss"), "gridss" +
                      get_filext("vcf"))
     conda:
         "../environment.yaml"
@@ -99,7 +99,7 @@ rule gridss_g:  # germline mode
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 {params.excl_opt} \
-                INPUT="{input.tumor_bam}" \
+                INPUT="{input.bam}" \
                 OUTPUT="{output}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \

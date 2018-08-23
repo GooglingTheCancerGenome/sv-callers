@@ -29,8 +29,11 @@ file_exts:
   bcf: .bcf
   bed: .bed
 
-samples: samples.csv  # list of WGS samples (pairs) in BAM format
-                      # PATH TUMOR NORMAL
+samples: samples.csv  # list of (paired) WGS samples in BAM file format
+                      # columns: PATH,SAMPLE1,SAMPLE2
+                      # SAMPLE1/SAMPLE2 correspond to tumor/normal samples;
+                      # both samples are used in somatic mode while only SAMPLE1
+                      # is used in germline mode
 callers:
   manta:
     threads: 24         # number of threads used

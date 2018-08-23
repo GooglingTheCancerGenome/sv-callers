@@ -67,12 +67,12 @@ rule delly_g:  # germline mode
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
-        tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx")
+        bam = "{path}/{sample}" + get_filext("bam"),
+        bai = "{path}/{sample}" + get_filext("bam_idx")
     params:
         excl_opt = '-x "%s"' % get_bed("delly") if get_bed("delly") else ""
     output:
-        os.path.join("{path}/{tumor}", get_outdir("delly"), "delly-{sv_type}" +
+        os.path.join("{path}/{sample}", get_outdir("delly"), "delly-{sv_type}" +
                      get_filext("bcf"))
     conda:
         "../environment.yaml"
@@ -100,7 +100,7 @@ rule delly_g:  # germline mode
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
                 {params.excl_opt} \
-                "{input.tumor_bam}"
+                "{input.bam}"
         fi
         """
 
@@ -110,14 +110,14 @@ rule delly_merge:  # both somatic and germline modes
                       "delly-" + sv + ".filtered" + get_filext("bcf"))
          for sv in config["callers"]["delly"]["sv_types"]]
          if config["mode"].startswith("s") is True else
-        [os.path.join("{path}/{tumor}" , get_outdir("delly"), "delly-" + sv +
+        [os.path.join("{path}/{sample}" , get_outdir("delly"), "delly-" + sv +
                       get_filext("bcf"))
          for sv in config["callers"]["delly"]["sv_types"]]
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"), "delly" +
                      get_filext("vcf"))
         if config["mode"].startswith("s") is True else
-        os.path.join("{path}/{tumor}", get_outdir("delly"), "delly" +
+        os.path.join("{path}/{sample}", get_outdir("delly"), "delly" +
                      get_filext("vcf"))
     conda:
         "../environment.yaml"
