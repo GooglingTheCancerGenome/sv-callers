@@ -50,7 +50,7 @@ Note: One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Mant
 ```bash
 # dry run doesn't execute anything only checks I/O files
 snakemake -np
-# dummy run (default) executes 'echo' for each caller and outputs (dummy) *.vcf files
+# echo run (default) pretends to run SV callers by echoing the names of I/O files into (dummy) VCF files
 snakemake -C echo_run=1
 
 ```
@@ -58,16 +58,15 @@ snakemake -C echo_run=1
 _Submit to Grid Engine-based cluster_
 
 ```bash
-#   SV calling:
-#     set echo_run=0, add --use-conda and increase --max-run-time [minutes]
-#     and/or selectively enable_callers="['manta','delly']" etc.
-snakemake -C echo_run=1 --use-conda --latency-wait 30 --jobs  9 \
+snakemake -C echo_run=1 --latency-wait 30 --jobs \
 --cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --option parallel.environment=threaded --option parallel.slots={threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-\\\$JOB_ID.log --stdout stdout-\\\$JOB_ID.log' &>smk.log&
 ```
 
 _Submit to Slurm-based cluster_
 
 ```bash
-snakemake -C echo_run=1 --latency-wait 30 --jobs  9 \
+snakemake -C echo_run=1 --latency-wait 30 --jobs \
 --cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
+
+For the actual SV calling, set `echo_run=0`, select callers with `enable_callers="['manta','delly','lumpy','gridss']"` (default), add `--use-conda` and increase the value for `--max-run-time` (in minutes). The workflow enables both germline and somatic calling using `mode=g` and `mode=s` (default), respectively.
