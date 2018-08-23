@@ -14,18 +14,6 @@ env:
     - MODE=s PORT=10024 SCH=slurm
     - MODE=g PORT=10025 SCH=slurm
 before_install:
-  - >
-    cat <<EOF > run.sh
-    #!/bin/bash
-
-    source ~/.profile && \
-    cd sv-callers/snakemake && \
-    git checkout dev && \
-    snakemake -C echo_run=1 mode=$1 --latency-wait 30 --jobs \
-      --cluster "xenon -vvv scheduler $2 --location local:// submit \
-      --name smk.{rule} --inherit-env --max-run-time 1 --working-directory ."
-    EOF
-  - cat run.sh
   - docker pull $PREFIX-$SCH
   - docker run -d -p $PORT:22 --name $SCH-$MODE $PREFIX-$SCH
   - sleep 10
