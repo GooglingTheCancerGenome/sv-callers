@@ -7,7 +7,7 @@ enable_callers:
 mode: s # (s)omatic or (g)ermline SV calling
 
 # filepath of the reference genome in FASTA format (excl. file suffix)
-genome: data/fasta/Homo_sapiens.GRCh37.GATK.illumina
+genome: data/fasta/chr22
 
 # filepath of the optional blacklist of genomic regions in BED format
 # (excl. file suffix)
