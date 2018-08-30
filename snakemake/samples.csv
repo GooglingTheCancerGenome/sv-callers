@@ -1,4 +1,5 @@
 PATH,SAMPLE1,SAMPLE2
-data/bam/1,T1,N1
-data/bam/2,T2.1,N2
-data/bam/2,T2.2,N2
+#data/bam/1,T1,N1
+#data/bam/2,T2.1,N2
+#data/bam/2,T2.2,N2
+data/bam/3,T3,N3
