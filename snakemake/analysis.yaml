@@ -36,14 +36,14 @@ samples: samples.csv  # list of (paired) WGS samples in BAM file format
                       # is used in germline mode
 callers:
   manta:
-    threads: 24         # number of threads used
+    threads: 1          # number of threads used
     memory: 16384       # allocated memory in MB
     tmpspace: 0         # min. temporary disk space in MB
     outdir: manta_out   # output dir relative to PATH/sample (see above)
     exclude_regions: 0  # using the blacklist: false (0) or true (1)
 
   delly:
-    threads: 2  # max. 2 if somatic mode otherwise defaults to 1
+    threads: 1  # max. 2 if somatic mode otherwise defaults to 1
     memory: 8192
     tmpspace: 0
     outdir: delly_out
@@ -63,7 +63,7 @@ callers:
     exclude_regions: 0
 
   gridss:
-    threads: 24
+    threads: 1
     memory: 63488
     tmpspace: 0  # 10240
     outdir: gridss_out
