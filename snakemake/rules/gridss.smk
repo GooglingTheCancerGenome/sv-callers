@@ -2,10 +2,10 @@ rule gridss_s:  # somatic mode
     input:
         fasta = get_fasta(),
         fai = get_faidx(),  # bwa index files also required
-        tumor_bam = "{path}/{tumor}" + get_filext("bam"),
-        tumor_bai = "{path}/{tumor}" + get_filext("bam_idx"),
-        normal_bam = "{path}/{normal}" + get_filext("bam"),
-        normal_bai = "{path}/{normal}" + get_filext("bam_idx")
+        tumor_bam = get_bam("{path}/{tumor}"),
+        tumor_bai = get_bai("{path}/{tumor}"),
+        normal_bam = get_bam("{path}/{normal}"),
+        normal_bai = get_bai("{path}/{normal}")
     params:
         excl_opt = "BLACKLIST=" + get_bed("gridss") if get_bed("gridss") else ""
     output:
@@ -58,8 +58,8 @@ rule gridss_g:  # germline mode
     input:
         fasta = get_fasta(),
         fai = get_faidx(),  # bwa index files also required
-        bam = "{path}/{sample}" + get_filext("bam"),
-        bai = "{path}/{sample}" + get_filext("bam_idx")
+        bam = get_bam("{path}/{sample}"),
+        bai = get_bai("{path}/{sample}")
     params:
         excl_opt = "BLACKLIST=" + get_bed("gridss") if get_bed("gridss") else ""
     output:
