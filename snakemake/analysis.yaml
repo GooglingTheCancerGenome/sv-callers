@@ -39,7 +39,8 @@ callers:
     memory: 16384       # allocated memory in MB
     tmpspace: 0         # min. temporary disk space in MB
     outdir: manta_out   # output dir relative to PATH/sample (see above)
-    exclude_regions: 0  # 1 - use an exclusion list in BED format otherwise 0
+    exclude_regions: 0  # use an exclusion list in BED format (1) otherwise (0)
+    tumor_only: 0       # tumor-only (1) otherwise germline analysis (0)
 
   delly:
     threads: 1  # max. 2 if somatic mode otherwise defaults to 1

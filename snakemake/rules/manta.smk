@@ -6,8 +6,8 @@ rule manta_s:  # somatic mode
         tumor_bai = get_bai("{path}/{tumor}"),
         normal_bam = get_bam("{path}/{normal}"),
         normal_bai = get_bai("{path}/{normal}")
-    #params:
-    #    excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
+    # params:
+    #     excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("manta"),
                      "manta" + get_filext("vcf"))
@@ -50,8 +50,10 @@ rule manta_g:  # germline mode
         fai = get_faidx()[0],
         bam = get_bam("{path}/{sample}"),
         bai = get_bai("{path}/{sample}")
-    #params:
-    #    excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
+    params:
+        # excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
+        bam_opt = "--tumorBam" if is_tumor_only() else "--bam",
+        outfile = "tumorSV.vcf.gz" if is_tumor_only() else "candidateSV.vcf.gz"
     output:
         os.path.join("{path}/{sample}", get_outdir("manta"), "manta" +
                      get_filext("vcf"))
@@ -74,7 +76,7 @@ rule manta_g:  # germline mode
             configManta.py \
                 --runDir "${{OUTDIR}}" \
                 --reference "{input.fasta}" \
-                --tumorBam "{input.bam}" &&
+                {params.bam_opt} "{input.bam}" &&
             cd "${{OUTDIR}}" &&
             ./runWorkflow.py \
                 --quiet \
@@ -83,6 +85,6 @@ rule manta_g:  # germline mode
             bcftools convert \
                 -O v `# uncompressed VCF format` \
                 -o "$(basename "{output}")" \
-                results/variants/tumorSV.vcf.gz
+                results/variants/{params.outfile}
         fi
         """
