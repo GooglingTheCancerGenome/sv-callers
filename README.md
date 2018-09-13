@@ -37,20 +37,21 @@ conda install -y -c nlesc xenon-cli # optional but recommended;)
 
 **3. Configure and execute the workflow.**
 
-- **config files**: `analysis.yaml` and `environment.yaml` 
+- **config files**: `analysis.yaml` and `environment.yaml`
+  - two workflow `mode`s: `s`ingle-sample (germline or tumor-only) or `p`aired-samples (somatic) analysis
 - **input files**:
-  - example data provided in the `sv-callers/data` directory
-  - tumor/normal (T/N) samples in `*.bam` (incl. index files)
-     - list T/N sample pairs to compare in `samples.csv`
+  - example data in the `sv-callers/data` directory
   - reference genome in `.fasta` (incl. index files)
-- **output files**: somatic SVs in `.vcf` (incl. index files)
+  - (paired) samples in `*.bam` (incl. index files)
+  - list of (paired) samples for analysis in `samples.csv`
+- **output files**: SVs in `.vcf` (incl. index files)
 
-Note: One pair of T/N samples will generate eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job that merges DELLY (per SV type) call sets into one VCF file. A workflow instance can be found [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
+Note: One sample or tumor/normal sample pair generates eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job to merge DELLY call sets (per SV type) into one VCF file. A workflow instance can be found [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
 
 ```bash
-# dry run doesn't execute anything only checks I/O files
+# this 'dry' run only checks I/O files
 snakemake -np
-# echo run (default) pretends to run SV callers by echoing the names of I/O files into (dummy) VCF files
+# this 'vanilla' run (default) pretends to execute SV callers by echoing the I/O file names into (dummy) VCF files
 snakemake -C echo_run=1
 
 ```
@@ -58,15 +59,15 @@ snakemake -C echo_run=1
 _Submit to Grid Engine-based cluster_
 
 ```bash
-snakemake -C echo_run=1 --latency-wait 30 --jobs \
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']"--latency-wait 30 --jobs \
 --cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --option parallel.environment=threaded --option parallel.slots={threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-\\\$JOB_ID.log --stdout stdout-\\\$JOB_ID.log' &>smk.log&
 ```
 
 _Submit to Slurm-based cluster_
 
 ```bash
-snakemake -C echo_run=1 --latency-wait 30 --jobs \
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']" --latency-wait 30 --jobs \
 --cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
-For the actual SV calling, set `echo_run=0`, select callers with `enable_callers="['manta','delly','lumpy','gridss']"` (default), add `--use-conda` and increase the value for `--max-run-time` (in minutes). The workflow enables both germline and somatic calling using `mode=g` and `mode=s` (default), respectively.
+To perform SV calling, set `echo_run=0`, select one or more callers using  `enable_callers` (default: all used), add `--use-conda` and increase the value for `--max-run-time` (in minutes).
