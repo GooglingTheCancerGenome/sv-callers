@@ -133,8 +133,7 @@ def is_tumor_only():
     """
     try:
         assert config["callers"]["manta"]["tumor_only"] in (0, 1), \
-            "Invalid setting for 'manta' caller: 'tumor_only' must be set " + \
-            "to either 0 or 1."
+            "Invalid setting for 'manta' caller: 'tumor_only' must be set to either 0 or 1."
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
@@ -151,8 +150,8 @@ def make_output():
     with open(config["samples"], "r") as fp:
         mode = config["mode"]
         try:
-            assert(mode in ('s', 'g')), \
-                "SV calling mode must be either (s)omatic or (g)ermline."
+            assert(mode in ('s', 'p')), \
+                "Invalid workflow mode: run (s)ingle- or (p)aired-samples analysis."
         except AssertionError as err:
             print(str(err), file=sys.stderr)
             os._exit(1)
@@ -162,7 +161,7 @@ def make_output():
         for i, r in enumerate(reader):
             try:
                 path = os.path.join(r["PATH"], is_ok(r["SAMPLE1"]))
-                if mode.startswith('s') is True:  # in somatic mode
+                if mode.startswith('p') is True:  # for paired-samples
                     path += "--" + is_ok(r["SAMPLE2"])
             except TypeError as err:
                 print("Missing value(s) in '{}' at record #{}: {}"

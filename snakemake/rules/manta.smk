@@ -1,4 +1,4 @@
-rule manta_s:  # somatic mode
+rule manta_p:  # paired-samples analysis
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
@@ -44,7 +44,7 @@ rule manta_s:  # somatic mode
         fi
         """
 
-rule manta_g:  # germline mode
+rule manta_s:  # single-sample analysis: germline or tumor-only
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],

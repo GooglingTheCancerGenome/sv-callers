@@ -1,4 +1,4 @@
-rule delly_s:  # somatic mode
+rule delly_p:  # paired-samples analysis
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
@@ -63,7 +63,7 @@ rule delly_s:  # somatic mode
         fi
         """
 
-rule delly_g:  # germline mode
+rule delly_s:  # single-sample analysis
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
@@ -104,19 +104,19 @@ rule delly_g:  # germline mode
         fi
         """
 
-rule delly_merge:  # both somatic and germline modes
+rule delly_merge:  # used by both modes
     input:
         [os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
                       "delly-" + sv + ".filtered" + get_filext("bcf"))
          for sv in config["callers"]["delly"]["sv_types"]]
-        if config["mode"].startswith("s") is True else
+        if config["mode"].startswith("p") is True else
         [os.path.join("{path}/{sample}", get_outdir("delly"), "delly-" + sv +
                       get_filext("bcf"))
          for sv in config["callers"]["delly"]["sv_types"]]
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"), "delly" +
                      get_filext("vcf"))
-        if config["mode"].startswith("s") is True else
+        if config["mode"].startswith("p") is True else
         os.path.join("{path}/{sample}", get_outdir("delly"), "delly" +
                      get_filext("vcf"))
     conda:

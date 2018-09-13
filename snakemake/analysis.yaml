@@ -4,7 +4,7 @@ enable_callers:
     - delly
     - lumpy
     - gridss
-mode: s # (s)omatic or (g)ermline SV calling
+mode: p # (s)ingle-sample or (p)aired-samples analysis
 
 # filepath of the reference genome (in FASTA format)
 genome: data/fasta/chr22.fasta
@@ -30,9 +30,9 @@ file_exts:
 
 samples: samples.csv  # list of (paired) WGS samples in BAM file format
                       # columns: PATH,SAMPLE1,SAMPLE2
-                      # SAMPLE1/SAMPLE2 correspond to tumor/normal samples;
-                      # both samples are used in somatic mode while only SAMPLE1
-                      # is used in germline mode
+                      # SAMPLE1/SAMPLE2 corresponding to tumor/normal samples
+                      # are used for somatic analysis while only SAMPLE1 is used
+                      # for germline (or tumor-only) analysis
 callers:
   manta:
     threads: 1          # number of threads used
@@ -40,10 +40,10 @@ callers:
     tmpspace: 0         # min. temporary disk space in MB
     outdir: manta_out   # output dir relative to PATH/sample (see above)
     exclude_regions: 0  # use an exclusion list in BED format (1) otherwise (0)
-    tumor_only: 0       # tumor-only (1) otherwise germline analysis (0)
+    tumor_only: 0       # germline (0) otherwise tumor-only analysis (1)
 
   delly:
-    threads: 1  # max. 2 if somatic mode otherwise defaults to 1
+    threads: 1  # max. 2 for paired-samples otherwise defaults to 1
     memory: 8192
     tmpspace: 0
     outdir: delly_out
@@ -56,7 +56,7 @@ callers:
         - INV  # inversion
 
   lumpy:
-    threads: 1  # does not support multi-threading
+    threads: 1  # multi-threading not supported
     memory: 32768
     tmpspace: 0  # 1024
     outdir: lumpy_out

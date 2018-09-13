@@ -1,4 +1,4 @@
-rule lumpy_s:  # somatic mode
+rule lumpy_p:  # paired-samples analysis
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],
@@ -42,7 +42,7 @@ rule lumpy_s:  # somatic mode
         fi
         """
 
-rule lumpy_g:  # germline mode
+rule lumpy_s:  # single-sample analysis
     input:
         fasta = get_fasta(),
         fai = get_faidx()[0],

@@ -1,4 +1,4 @@
-rule gridss_s:  # somatic mode
+rule gridss_p:  # paired-samples analysis
     input:
         fasta = get_fasta(),
         fai = get_faidx(),  # bwa index files also required
@@ -54,7 +54,7 @@ rule gridss_s:  # somatic mode
         fi
         """
 
-rule gridss_g:  # germline mode
+rule gridss_s:  # single-sample analysis
     input:
         fasta = get_fasta(),
         fai = get_faidx(),  # bwa index files also required
