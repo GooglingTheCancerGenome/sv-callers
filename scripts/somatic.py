@@ -1,3 +1,5 @@
+# Outputs the somatic variants GRIDSS found
+
 from pysam import VariantFile
 
 vcf_input_file = 'somatic.sv.vcf'
