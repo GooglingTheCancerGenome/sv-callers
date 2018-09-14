@@ -14,7 +14,7 @@ Structural variants (SVs) are an important class of genetic variation implicated
   - [Manta](https://github.com/Illumina/manta) (1.1.0)
   - [DELLY](https://github.com/dellytools/delly) (0.7.7)
   - [LUMPY](https://github.com/arq5x/lumpy-sv) (0.2.13)
-  - [GRIDSS](https://github.com/PapenfussLab/gridss) (1.5.1)
+  - [GRIDSS](https://github.com/PapenfussLab/gridss) (1.3.4)
 
 **1. Clone this repo.**
 
@@ -38,7 +38,7 @@ conda install -y -c nlesc xenon-cli # optional but recommended;)
 **3. Configure and execute the workflow.**
 
 - **config files**: `analysis.yaml` and `environment.yaml`
-  - two workflow `mode`s: `s`ingle-sample (germline or tumor-only) or `p`aired-samples (somatic) analysis
+  - two workflow modes: single-sample (germline or tumor-only) or paired-samples (somatic) analysis
 - **input files**:
   - example data in the `sv-callers/data` directory
   - reference genome in `.fasta` (incl. index files)
@@ -70,4 +70,4 @@ snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']
 --cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
-To perform SV calling, set `echo_run=0`, select one or more callers using  `enable_callers` (default: all used), add `--use-conda` and increase the value for `--max-run-time` (in minutes).
+To perform SV calling, set `echo_run=0`, choose workflow `mode`, select one or more callers using `enable_callers`, add `--use-conda` and set `--max-run-time` to a reasonable value (in minutes).
