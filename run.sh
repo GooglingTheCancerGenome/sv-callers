@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 source ~/.profile
-git lfs clone -b dev https://github.com/GooglingTheCancerGenome/sv-callers.git
+git clone -b dev https://github.com/GooglingTheCancerGenome/sv-callers.git
 cd sv-callers/snakemake
 snakemake -C echo_run=0 enable_callers="['manta','delly','lumpy','gridss']" \
   mode=$1 --use-conda --latency-wait 30 --jobs \
