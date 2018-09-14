@@ -1,10 +1,15 @@
-echo_run: 1  # run SV callers (0) or vanilla jobs (1)
+# run SV calling (0) or vanilla jobs (1)
+echo_run: 1
+
+# select one or more callers
 enable_callers:
     - manta
     - delly
     - lumpy
     - gridss
-mode: p # (s)ingle-sample or (p)aired-samples analysis
+
+# (s)ingle-sample or (p)aired-samples analysis
+mode: p
 
 # filepath of the reference genome (in FASTA format)
 genome: data/fasta/chr22.fasta
@@ -12,7 +17,7 @@ genome: data/fasta/chr22.fasta
 # filepath of the exclusion list with genomic regions (in BED format)
 exclusion_list: data/ENCFF001TDO.bed
 
-# list of registered file extensions
+# list of registered file extensions used by the workflow
 file_exts:
   fasta: .fasta
   fasta_idx:
@@ -28,11 +33,13 @@ file_exts:
   bcf: .bcf
   bed: .bed
 
-samples: samples.csv  # list of (paired) WGS samples in BAM file format
-                      # columns: PATH,SAMPLE1,SAMPLE2
-                      # SAMPLE1/SAMPLE2 corresponding to tumor/normal samples
-                      # are used for somatic analysis while only SAMPLE1 is used
-                      # for germline (or tumor-only) analysis
+# list of (paired) WGS samples for analysis
+# CSV format: PATH,SAMPLE1,SAMPLE2
+# paired SAMPLE1/SAMPLE2 (tumor/normal) used for somatic analysis while
+# single SAMPLE1 used for germline (or tumor-only) analysis
+samples: samples.csv
+
+# settings or requirements of SV callers (jobs)
 callers:
   manta:
     threads: 1          # number of threads used
