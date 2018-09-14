@@ -26,7 +26,7 @@ rule delly_p:  # paired-samples analysis
         # fetch sample ID from a BAM file
         function get_samp_id() {{
             echo "$(samtools view -H ${{1}} | \
-                   perl -lne 'print ${{1}} if /\sLB:(\S+)/' | \
+                   perl -lne 'print ${{1}} if /\sSM:(\S+)/' | \
                    head -n 1)"
         }}
 
