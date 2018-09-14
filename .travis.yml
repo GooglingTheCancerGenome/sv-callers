@@ -10,9 +10,9 @@ env:
     - PREFIX=gtcg/sv-callers
   matrix:
     - MODE=s PORT=10022 SCH=gridengine
-    - MODE=g PORT=10023 SCH=gridengine
+    - MODE=p PORT=10023 SCH=gridengine
     - MODE=s PORT=10024 SCH=slurm
-    - MODE=g PORT=10025 SCH=slurm
+    - MODE=p PORT=10025 SCH=slurm
 before_install:
   - docker pull $PREFIX-$SCH
   - docker run -d -p $PORT:22 --name $SCH-$MODE $PREFIX-$SCH
