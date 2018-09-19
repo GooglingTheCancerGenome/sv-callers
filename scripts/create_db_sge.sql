@@ -85,3 +85,29 @@ SELECT
     CAST(ROUND(AVG(`mem_mb`)) AS INTEGER) AS `mean_mem`
 FROM V_JOB
 GROUP BY `jobname`, `status`;
+
+CREATE VIEW V_JOB_E AS
+SELECT
+  `etime_bin`,
+  `status`,
+  COUNT(DISTINCT `hostname`) AS `n_hosts`,
+  SUM(`slots`) AS `n_cores`,
+  COUNT(*) AS `n_jobs`
+FROM V_JOB
+GROUP BY `etime_bin`, `status` ORDER BY 1;
+
+CREATE VIEW VV_JOB_E AS
+SELECT
+  T1.etime_bin,
+  T1.status,
+  T1.n_jobs,
+  SUM(T2.n_jobs) AS cum_jobs
+FROM V_JOB_E AS T1, V_JOB_E AS T2
+WHERE T2.rowid <= T1.rowid AND T2.status = T1.status
+GROUP BY T1.status, T1.etime_bin, T1.n_jobs
+ORDER BY T1.status, T1.rowid;
+
+-- .header on
+-- .mode csv
+-- .output jobs.csv
+-- SELECT etime_bin, cum_jobs FROM VV_JOB_E WHERE status = 'COMPLETED';
