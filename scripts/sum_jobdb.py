@@ -66,12 +66,12 @@ with sqlt.connect(dbfile) as conn:
    SELECT
       jobname,
       COUNT(jobid) AS n,
-      ROUND(MIN(rtime_s) / 60, 0) AS min,
-      ROUND(MAX(rtime_s) / 60, 0) AS max,
-      ROUND(AVG(rtime_s) / 60, 0) AS mean,
-      ROUND(MEDIAN(rtime_s) / 60, 0) AS median
+      ROUND(MIN(runtime) / 60, 0) AS min,
+      ROUND(MAX(runtime) / 60, 0) AS max,
+      ROUND(AVG(runtime) / 60, 0) AS mean,
+      ROUND(MEDIAN(runtime) / 60, 0) AS median
    FROM V_JOB
-   WHERE state = 'COMPLETED'
+   WHERE status = 'COMPLETED'
    GROUP BY jobname;
    """
 
