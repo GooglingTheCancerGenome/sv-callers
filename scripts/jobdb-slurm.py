@@ -39,7 +39,7 @@ SELECT
     start,
     end,
     (CAST(REPLACE(mem, 'K', '') AS INTEGER) / 1024) AS mem_mb,
-    reqcpus,
+    MIN(reqcpus) AS reqcpus,
     nodelist,
     state
 FROM {0}
