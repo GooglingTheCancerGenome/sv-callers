@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import sys, os
+import os
+import sys
 
 
 period = sys.argv[1:]
@@ -44,6 +45,9 @@ SELECT
     state
 FROM {0}
 GROUP BY jobid;
+
+CREATE INDEX idx_{3}_jobid ON {3}(jobid);
+CREATE INDEX idx_{3}_jobname ON {3}(jobname);
 
 CREATE VIEW {4} AS
 SELECT
