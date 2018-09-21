@@ -1,16 +1,15 @@
-# Outputs the somatic variants GRIDSS found
+# Filter GRIDSS output for somatic SVs
 
 from pysam import VariantFile
 
-vcf_input_file = 'somatic.sv.vcf'
-vcf_output_file = 'somatic.vcf'
 
-vcf_in = VariantFile(vcf_input_file)
-vcf_out = VariantFile(vcf_output_file, 'w', header=vcf_in.header)
+vcf_infile = 'gridss.vcf'
+vcf_outfile = 'gridss_somatic.vcf'
+
+vcf_in = VariantFile(vcf_infile)
+vcf_out = VariantFile(vcf_outfile, 'w', header=vcf_in.header)
 
 for record in vcf_in:
-    #Normal is the first sample
-    normal = record.samples.keys()[0]
-    assert normal[0] == 'N'
-    if record.samples[normal]['QUAL']==0:
+    normal = record.samples.keys()[0]  # assume 1st sample is 'normal'
+    if record.samples[normal]["QUAL"] == 0:
         vcf_out.write(record)
