@@ -47,10 +47,14 @@ rule gridss_p:  # paired-samples analysis
                 {params.excl_opt} \
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
-                OUTPUT="{output}" \
+                OUTPUT="${{OUTDIR}}/gridss.unfiltered.vcf" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
-                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
+                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" &&
+            # somatic filtering
+            #   'normal' sample assumes index 0
+            bcftools filter -O v -o "{output}" -i "FORMAT/QUAL[0] == 0" \
+                "${{OUTDIR}}/gridss.unfiltered.vcf"
         fi
         """
 

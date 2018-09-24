@@ -34,11 +34,15 @@ rule lumpy_p:  # paired-samples analysis
             lumpyexpress \
                 -B "{input.tumor_bam}","{input.normal_bam}" \
                 {params.excl_opt} \
-                -o "{output}" \
+                -o "${{OUTDIR}}/lumpy.unfiltered.vcf" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \
-                -T "${{TMP}}/lumpy.${{RANDOM}}"
+                -T "${{TMP}}/lumpy.${{RANDOM}}" &&
+            # somatic filtering
+            #   'normal' sample assumes index 1
+            bcftools filter -O v -o "{output}" -i "FORMAT/SU[1] == 0" \
+                "${{OUTDIR}}/lumpy.unfiltered.vcf"
         fi
         """
 
