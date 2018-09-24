@@ -37,8 +37,9 @@ conda install -y -c nlesc xenon-cli # optional but recommended;)
 
 **3. Configure and execute the workflow.**
 
-- **config files**: `analysis.yaml` and `environment.yaml`
-  - two workflow modes: single-sample (germline or tumor-only) or paired-samples (somatic) analysis
+- **config files**:
+  - `analysis.yaml` - analysis-specific settings such as workflow mode (single- or paired-samples analysis) or SV callers used etc.
+  - `environment.yaml` - software dependencies and versions
 - **input files**:
   - example data in the `sv-callers/data` directory
   - reference genome in `.fasta` (incl. index files)
@@ -70,4 +71,4 @@ snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']
 --cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
-To perform SV calling, set `echo_run=0`, choose workflow `mode`, select one or more callers using `enable_callers`, add `--use-conda` and set `--max-run-time` to a reasonable value (in minutes).
+To perform SV calling, set `echo_run=0`, choose workflow `mode` [s/p], select one or more callers using `enable_callers`, add `--use-conda` and set `--max-run-time` to a reasonable value (in minutes).
