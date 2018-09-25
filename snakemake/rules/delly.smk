@@ -10,7 +10,7 @@ rule delly_p:  # paired-samples analysis
         excl_opt = '-x "%s"' % get_bed("delly") if get_bed("delly") else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
-                     "delly-{sv_type}.filtered" + get_filext("bcf"))
+                     "delly-{sv_type}" + get_filext("bcf"))
     conda:
         "../environment.yaml"
     threads:
@@ -21,7 +21,10 @@ rule delly_p:  # paired-samples analysis
     shell:
         """
         set -x
+
         OUTDIR="$(dirname "{output}")"
+        PREFIX="${{OUTDIR}}/$(basename "{output}" .bcf).unfiltered"
+        TSV="${{OUTDIR}}/sample_pairs.tsv"
 
         # fetch sample ID from a BAM file
         function get_samp_id() {{
@@ -40,8 +43,6 @@ rule delly_p:  # paired-samples analysis
             #export OMP_PLACES=threads
 
             # SV calling
-            PREFIX="${{OUTDIR}}/$(basename "{output}" .filtered.bcf)"
-            TSV="${{OUTDIR}}/sample_pairs.tsv"
             delly call \
                 -t "{wildcards.sv_type}" \
                 -g "{input.fasta}" \
@@ -50,7 +51,7 @@ rule delly_p:  # paired-samples analysis
                 -s 9 `# insert size cutoff, DELs only` \
                 {params.excl_opt} \
                 "{input.tumor_bam}" "{input.normal_bam}" &&
-            # somatic pre-filtering
+            # somatic filtering
             #   create sample list
             TID=$(get_samp_id "{input.tumor_bam}")
             CID=$(get_samp_id "{input.normal_bam}")
@@ -107,7 +108,7 @@ rule delly_s:  # single-sample analysis
 rule delly_merge:  # used by both modes
     input:
         [os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
-                      "delly-" + sv + ".filtered" + get_filext("bcf"))
+                      "delly-" + sv + get_filext("bcf"))
          for sv in config["callers"]["delly"]["sv_types"]]
         if config["mode"].startswith("p") is True else
         [os.path.join("{path}/{sample}", get_outdir("delly"), "delly-" + sv +
