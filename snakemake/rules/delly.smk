@@ -23,7 +23,8 @@ rule delly_p:  # paired-samples analysis
         set -x
 
         OUTDIR="$(dirname "{output}")"
-        PREFIX="${{OUTDIR}}/$(basename "{output}" .bcf).unfiltered"
+        PREFIX="$(basename "{output}" .bcf)"
+        OUTFILE="${{OUTDIR}}/${{PREFIX}}.unfiltered.bcf"
         TSV="${{OUTDIR}}/sample_pairs.tsv"
 
         # fetch sample ID from a BAM file
@@ -46,7 +47,7 @@ rule delly_p:  # paired-samples analysis
             delly call \
                 -t "{wildcards.sv_type}" \
                 -g "{input.fasta}" \
-                -o "${{PREFIX}}.bcf" \
+                -o "${{OUTFILE}}" \
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
                 {params.excl_opt} \
@@ -60,7 +61,7 @@ rule delly_p:  # paired-samples analysis
                 -f somatic \
                 -s "${{TSV}}" \
                 -o "{output}" \
-                "${{PREFIX}}.bcf"
+                "${{OUTFILE}}"
         fi
         """
 
@@ -84,6 +85,7 @@ rule delly_s:  # single-sample analysis
     shell:
         """
         set -x
+
         OUTDIR="$(dirname "{output}")"
 
         # run dummy or real job
