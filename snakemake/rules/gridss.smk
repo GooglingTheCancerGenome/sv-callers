@@ -24,6 +24,8 @@ rule gridss_p:  # paired-samples analysis
 
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
+        PREFIX="$(basename "{output}" .vcf)"
+        OUTFILE="${{OUTDIR}}/${{PREFIX}}.unfiltered.vcf"
         TMP=$([ "{resources.tmp_mb}" -eq "0" ] &&
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
 
@@ -47,14 +49,14 @@ rule gridss_p:  # paired-samples analysis
                 {params.excl_opt} \
                 INPUT="{input.normal_bam}" \
                 INPUT="{input.tumor_bam}" \
-                OUTPUT="${{OUTDIR}}/gridss.unfiltered.vcf" \
+                OUTPUT="${{OUTFILE}}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" &&
             # somatic filtering
             #   'normal' sample assumes index 0
             bcftools filter -O v -o "{output}" -i "FORMAT/QUAL[0] == 0" \
-                "${{OUTDIR}}/gridss.unfiltered.vcf"
+                "${{OUTFILE}}"
         fi
         """
 
