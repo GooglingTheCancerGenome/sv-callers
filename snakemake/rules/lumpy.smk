@@ -24,6 +24,8 @@ rule lumpy_p:  # paired-samples analysis
 
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
+        PREFIX="$(basename "{output}" .vcf)"
+        OUTFILE="${{OUTDIR}}/${{PREFIX}}.unfiltered.vcf"
         TMP=$([ "{resources.tmp_mb}" -eq "0" ] &&
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
 
@@ -34,7 +36,7 @@ rule lumpy_p:  # paired-samples analysis
             lumpyexpress \
                 -B "{input.tumor_bam}","{input.normal_bam}" \
                 {params.excl_opt} \
-                -o "${{OUTDIR}}/lumpy.unfiltered.vcf" \
+                -o "${{OUTFILE}}" \
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \
@@ -42,7 +44,7 @@ rule lumpy_p:  # paired-samples analysis
             # somatic filtering
             #   'normal' sample assumes index 1
             bcftools filter -O v -o "{output}" -i "FORMAT/SU[1] == 0" \
-                "${{OUTDIR}}/lumpy.unfiltered.vcf"
+                "${{OUTFILE}}"
         fi
         """
 
