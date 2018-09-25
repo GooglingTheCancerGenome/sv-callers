@@ -9,10 +9,14 @@ env:
   global:
     - PREFIX=gtcg/sv-callers
   matrix:
-    - MODE=s PORT=10022 SCH=gridengine
-    - MODE=p PORT=10023 SCH=gridengine
-    - MODE=s PORT=10024 SCH=slurm
-    - MODE=p PORT=10025 SCH=slurm
+    - ECHO=1 MODE=s PORT=10022 SCH=gridengine
+    - ECHO=1 MODE=p PORT=10023 SCH=gridengine
+    - ECHO=1 MODE=s PORT=10024 SCH=slurm
+    - ECHO=1 MODE=p PORT=10025 SCH=slurm
+    - ECHO=0 MODE=s PORT=10022 SCH=gridengine
+    - ECHO=0 MODE=p PORT=10023 SCH=gridengine
+    - ECHO=0 MODE=s PORT=10024 SCH=slurm
+    - ECHO=0 MODE=p PORT=10025 SCH=slurm
 before_install:
   - docker pull $PREFIX-$SCH
   - docker run -d -p $PORT:22 --name $SCH-$MODE $PREFIX-$SCH
@@ -21,4 +25,4 @@ before_install:
   - docker cp run.sh $SCH-$MODE:/home/xenon
 install: true
 script:
-  - docker exec -u xenon -t $SCH-$MODE /bin/bash run.sh $MODE $SCH
+  - docker exec -u xenon -t $SCH-$MODE /bin/bash run.sh $ECHO $MODE $SCH
