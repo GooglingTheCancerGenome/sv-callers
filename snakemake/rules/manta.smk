@@ -21,6 +21,7 @@ rule manta_p:  # paired-samples analysis
     shell:
         """
         set -x
+
         OUTDIR="$(dirname "{output}")"
 
         # run dummy or real job
@@ -67,6 +68,7 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
     shell:
         """
         set -x
+
         OUTDIR="$(dirname "{output}")"
 
         # run dummy or real job
