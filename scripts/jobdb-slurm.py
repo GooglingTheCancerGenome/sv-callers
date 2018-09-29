@@ -53,8 +53,8 @@ CREATE VIEW {4} AS
 SELECT
     jobid,
     jobname,
-    strftime('%Y-%m-%d %H:%M:%D', start) AS stime,
-    strftime('%Y-%m-%d %H:%M:%D', end) AS etime,
+    strftime('%Y-%m-%d %H:%M:%S', start) AS stime,
+    strftime('%Y-%m-%d %H:%M:%S', end) AS etime,
     strftime('%s',end) - strftime('%s', start) AS runtime, -- in sec
     strftime('%Y-%m-%d %H:00:00', start) AS stime_bin,
     strftime('%Y-%m-%d %H:00:00', end) AS etime_bin,
