@@ -42,7 +42,7 @@ rule gridss_p:  # paired-samples analysis
             echo "{input}" "${{TMP}}" > "{output}"
         else
             # clean-up outdir prior to SV calling
-            rm -fr ${{OUTDIR}}/*gridss* {input.fasta}.dict &&
+            rm -fr ${{OUTDIR}}/*gridss* &&
             gridss gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
@@ -100,7 +100,7 @@ rule gridss_s:  # single-sample analysis
             echo "{input}" "${{TMP}}" > "{output}"
         else
             # clean-up outdir prior to SV calling
-            rm -fr ${{OUTDIR}}/*gridss* {input.fasta}.dict &&
+            rm -fr ${{OUTDIR}}/*gridss* &&
             gridss gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
