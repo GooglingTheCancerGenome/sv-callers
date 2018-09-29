@@ -65,7 +65,7 @@ def get_bed(caller):
     fname = config["exclusion_list"]
     sfx = get_filext("bed")
     exclude = config["callers"][caller]["exclude_regions"]
-    if exclude is False:
+    if exclude == 0:
         return ""
     try:
         assert os.path.exists(fname), \
