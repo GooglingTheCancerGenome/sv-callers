@@ -39,7 +39,7 @@ SELECT
     GROUP_CONCAT(jobname, '') AS jobname,
     start,
     end,
-    (CAST(REPLACE(mem, 'K', '') AS INTEGER) / 1024) AS mem_mb,
+    MAX(CAST(REPLACE(mem, 'K', '') AS INTEGER) / 1024) AS mem_mb,
     MIN(reqcpus) AS reqcpus,
     nodelist,
     state
