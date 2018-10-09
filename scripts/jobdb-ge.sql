@@ -48,7 +48,8 @@ CREATE TABLE TMP (
 );
 
 .separator :
-.import accounting TMP -- $SGE_ROOT/$SGE_CELL/common/accounting
+-- $SGE_ROOT/$SGE_CELL/common/accounting
+.import accounting TMP
 
 CREATE INDEX idx_TMP_owner ON TMP(`owner`);
 CREATE INDEX idx_TMP_jobname ON TMP(`jobname`);
