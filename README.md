@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/GooglingTheCancerGenome/sv-callers.svg?branch=dev)](https://travis-ci.org/GooglingTheCancerGenome/sv-callers)
 
-Structural variants (SVs) are an important class of genetic variation implicated in a wide array of genetic diseases. _sv-callers_ is a Snakemake-based workflow that combines several state-of-the-art tools for detecting SVs in whole genome sequencing (WGS) data. The workflow is easy to use and deploy on any Linux-based machine. In particular, the workflow supports automated software deployment, easy configuration and addition of new analysis tools as well as enables to scale from a single computer to different HPC clusters with minimal effort.
+Structural variants (SVs) are an important class of genetic variation implicated in a wide array of genetic diseases. _sv-callers_ is a _Snakemake_-based workflow that combines several state-of-the-art tools for detecting SVs in whole genome sequencing (WGS) data. The workflow is easy to use and deploy on any Linux-based machine. In particular, the workflow supports automated software deployment, easy configuration and addition of new analysis tools as well as enables to scale from a single computer to different HPC clusters with minimal effort.
 
 ### Dependencies
 
@@ -26,19 +26,19 @@ cd sv-callers/snakemake
 **2. Install dependencies.**
 
 ```bash
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh # python 3
-bash miniconda.sh # install & add conda to your PATH
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh  # python3
+bash miniconda.sh  # install & add conda to your PATH
 source ~/.bashrc
-conda update -y conda # update conda
-conda create -y -n wf && source activate wf # create & activate the environment
+conda update -y conda  # update conda
+conda create -y -n wf && source activate wf  # create & activate the environment
 conda install -y -c bioconda snakemake
-conda install -y -c nlesc xenon-cli # optional but recommended;)
+conda install -y -c nlesc xenon-cli  # optional but recommended;)
 ```
 
 **3. Configure and execute the workflow.**
 
 - **config files**:
-  - `analysis.yaml` - analysis-specific settings such as workflow mode (single- or paired-samples analysis) or SV callers used etc.
+  - `analysis.yaml` - analysis-specific settings (e.g., workflow mode, SV callers used etc.)
   - `environment.yaml` - software dependencies and versions
 - **input files**:
   - example data in the `sv-callers/data` directory
@@ -50,25 +50,30 @@ conda install -y -c nlesc xenon-cli # optional but recommended;)
 Note: One sample or tumor/normal sample pair generates eight SV calling jobs (i.e. 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job to merge DELLY call sets (per SV type) into one VCF file. A workflow instance can be found [here](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv_calling_workflow.png).
 
 ```bash
-# this 'dry' run only checks I/O files
+# the 'dry' run only checks I/O files
 snakemake -np
-# this 'vanilla' run (default) pretends to execute SV callers by echoing the I/O file names into (dummy) VCF files
+# the 'vanilla' run (default) doesn't execute the SV callers per se but rather writes the I/O file names into (dummy) VCF files
 snakemake -C echo_run=1
 
 ```
 
-_Submit to Grid Engine-based cluster_
+_Submit jobs to Grid Engine-based cluster_
 
 ```bash
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']"--latency-wait 30 --jobs \
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']" --latency-wait 30 --jobs 9 \
 --cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --option parallel.environment=threaded --option parallel.slots={threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-\\\$JOB_ID.log --stdout stdout-\\\$JOB_ID.log' &>smk.log&
 ```
 
-_Submit to Slurm-based cluster_
+_Submit jobs to Slurm-based cluster_
 
 ```bash
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']" --latency-wait 30 --jobs \
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']" --latency-wait 30 --jobs 9 \
 --cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
-To perform SV calling, set `echo_run=0`, choose workflow `mode` [s/p], select one or more callers using `enable_callers`, add `--use-conda` and set `--max-run-time` to a reasonable value (in minutes).
+Settings for SV calling:
+- `echo_run=0`
+- set `--max-run-time` to a reasonable value (in minutes)
+- add `--use-conda` to run jobs in a conda environment with pre-install callers
+- select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
+- choose between two workflow modes: `s` - single-sample or `p` - paired-samples analysis (default: `p`)
