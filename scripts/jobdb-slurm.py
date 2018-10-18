@@ -35,12 +35,12 @@ UPDATE {0} SET jobname=REPLACE(jobname, 'batch', '');
 
 CREATE TABLE {3} AS
 SELECT
-    jobid,
+    CAST(jobid AS INTEGER) AS jobid,
     GROUP_CONCAT(jobname, '') AS jobname,
     start,
     end,
     MAX(CAST(REPLACE(mem, 'K', '') AS INTEGER) / 1024) AS mem_mb,
-    MIN(reqcpus) AS reqcpus,
+    MIN(CAST(reqcpus AS INTEGER)) AS reqcpus,
     nodelist,
     state
 FROM {0}
