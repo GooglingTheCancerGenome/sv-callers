@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This bash script generates the SURVIVOR merge VCF file with the overlap among sv callers within each run
+# SURVIVOR version v1.0.5 was used
 
 for SAMPLE in COLO829 NA12878; do
 	echo "Sample: "$SAMPLE
