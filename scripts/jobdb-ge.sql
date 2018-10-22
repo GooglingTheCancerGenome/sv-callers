@@ -48,7 +48,8 @@ CREATE TABLE TMP (
 );
 
 .separator :
-.import accounting TMP -- $SGE_ROOT/$SGE_CELL/common/accounting
+-- $SGE_ROOT/$SGE_CELL/common/accounting
+.import accounting TMP
 
 CREATE INDEX idx_TMP_owner ON TMP(`owner`);
 CREATE INDEX idx_TMP_jobname ON TMP(`jobname`);
@@ -62,6 +63,7 @@ SELECT
     `jobname`,
     `hostname`,
     CAST(`slots` AS INTEGER) AS `slots`,
+    strftime('%Y-%m-%d %H:%M:%S', `qsub_time`, 'unixepoch') AS `subtime`,
     strftime('%Y-%m-%d %H:%M:%S', `start_time`, 'unixepoch') AS `stime`,
     strftime('%Y-%m-%d %H:%M:%S', `end_time`, 'unixepoch') AS `etime`,
     CAST(`ru_wallclock` AS INTEGER) AS `runtime`, -- in sec

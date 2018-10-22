@@ -35,12 +35,13 @@ UPDATE {0} SET jobname=REPLACE(jobname, 'batch', '');
 
 CREATE TABLE {3} AS
 SELECT
-    jobid,
+    CAST(jobid AS INTEGER) AS jobid,
     GROUP_CONCAT(jobname, '') AS jobname,
+    submit,
     start,
     end,
     MAX(CAST(REPLACE(mem, 'K', '') AS INTEGER) / 1024) AS mem_mb,
-    MIN(reqcpus) AS reqcpus,
+    MIN(CAST(reqcpus AS INTEGER)) AS reqcpus,
     nodelist,
     state
 FROM {0}
@@ -53,9 +54,11 @@ CREATE VIEW {4} AS
 SELECT
     jobid,
     jobname,
+    strftime('%Y-%m-%d %H:%M:%S', submit) AS subtime,
     strftime('%Y-%m-%d %H:%M:%S', start) AS stime,
     strftime('%Y-%m-%d %H:%M:%S', end) AS etime,
-    strftime('%s',end) - strftime('%s', start) AS runtime, -- in sec
+    strftime('%s',start) - strftime('%s', submit) AS qtime, -- in sec
+    strftime('%s',end) - strftime('%s', start) AS runtime,  -- in sec
     strftime('%Y-%m-%d %H:00:00', start) AS stime_bin,
     strftime('%Y-%m-%d %H:00:00', end) AS etime_bin,
     mem_mb,
