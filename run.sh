@@ -21,9 +21,9 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   --max-run-time 15 --working-directory ."
 
 if [ "$ECHO" -eq "0" ]; then
-  for c in "${CALLERS[@]}"; do
-    VCF_FILE="$(find data -name $c.vcf)"
-    MSG=$([ -e  "$VCF_FILE" ] && echo "OK" || echo "missing")
-    echo "$VCF_FILE...$MSG"
+  for caller in "${CALLERS[@]}"; do
+    VCF_FILE="$(find data -name $caller.vcf)"
+    MSG=$([ -e  "$VCF_FILE" ] && echo "OK" || echo "None")
+    echo "$caller: $VCF_FILE VCF outfile...$MSG"
   done
 fi
