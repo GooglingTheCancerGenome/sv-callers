@@ -60,14 +60,14 @@ snakemake -C echo_run=1
 _Submit jobs to Grid Engine-based cluster_
 
 ```bash
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']" --latency-wait 30 --jobs 9 \
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --latency-wait 30 --jobs 9 \
 --cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --option parallel.environment=threaded --option parallel.slots={threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-\\\$JOB_ID.log --stdout stdout-\\\$JOB_ID.log' &>smk.log&
 ```
 
 _Submit jobs to Slurm-based cluster_
 
 ```bash
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly,'lumpy','gridss']" --latency-wait 30 --jobs 9 \
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --latency-wait 30 --jobs 9 \
 --cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
