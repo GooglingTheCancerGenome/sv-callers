@@ -42,7 +42,7 @@ samples: samples.csv
 # settings or requirements of SV callers (jobs)
 callers:
   manta:
-    threads: 1          # number of threads used
+    threads: 24         # number of threads used
     memory: 16384       # allocated memory (MB)
     tmpspace: 0         # min. temporary disk space (MB); not supported by Manta
     outdir: manta_out   # output dir relative to PATH/sample (see above)
@@ -50,7 +50,7 @@ callers:
     tumor_only: 0       # germline (0) or tumor-only analysis (1)
 
   delly:
-    threads: 1  # max. 2 for paired-samples otherwise defaults to 1
+    threads: 2  # max. 2 for paired-samples otherwise defaults to 1
     memory: 8192
     tmpspace: 0 # not supported by Delly
     outdir: delly_out
@@ -70,7 +70,7 @@ callers:
     exclude_regions: 0
 
   gridss:
-    threads: 1
+    threads: 24
     memory: 63488
     tmpspace: 0  # 102400
     outdir: gridss_out
