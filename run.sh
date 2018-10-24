@@ -16,6 +16,7 @@ USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 echo "Selected callers: $STR_CALLERS"
 snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   enable_callers="$STR_CALLERS" $USE_CONDA \
+  --configfile analysis_test.yaml \
   --latency-wait 60 --jobs \
   --cluster "xenon -vvv scheduler $SCH --location local:// submit \
   --name smk.{rule} --procs-per-node=1 --start-single-process --inherit-env \
