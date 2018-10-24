@@ -15,14 +15,14 @@ USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 echo "Selected callers: $STR_CALLERS"
 snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   enable_callers="$STR_CALLERS" $USE_CONDA \
-  --latency-wait 30 --jobs \
+  --latency-wait 60 --jobs \
   --cluster "xenon -vvv scheduler $SCH --location local:// submit \
   --name smk.{rule} --procs-per-node=1 --start-single-process --inherit-env \
   --max-run-time 15 --working-directory ."
 
 if [ "$ECHO" -eq "0" ]; then
   for c in "${CALLERS[@]}"; do
-    vcf_file="$c.vcf"
-    find data -name $vcf_file | xargs grep -cv "#" || exit 1
+    VCF_FILE="$(find data -name $c.vcf)"
+    [ -e  "$VCF_FILE" ] && exit 0 || exit 1
   done
 fi
