@@ -55,8 +55,11 @@ rule gridss_p:  # paired-samples analysis
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" &&
             # somatic + SV quality filtering
             #   'normal' sample assumes index 0
-            bcftools filter -O v -o "{output}" -i "FORMAT/QUAL[0] == 0 && \
-                FILTER == '.'" "${{OUTFILE}}"
+            bcftools filter
+                -O v `# uncompressed VCF format` \
+                -o "{output}"
+                -i "FORMAT/QUAL[0] == 0 && FILTER == '.'" \
+                "${{OUTFILE}}"
         fi
         """
 

@@ -43,8 +43,11 @@ rule lumpy_p:  # paired-samples analysis
                 -T "${{TMP}}/lumpy.${{RANDOM}}" &&
             # somatic + SV quality filtering
             #   'normal' sample assumes index 1
-            bcftools filter -O v -o "{output}" -i "FORMAT/SU[1] == 0 && \
-                FILTER == '.'" "${{OUTFILE}}"
+            bcftools filter
+                -O v `# uncompressed VCF format` \
+                -o "{output}" \
+                -i "FORMAT/SU[1] == 0 && FILTER == '.'" \
+                "${{OUTFILE}}"
         fi
         """
 
