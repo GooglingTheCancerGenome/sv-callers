@@ -22,7 +22,7 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   --name smk.{rule} --procs-per-node=1 --start-single-process --inherit-env \
   --max-run-time 15 --working-directory ."
 
-echo "== VCF output files =="
+echo "VCF output files:"
 if [ "$ECHO" -eq "0" ]; then
   for caller in "${CALLERS[@]}"; do
     VCF_FILE="$(find data -name $caller.vcf)"
@@ -31,7 +31,7 @@ if [ "$ECHO" -eq "0" ]; then
     if [ $BOOL -gt $EXIT_CODE ]; then
       EXIT_CODE=1
     fi
-    echo "\t$caller: $INFO"
+    echo " $caller: $INFO"
   done
 fi
 exit $EXIT_CODE
