@@ -25,10 +25,10 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
 if [ "$ECHO" -eq "0" ]; then
   for caller in "${CALLERS[@]}"; do
     VCF_FILE="$(find data -name $caller.vcf)"
-    BOOL=$([ -e  "$VCF_FILE" ] && echo "0" || echo "1")
-    MSG=$([ "$BOOL" -eq "0" ] && echo "Yes" || echo "No")
+    BOOL=$([ -e  "$VCF_FILE" ] && echo 0 || echo 1)
+    MSG=$([ $BOOL -eq 0 ] && echo "Yes" || echo "No")
+    EXIT_CODE=$([ $BOOL -gt $EXIT_CODE ] && echo 1 || echo 0)
     echo "$caller: VCF outfile $VCF_FILE...$MSG"
-    EXIT_CODE=$([ "$BOOL" -gt "$EXIT_CODE" ] && echo "1")
   done
 fi
 exit $EXIT_CODE
