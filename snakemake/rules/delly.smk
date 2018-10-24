@@ -52,13 +52,14 @@ rule delly_p:  # paired-samples analysis
                 -s 9 `# insert size cutoff, DELs only` \
                 {params.excl_opt} \
                 "{input.tumor_bam}" "{input.normal_bam}" &&
-            # somatic filtering
+            # somatic + SV quality filtering
             #   create sample list
             TID=$(get_samp_id "{input.tumor_bam}")
             CID=$(get_samp_id "{input.normal_bam}")
             printf "${{TID}}\ttumor\n${{CID}}\tcontrol\n" > ${{TSV}} &&
             delly filter \
                 -f somatic \
+                -p \
                 -s "${{TSV}}" \
                 -o "{output}" \
                 "${{OUTFILE}}"

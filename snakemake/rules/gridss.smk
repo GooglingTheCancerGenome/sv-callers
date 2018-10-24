@@ -53,10 +53,10 @@ rule gridss_p:  # paired-samples analysis
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
                 TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" &&
-            # somatic filtering
+            # somatic + SV quality filtering
             #   'normal' sample assumes index 0
-            bcftools filter -O v -o "{output}" -i "FORMAT/QUAL[0] == 0" \
-                "${{OUTFILE}}"
+            bcftools filter -O v -o "{output}" -i "FORMAT/QUAL[0] == 0 && \
+                FILTER == '.'" "${{OUTFILE}}"
         fi
         """
 

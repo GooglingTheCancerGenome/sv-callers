@@ -38,9 +38,11 @@ rule manta_p:  # paired-samples analysis
                 --quiet \
                 -m local \
                 -j {threads} &&
-            bcftools convert \
+            # SV quality filtering
+            bcftools filter
                 -O v `# uncompressed VCF format` \
                 -o "$(basename "{output}")" \
+                -i "FILTER == 'PASS'" \
                 results/variants/somaticSV.vcf.gz
         fi
         """
