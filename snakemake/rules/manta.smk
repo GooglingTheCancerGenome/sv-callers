@@ -39,7 +39,7 @@ rule manta_p:  # paired-samples analysis
                 -m local \
                 -j {threads} &&
             # SV quality filtering
-            bcftools filter
+            bcftools filter \
                 -O v `# uncompressed VCF format` \
                 -o "$(basename "{output}")" \
                 -i "FILTER == 'PASS'" \
