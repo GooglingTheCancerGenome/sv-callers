@@ -28,7 +28,7 @@ if [ "$ECHO" -eq "0" ]; then
     BOOL=$([ -e  "$VCF_FILE" ] && echo "0" || echo "1")
     MSG=$([ "$BOOL" -eq "0" ] && echo "Yes" || echo "No")
     echo "$caller: VCF outfile $VCF_FILE...$MSG"
-    EXIT_CODE=$([ "$BOOL" -gt "$EXIT_CODE ] && echo "1")
+    EXIT_CODE=$([ "$BOOL" -gt "$EXIT_CODE" ] && echo "1")
   done
 fi
 exit $EXIT_CODE
