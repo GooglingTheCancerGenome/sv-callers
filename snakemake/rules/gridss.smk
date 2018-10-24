@@ -57,7 +57,7 @@ rule gridss_p:  # paired-samples analysis
             #   'normal' sample assumes index 0
             bcftools filter \
                 -O v `# uncompressed VCF format` \
-                -o "{output}"
+                -o "{output}" \
                 -i "FORMAT/QUAL[0] == 0 && FILTER == '.'" \
                 "${{OUTFILE}}"
         fi
