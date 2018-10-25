@@ -2,8 +2,8 @@
 # This workflow runs an ensembl of structural variant (SV) callers on a set of
 # paired samples (BAM files, tumor vs. normal) provided in a CSV file.
 #
-# The workflow settings and its deployment are controlled by two config files:
-#   config.yaml - set input/output files, SV callers' params, requirements etc.
+# The workflow uses two config files:
+#   analysis.yaml - set input/output files, SV callers' params, requirements etc.
 #   environment.yaml - set software dependencies incl. versions
 #
 
