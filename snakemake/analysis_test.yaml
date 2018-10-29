@@ -70,7 +70,7 @@ callers:
     exclude_regions: 0
 
   gridss:
-    threads: 24
+    threads: 1
     memory: 63488
     tmpspace: 0  # 102400
     outdir: gridss_out

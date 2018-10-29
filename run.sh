@@ -19,7 +19,7 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   --configfile analysis_test.yaml \
   --latency-wait 60 --jobs \
   --cluster "xenon -vvv scheduler $SCH --location local:// submit \
-  --name smk.{rule} --procs-per-node=1 --start-single-process --inherit-env \
+  --name smk.{rule} --procs-per-node {threads} --start-single-process --inherit-env \
   --max-run-time 15 --working-directory ."
 
 echo "VCF output files:"
