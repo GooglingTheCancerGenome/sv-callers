@@ -19,8 +19,9 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   --configfile analysis_test.yaml \
   --latency-wait 60 --jobs \
   --cluster "xenon -vvv scheduler $SCH --location local:// submit \
-  --name smk.{rule} --procs-per-node {threads} --start-single-process --inherit-env \
-  --max-run-time 15 --working-directory ."
+  --name smk.{rule} --procs-per-node {threads} --start-single-process \
+  --inherit-env --max-run-time 15 --working-directory . \
+  --stderr stderr-%j.log --stdout stdout-%j.log"
 
 echo "VCF output files:"
 if [ "$ECHO" -eq "0" ]; then
@@ -34,4 +35,8 @@ if [ "$ECHO" -eq "0" ]; then
     echo " $caller: $INFO"
   done
 fi
+
+echo "Log files:"
+ls *.log
+
 exit $EXIT_CODE
