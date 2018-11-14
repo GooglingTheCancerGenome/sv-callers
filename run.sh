@@ -18,10 +18,10 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   enable_callers="$STR_CALLERS" $USE_CONDA \
   --configfile analysis_test.yaml \
   --latency-wait 60 --jobs \
-  --cluster "xenon -vvv scheduler $SCH --location local:// submit \
+  --cluster 'xenon -vvv scheduler $SCH --location local:// submit \
   --name smk.{rule} --procs-per-node {threads} --start-single-process \
   --inherit-env --max-run-time 15 --working-directory . \
-  --stderr stderr-%j.log --stdout stdout-%j.log"
+  --stderr stderr-%j.log --stdout stdout-%j.log'
 
 echo "VCF output files:"
 if [ "$ECHO" -eq "0" ]; then
