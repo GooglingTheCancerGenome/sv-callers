@@ -150,6 +150,6 @@ rule delly_merge:  # used by both modes
                -a `# allow overlaps` \
                -O v `# uncompressed VCF format` \
                -o "{output}" \
-               "{input}"
+               {input}
        fi
        """
