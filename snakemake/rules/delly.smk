@@ -135,13 +135,13 @@ rule delly_merge:  # used by both modes
 
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
-            cat {input} > "{output}"
+            cat "{input}" > "{output}"
         else
             # concatenate rather than merge BCF files
             bcftools concat \
                -a `# allow overlaps` \
                -O v `# uncompressed VCF format` \
                -o "{output}" \
-               {input}
+               "{input}"
        fi
        """
