@@ -88,6 +88,8 @@ rule delly_s:  # single-sample analysis
         set -x
 
         OUTDIR="$(dirname "{output}")"
+        PREFIX="$(basename "{output}" .bcf)"
+        OUTFILE="${{OUTDIR}}/${{PREFIX}}.unfiltered.bcf"
 
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
@@ -100,11 +102,17 @@ rule delly_s:  # single-sample analysis
             delly call \
                 -t "{wildcards.sv_type}" \
                 -g "{input.fasta}" \
-                -o "{output}" \
+                -o "${{OUTFILE}}" \
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
                 {params.excl_opt} \
                 "{input.bam}"
+            # germline + SV quality filtering
+            delly filter \
+                -f germline \
+                -p \
+                -o "{output}" \
+                "${{OUTFILE}}"
         fi
         """
 
