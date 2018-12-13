@@ -1,0 +1,95 @@
+import os
+import pandas as pd
+
+shell.executable("/bin/bash")
+
+__author__ = 'Luca Santuari'
+__version__ = '1.0.0'
+__license__ = 'Apache License, Version 2.0'
+
+'''
+Runs break-point-inspector on the manta output of the HMF dataset
+Run with:
+snakemake --cluster "qsub --runtime {params.runtime}" --jobs 20
+'''
+
+WORKING_DIR = '/hpc/cog_bioinf/ridder/users/akuzniar/HMF_data'
+#WORKING_DIR = '/Users/lsantuari/Documents/Processed/HMF_data'
+CSV = os.path.join(WORKING_DIR, 'samples.csv')
+
+# Tools
+BPI = 'break-point-inspector'
+
+def get_comparisons():
+    df = pd.read_csv(CSV)
+    return ['--'.join(t) for t in zip(df['SAMPLE1'], df['SAMPLE2'])]
+
+def get_sample_name(sample):
+    df = pd.read_csv(CSV)
+    return [s for s in df[sample]]
+
+def get_sample_path(sample):
+    df = pd.read_csv(CSV)
+    return [os.path.join(WORKING_DIR[:-4] + s[0], s[1]+'.bam')
+            for s in zip(df['PATH'], df[sample])]
+
+def get_comparison_path(wildcards):
+    df = pd.read_csv(CSV)
+    return os.path.join(WORKING_DIR[:-4]+df['PATH'][(df['SAMPLE1']==wildcards.sample1) & \
+                                                     (df['SAMPLE2']==wildcards.sample2)].iloc[0])
+
+def get_comparison_vcf(wildcards):
+    df = pd.read_csv(CSV)
+    return os.path.join(WORKING_DIR[:-4]+df['PATH'][(df['SAMPLE1']==wildcards.sample1) & \
+                                                     (df['SAMPLE2']==wildcards.sample2)].iloc[0],
+                        wildcards.sample1+'--'+wildcards.sample2, 'manta_out', 'manta.vcf')
+
+def get_sample1(wildcards):
+    df = pd.read_csv(CSV)
+    filepath = os.path.join(WORKING_DIR[:-4]+df['PATH'][ (df['SAMPLE1']==wildcards.sample1) & \
+                            (df['SAMPLE2']==wildcards.sample2) ].iloc[0], \
+                            wildcards.sample1+'.bam')
+    return filepath
+
+def get_sample2(wildcards):
+    df = pd.read_csv(CSV)
+    filepath = os.path.join(WORKING_DIR[:-4]+df['PATH'][ (df['SAMPLE1']==wildcards.sample1) & \
+                            (df['SAMPLE2']==wildcards.sample2) ].iloc[0], \
+                            wildcards.sample2+'.bam')
+    return filepath
+
+def get_output(sample1, sample2):
+    vcf = os.path.join(sample1,'--', sample2, 'bpi_out', 'bpi.vcf')
+    print(vcf)
+    return vcf
+
+rule all:
+  input:
+      expand(os.path.join('{sample1}--{sample2}','bpi_out','bpi.vcf'), zip,
+            sample1=get_sample_name('SAMPLE1'),
+            sample2=get_sample_name('SAMPLE2'))
+
+rule break_point_inspector:
+    input:
+        ref = get_sample2,
+        tumor = get_sample1,
+        vcf = get_comparison_vcf
+    params:
+        contamination_fraction = 0,
+        proximity = 500,
+        ref_slice = os.path.join('{sample1}--{sample2}', 'bpi_out', '{sample2}_slice.bam'),
+        tumor_slice = os.path.join('{sample1}--{sample2}', 'bpi_out', '{sample1}_slice.bam'),
+        runtime="4h"
+    output:
+        vcf = os.path.join('{sample1}--{sample2}', 'bpi_out', 'bpi.vcf'),
+        table = os.path.join('{sample1}--{sample2}', 'bpi_out', 'bpi_table.txt')
+    shell:
+        '{BPI} \
+        -contamination_fraction {params.contamination_fraction} \
+        -proximity {params.proximity} \
+        -ref {input.ref} \
+        -ref_slice {params.ref_slice} \
+        -tumor {input.tumor} \
+        -tumor_slice {params.tumor_slice} \
+        -output_vcf {output.vcf} \
+        -vcf {input.vcf} > {output.table}'
