@@ -9,7 +9,7 @@ Structural variants (SVs) are an important class of genetic variation implicated
 - python (>=3.6)
 - [conda](https://conda.io/) (>=4.5)
 - [snakemake](https://snakemake.readthedocs.io/) (>=4.7)
-- [xenon-cli](https://github.com/NLeSC/xenon-cli) (2.4)
+- [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.0)
 - SV callers
   - [Manta](https://github.com/Illumina/manta) (1.1.0)
   - [DELLY](https://github.com/dellytools/delly) (0.7.7)
@@ -67,7 +67,7 @@ _Submit jobs to Grid Engine-based cluster_
 
 ```bash
 snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 9 \
---cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --option parallel.environment=threaded --option parallel.slots={threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-\\\$JOB_ID.log --stdout stdout-\\\$JOB_ID.log' &>smk.log&
+--cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
 _Submit jobs to Slurm-based cluster_
