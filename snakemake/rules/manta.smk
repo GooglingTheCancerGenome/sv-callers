@@ -23,6 +23,7 @@ rule manta_p:  # paired-samples analysis
         set -x
 
         OUTDIR="$(dirname "{output}")"
+        OUTFILE="$(basename "{output}")"
 
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
@@ -41,7 +42,7 @@ rule manta_p:  # paired-samples analysis
             # SV quality filtering
             bcftools filter \
                 -O v `# uncompressed VCF format` \
-                -o "$(basename "{output}")" \
+                -o "${{OUTFILE}}" \
                 -i "FILTER == 'PASS'" \
                 results/variants/somaticSV.vcf.gz
         fi
@@ -72,6 +73,7 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
         set -x
 
         OUTDIR="$(dirname "{output}")"
+        OUTFILE="$(basename "{output}")"
 
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
@@ -86,9 +88,11 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
                 --quiet \
                 -m local \
                 -j {threads} &&
-            bcftools convert \
+            # SV quality filtering
+            bcftools filter \
                 -O v `# uncompressed VCF format` \
-                -o "$(basename "{output}")" \
+                -o "${{OUTFILE}}" \
+                -i "FILTER == 'PASS'" \
                 results/variants/{params.outfile}
         fi
         """
