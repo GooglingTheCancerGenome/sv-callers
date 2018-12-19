@@ -87,6 +87,8 @@ rule gridss_s:  # single-sample analysis
 
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
+        PREFIX="$(basename "{output}" .vcf)"
+        OUTFILE="${{OUTDIR}}/${{PREFIX}}.unfiltered.vcf"
         TMP=$([ "{resources.tmp_mb}" -eq "0" ] &&
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
 
@@ -109,9 +111,15 @@ rule gridss_s:  # single-sample analysis
                 REFERENCE_SEQUENCE="{input.fasta}" \
                 {params.excl_opt} \
                 INPUT="{input.bam}" \
-                OUTPUT="{output}" \
+                OUTPUT="${{OUTFILE}}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
-                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
+                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" &&
+            # SV quality filtering
+            bcftools filter \
+                -O v `# uncompressed VCF format` \
+                -o "{output}" \
+                -i "FILTER == '.'" \
+                "${{OUTFILE}}"
         fi
         """
