@@ -106,13 +106,15 @@ rule delly_s:  # single-sample analysis
                 -q 1 `# min.paired-end mapping quality` \
                 -s 9 `# insert size cutoff, DELs only` \
                 {params.excl_opt} \
-                "{input.bam}"
+                "{input.bam}" &&
             # SV quality filtering
             bcftools filter \
-                -O v `# uncompressed VCF format` \
+                -O b `# compressed BCF format` \
                 -o "{output}" \
                 -i "FILTER == 'PASS'" \
-                "${{OUTFILE}}"
+                "${{OUTFILE}}" &&
+            # index BCF file
+            bcftools index "{output}"
         fi
         """
 
