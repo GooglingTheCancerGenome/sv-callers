@@ -92,7 +92,7 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
             bcftools filter \
                 -O v `# uncompressed VCF format` \
                 -o "${{OUTFILE}}" \
-                -i "FILTER == 'PASS'" \
+                -i "FILTER == '.'" \
                 results/variants/{params.outfile}
         fi
         """
