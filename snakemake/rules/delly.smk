@@ -107,11 +107,11 @@ rule delly_s:  # single-sample analysis
                 -s 9 `# insert size cutoff, DELs only` \
                 {params.excl_opt} \
                 "{input.bam}"
-            # germline + SV quality filtering
-            delly filter \
-                -f germline \
-                -p \
+            # SV quality filtering
+            bcftools filter \
+                -O v `# uncompressed VCF format` \
                 -o "{output}" \
+                -i "FILTER == 'PASS'" \
                 "${{OUTFILE}}"
         fi
         """
