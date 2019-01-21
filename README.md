@@ -60,7 +60,7 @@ snakemake -C echo_run=1
 
 ```
 
-Note: One sample or sample pair (tumor/normal) generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job to merge DELLY call sets (per SV type) into one output file in [VCF](https://samtools.github.io/hts-specs/). See the workflow instance of [single-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv-callers_single.svg) (germline) or [paired-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/master/doc/sv-callers_paired.svg) (somatic) analysis.
+Note: One sample or sample pair (tumor/normal) generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job to merge DELLY call sets (per SV type) into one output file in [VCF](https://samtools.github.io/hts-specs/). See the workflow instance of [single-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/dev/doc/sv-callers_single.svg) (germline) or [paired-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/dev/doc/sv-callers_paired.svg) (somatic) analysis.
 
 _Submit jobs to Grid Engine-based cluster_
 
