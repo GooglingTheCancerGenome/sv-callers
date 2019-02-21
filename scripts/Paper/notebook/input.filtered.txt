@@ -1,0 +1,4 @@
+delly.filtered.vcf
+gridss.filtered.vcf
+lumpy.filtered.vcf
+manta.filtered.vcf
