@@ -57,7 +57,7 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
     params:
         # excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
         bam_opt = "--tumorBam" if is_tumor_only() else "--bam",
-        outfile = "tumorSV.vcf.gz" if is_tumor_only() else "candidateSV.vcf.gz"
+        outfile = "tumorSV.vcf.gz" if is_tumor_only() else "diploidSV.vcf.gz"
     output:
         os.path.join("{path}/{sample}", get_outdir("manta"), "manta" +
                      get_filext("vcf"))
@@ -92,7 +92,7 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
             bcftools filter \
                 -O v `# uncompressed VCF format` \
                 -o "${{OUTFILE}}" \
-                -i "FILTER == '.'" \
+                -i "FILTER == 'PASS'" \
                 results/variants/{params.outfile}
         fi
         """
