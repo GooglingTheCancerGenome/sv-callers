@@ -6,17 +6,18 @@ SURVIVOR merge input.txt 100 1 0 0 0 0 all.vcf
 merging entries: 15081
 merging entries: 11797
 merging entries: 334
-merging entries: 116891
+merging entries: 7480
 
 SURVIVOR filter all.vcf ENCFF001TDO.bed -1 -1 0 -1 all.filtered.vcf
-SVs ignored: 3753
+SVs ignored: 2938
 
-all.filtered.vcf:113202
-all.vcf:116955
+grep -cv "#" *.vcf
+all.filtered.vcf:19278
+all.vcf:22216
 delly.vcf:15081
 gridss.vcf:11797
 lumpy.vcf:334
-manta.vcf:116891
+manta.vcf:7480
 
 
 # filter before merge
@@ -25,24 +26,25 @@ for f in $(ls *.vcf); do n=$(basename $f .vcf); SURVIVOR filter $f ENCFF001TDO.b
 SVs ignored: 6
 SVs ignored: 0
 SVs ignored: 0
-SVs ignored: 972
+SVs ignored: 48
 
 SURVIVOR merge input.filtered.txt 100 1 0 0 0 0 all.filtered.vcf
 merging entries: 15075
 merging entries: 11797
 merging entries: 334
-merging entries: 115919
+merging entries: 7432
 
 grep -cv "#" *.vcf
-all.filtered.vcf:116036
+all.filtered.vcf:22167
 delly.filtered.vcf:15075
 delly.vcf:15081
 gridss.filtered.vcf:11797
 gridss.vcf:11797
 lumpy.filtered.vcf:334
 lumpy.vcf:334
-manta.filtered.vcf:115919
-manta.vcf:116891
+manta.filtered.vcf:7432
+manta.vcf:7480
+
 
 === COLO829 ===
 
