@@ -137,6 +137,7 @@ def is_tumor_only():
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
+    return True
 
 
 def make_output():
