@@ -6,8 +6,9 @@ rule manta_p:  # paired-samples analysis
         tumor_bai = get_bai("{path}/{tumor}"),
         normal_bam = get_bam("{path}/{normal}"),
         normal_bai = get_bai("{path}/{normal}")
-    # params:
-    #     excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
+    params:
+    #    excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
+        outfile = "results/variants/somaticSV.vcf.gz"
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("manta"),
                      "manta" + get_filext("vcf"))
@@ -44,7 +45,7 @@ rule manta_p:  # paired-samples analysis
                 -O v `# uncompressed VCF format` \
                 -o "${{OUTFILE}}" \
                 -i "FILTER == 'PASS'" \
-                results/variants/somaticSV.vcf.gz
+                "{params.outfile}"
         fi
         """
 
@@ -57,7 +58,8 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
     params:
         # excl_opt = '-x "%s"' % get_bed("manta") if get_bed("manta") else ""
         bam_opt = "--tumorBam" if is_tumor_only() else "--bam",
-        outfile = "tumorSV.vcf.gz" if is_tumor_only() else "diploidSV.vcf.gz"
+        outfile = "results/variants/tumorSV.vcf.gz" if is_tumor_only() else
+                  "results/variants/diploidSV.vcf.gz"
     output:
         os.path.join("{path}/{sample}", get_outdir("manta"), "manta" +
                      get_filext("vcf"))
@@ -93,6 +95,6 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
                 -O v `# uncompressed VCF format` \
                 -o "${{OUTFILE}}" \
                 -i "FILTER == 'PASS'" \
-                results/variants/{params.outfile}
+                "{params.outfile}"
         fi
         """
