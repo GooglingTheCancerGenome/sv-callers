@@ -23,8 +23,9 @@ rule all:
     input:
         make_output()
 
-# include rules per SV caller
+# include rules
 include: "rules/manta.smk"
 include: "rules/delly.smk"
 include: "rules/lumpy.smk"
 include: "rules/gridss.smk"
+include: "rules/survivor.smk"

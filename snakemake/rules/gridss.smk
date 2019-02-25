@@ -7,7 +7,7 @@ rule gridss_p:  # paired-samples analysis
         normal_bam = get_bam("{path}/{normal}"),
         normal_bai = get_bai("{path}/{normal}")
     params:
-        excl_opt = "BLACKLIST=" + get_bed("gridss") if get_bed("gridss") else ""
+        excl_opt = "BLACKLIST=" + get_bed() if get_bed() else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("gridss"),
                      "gridss" + get_filext("vcf"))
@@ -70,7 +70,7 @@ rule gridss_s:  # single-sample analysis
         bam = get_bam("{path}/{sample}"),
         bai = get_bai("{path}/{sample}")
     params:
-        excl_opt = "BLACKLIST=" + get_bed("gridss") if get_bed("gridss") else ""
+        excl_opt = "BLACKLIST=" + get_bed() if get_bed() else ""
     output:
         os.path.join("{path}/{sample}", get_outdir("gridss"), "gridss" +
                      get_filext("vcf"))

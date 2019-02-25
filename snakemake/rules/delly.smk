@@ -7,7 +7,7 @@ rule delly_p:  # paired-samples analysis
         normal_bam = get_bam("{path}/{normal}"),
         normal_bai = get_bai("{path}/{normal}")
     params:
-        excl_opt = '-x "%s"' % get_bed("delly") if get_bed("delly") else ""
+        excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
                      "delly-{sv_type}" + get_filext("bcf"))
@@ -73,7 +73,7 @@ rule delly_s:  # single-sample analysis
         bam = get_bam("{path}/{sample}"),
         bai = get_bai("{path}/{sample}")
     params:
-        excl_opt = '-x "%s"' % get_bed("delly") if get_bed("delly") else ""
+        excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
     output:
         os.path.join("{path}/{sample}", get_outdir("delly"), "delly-{sv_type}" +
                      get_filext("bcf"))

@@ -7,7 +7,7 @@ rule lumpy_p:  # paired-samples analysis
         normal_bam = get_bam("{path}/{normal}"),
         normal_bai = get_bai("{path}/{normal}")
     params:
-        excl_opt = '-x "%s"' % get_bed("lumpy") if get_bed("lumpy") else ""
+        excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("lumpy"),
                      "lumpy" + get_filext("vcf"))
@@ -58,7 +58,7 @@ rule lumpy_s:  # single-sample analysis
         bam = get_bam("{path}/{sample}"),
         bai = get_bai("{path}/{sample}")
     params:
-        excl_opt = '-x "%s"' % get_bed("lumpy") if get_bed("lumpy") else ""
+        excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
     output:
         os.path.join("{path}/{sample}", get_outdir("lumpy"), "lumpy" +
                      get_filext("vcf"))

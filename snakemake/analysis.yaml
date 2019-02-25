@@ -11,11 +11,12 @@ enable_callers:
 # (s)ingle-sample or (p)aired-samples analysis
 mode: p
 
-# filepath of the reference genome (in FASTA format)
+# filepath of the reference genome in FASTA format
 genome: data/fasta/chr22.fasta
 
-# filepath of the exclusion list with genomic regions (in BED format)
+# filepath of the exclusion list in BED format
 exclusion_list: data/ENCFF001TDO.bed
+exclude_regions: 1 # use the list (1) or don't (0)
 
 # file extensions used by the workflow
 file_exts:
@@ -46,7 +47,6 @@ callers:
     memory: 16384       # allocated memory (MB)
     tmpspace: 0         # min. temporary disk space (MB); not supported by Manta
     outdir: manta_out   # output dir relative to PATH/SAMPLE/... (see above)
-    exclude_regions: 0  # use an exclusion list in BED format (1) otherwise (0)
     tumor_only: 0       # germline (0) or tumor-only analysis (1)
 
   delly:
@@ -54,7 +54,6 @@ callers:
     memory: 8192
     tmpspace: 0 # not supported
     outdir: delly_out
-    exclude_regions: 0
     sv_types:
         - BND  # translocation
         - DEL  # deletion
@@ -67,11 +66,9 @@ callers:
     memory: 32768
     tmpspace: 0  # 10240
     outdir: lumpy_out
-    exclude_regions: 0
 
   gridss:
     threads: 24
     memory: 63488
     tmpspace: 0  # 102400
     outdir: gridss_out
-    exclude_regions: 0

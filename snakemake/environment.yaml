@@ -10,3 +10,4 @@ dependencies:
   - gridss=1.3.4
   - bwa=0.7.15
   - R
+  - survivor=1.0.6
