@@ -17,7 +17,7 @@ genome: data/fasta/chr22.fasta
 # filepath of the exclusion list with genomic regions (in BED format)
 exclusion_list: data/ENCFF001TDO.bed
 
-# list of registered file extensions used by the workflow
+# file extensions used by the workflow
 file_exts:
   fasta: .fasta
   fasta_idx:
@@ -33,26 +33,26 @@ file_exts:
   bcf: .bcf
   bed: .bed
 
-# CSV file with a list of (paired) WGS samples for analysis
+# CSV file with (paired) WGS samples for analysis
 # format: PATH,SAMPLE1,SAMPLE2
 #   paired SAMPLE1(tumor)/SAMPLE2(normal) files used for somatic analysis while
-#   single SAMPLE1 file used for germline or tumor-only (Manta) analysis
+#   single SAMPLE1 file used for germline or tumor-only analysis (Manta only)
 samples: samples.csv
 
-# settings or requirements of SV callers (jobs)
+# settings or requirements per SV caller
 callers:
   manta:
     threads: 24         # number of threads used
     memory: 16384       # allocated memory (MB)
     tmpspace: 0         # min. temporary disk space (MB); not supported by Manta
-    outdir: manta_out   # output dir relative to PATH/sample (see above)
+    outdir: manta_out   # output dir relative to PATH/SAMPLE/... (see above)
     exclude_regions: 0  # use an exclusion list in BED format (1) otherwise (0)
     tumor_only: 0       # germline (0) or tumor-only analysis (1)
 
   delly:
     threads: 2  # max. 2 for paired-samples otherwise defaults to 1
     memory: 8192
-    tmpspace: 0 # not supported by Delly
+    tmpspace: 0 # not supported
     outdir: delly_out
     exclude_regions: 0
     sv_types:
@@ -63,7 +63,7 @@ callers:
         - INV  # inversion
 
   lumpy:
-    threads: 1  # multi-threading not supported by LUMPY
+    threads: 1  # multi-threading not supported
     memory: 32768
     tmpspace: 0  # 10240
     outdir: lumpy_out

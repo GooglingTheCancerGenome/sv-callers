@@ -60,7 +60,7 @@ def get_faidx():
 
 
 def get_bed(caller):
-    """Get BED file (blacklist) depending on the caller's setting.
+    """Get a BED file depending on the caller's 'exclude_regions' setting.
     """
     fname = config["exclusion_list"]
     sfx = get_filext("bed")
