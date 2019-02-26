@@ -130,13 +130,14 @@ def get_tmpspace(caller):
 def is_tumor_only():
     """Check if Manta should perform tumor-only or germline analysis.
     """
+    val = config["callers"]["manta"]["tumor_only"]
     try:
-        assert config["callers"]["manta"]["tumor_only"] in (0, 1), \
+        assert val in (0, 1), \
             "Incorrect value for Manta 'tumor_only': must be either 0 or 1."
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
-    return True
+    return val
 
 
 def make_output():
