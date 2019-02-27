@@ -11,3 +11,4 @@ dependencies:
   - bwa=0.7.15
   - R
   - survivor=1.0.6
+  - openssl=1.0
