@@ -1,16 +1,12 @@
-rule bed_filter:  # used by both modes
+rule survivor_filter:  # used by both modes
     input:
-        [os.path.join("{path}/{tumor}--{normal}", get_outdir(c), c +
-            get_filext("vcf")) for c in get_callers()]
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "{prefix}" + get_filext("vcf"))
         if config["mode"].startswith("p") is True else
-        [os.path.join("{path}/{sample}", get_outdir(c), c +
-            get_filext("vcf")) for c in get_callers()]
+        os.path.join("{path}", "{sample}", "{outdir}", "{prefix}" + get_filext("vcf"))
     output:
-        [os.path.join("{path}/{tumor}--{normal}", get_outdir(c), c +
-            get_filext("bed") + get_filext("vcf")) for c in get_callers()]
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "survivor", "{prefix}" + get_filext("vcf"))
         if config["mode"].startswith("p") is True else
-        [os.path.join("{path}/{sample}", get_outdir(c), c + get_filext("bed") +
-            get_filext("vcf")) for c in get_callers()]
+        os.path.join("{path}", "{sample}", "{outdir}", "survivor", "{prefix}" + get_filext("vcf"))
     params:
         bed = config["exclusion_list"]
     conda:

@@ -171,9 +171,11 @@ def make_output():
                 os._exit(1)
 
             for c in get_callers():
-                # PATH/SAMPLE1[--SAMPLE2]/CALLER_OUTDIR/CALLER.[bed.]vcf
-                fname = c
-                fname += get_filext("bed") if config["exclude_regions"] else ""
-                fname += get_filext("vcf")
-                outfiles.append(os.path.join(path, get_outdir(c), fname))
+                # PATH/SAMPLE1[--SAMPLE2]/CALLER_OUTDIR/[survivor/]CALLER.vcf
+                vcf = c + get_filext("vcf")
+                if config["exclude_regions"]:
+                    vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
+                else:
+                    vcf = os.path.join(path, get_outdir(c), vcf)
+                outfiles.append(vcf)
         return outfiles
