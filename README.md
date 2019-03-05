@@ -8,8 +8,11 @@ Structural variants (SVs) are an important class of genetic variation implicated
 
 - python (>=3.6)
 - [conda](https://conda.io/) (>=4.5)
-- [snakemake](https://snakemake.readthedocs.io/) (>=4.7)
+- [snakemake](https://snakemake.readthedocs.io/) (>=4.8)
 - [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.0)
+
+These will be installed by the workflow itself:
+
 - SV callers
   - [Manta](https://github.com/Illumina/manta) (1.1.0)
   - [DELLY](https://github.com/dellytools/delly) (0.7.7)
@@ -17,6 +20,7 @@ Structural variants (SVs) are an important class of genetic variation implicated
   - [GRIDSS](https://github.com/PapenfussLab/gridss) (1.3.4)
 - Post-processing
   - [BCFtools](https://github.com/samtools/bcftools) (1.9)
+  - [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR) (1.0.6)
 
 **1. Clone this repo.**
 
@@ -28,11 +32,13 @@ cd sv-callers/snakemake
 **2. Install dependencies.**
 
 ```bash
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh  # python3
-bash miniconda.sh  # install & add conda to your PATH
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh  # download Miniconda installer (with Python 3)
+bash miniconda.sh  # install Conda (accept defaults)
+# add the following line to ~/.bashrc & source env
+# export PATH="$HOME/miniconda3/bin:$PATH"
 source ~/.bashrc
-conda update -y conda  # update conda
-conda create -y -n wf && source activate wf  # create & activate the environment
+conda update -y conda  # update Conda
+conda create -y -n wf && source activate wf  # create & activate new env
 conda install -y -c bioconda snakemake
 conda install -y -c nlesc xenon-cli  # optional but recommended;)
 ```
