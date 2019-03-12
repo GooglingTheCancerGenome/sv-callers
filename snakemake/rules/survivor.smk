@@ -8,7 +8,7 @@ rule survivor_filter:  # used by both modes
         if config["mode"].startswith("p") is True else
         os.path.join("{path}", "{sample}", "{outdir}", "survivor", "{prefix}" + get_filext("vcf"))
     params:
-        bed = get_bed() if exclude_regions() else ""
+        bed = '"%s"' % get_bed() if exclude_regions() else ""
     conda:
         "../environment.yaml"
     threads: 1
@@ -23,7 +23,7 @@ rule survivor_filter:  # used by both modes
         if [ "{config[echo_run]}" -eq "1" ]; then
             cat "{input}" > "{output}"
         else
-            if [ "{params.bed}" -eq "" ]; then
+            if [ "{params.bed}" == "" ]; then
                 ln -s "{input}" "{output}"
             else
                 SURVIVOR filter "{input}" "{params.bed}" -1 -1 0 -1 "{output}"

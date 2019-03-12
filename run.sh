@@ -35,11 +35,12 @@ if [ "$ECHO" -eq "0" ]; then
     echo " $caller: $INFO"
   done
 fi
+
 echo "Log files:"
 ls *.log
 for f in $(ls stderr-*.log);
 do
-  echo $f
+  echo "### $f ###"
   cat $f
 done
 
