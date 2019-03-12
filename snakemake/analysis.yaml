@@ -52,7 +52,7 @@ callers:
   delly:
     threads: 2  # max. 2 for paired-samples otherwise defaults to 1
     memory: 8192
-    tmpspace: 0 # not supported
+    tmpspace: 0  # not supported
     outdir: delly_out
     sv_types:
         - BND  # translocation
