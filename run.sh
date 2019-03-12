@@ -23,6 +23,7 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   --inherit-env --max-run-time 15 --working-directory . \
   --stderr stderr-%j.log --stdout stdout-%j.log"
 
+sleep 60
 echo "VCF output files:"
 if [ "$ECHO" -eq "0" ]; then
   for caller in "${CALLERS[@]}"; do
