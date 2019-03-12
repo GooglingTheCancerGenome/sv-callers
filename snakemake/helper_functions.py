@@ -59,21 +59,29 @@ def get_faidx():
     return faidx
 
 
+def exclude_regions():
+    """Check flag for excluding genomic regions (using a BED file).
+    """
+    excl = config["exclude_regions"]
+    try:
+        assert excl in (0, 1), \
+            "Invalid value: 'exclude_regions' must be either 0 or 1."
+    except AssertionError as err:
+        print(str(err), file=sys.stderr)
+        os._exit(1)
+    return excl
+
+
 def get_bed():
-    """Return BED filepath if 'exclude_regions' set to 1.
+    """Return BED filepath.
     """
     fname = config["exclusion_list"]
     sfx = get_filext("bed")
-    exclude = config["exclude_regions"]
-    if exclude == 0:
-        return ""
     try:
         assert os.path.exists(fname), \
             "Exclusion file not found: {}.".format(fname)
         assert fname.endswith(sfx), \
             "Exclusion file '{}' must end with '{}' suffix.".format(fname, sfx)
-        assert exclude in (0, 1), \
-            "Invalid value: 'exclude_regions' must be either 0 or 1."
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
@@ -171,11 +179,8 @@ def make_output():
                 os._exit(1)
 
             for c in get_callers():
-                # PATH/SAMPLE1[--SAMPLE2]/CALLER_OUTDIR/[survivor/]CALLER.vcf
+                # PATH/SAMPLE1[--SAMPLE2]/CALLER_OUTDIR/survivor/CALLER.vcf
                 vcf = c + get_filext("vcf")
-                if config["exclude_regions"]:
-                    vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
-                else:
-                    vcf = os.path.join(path, get_outdir(c), vcf)
+                vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
                 outfiles.append(vcf)
         return outfiles

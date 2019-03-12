@@ -7,7 +7,7 @@ rule delly_p:  # paired-samples analysis
         normal_bam = get_bam("{path}/{normal}"),
         normal_bai = get_bai("{path}/{normal}")
     params:
-        excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
+        excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
                      "delly-{sv_type}" + get_filext("bcf"))
@@ -73,7 +73,7 @@ rule delly_s:  # single-sample analysis
         bam = get_bam("{path}/{sample}"),
         bai = get_bai("{path}/{sample}")
     params:
-        excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
+        excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
     output:
         os.path.join("{path}/{sample}", get_outdir("delly"), "delly-{sv_type}" +
                      get_filext("bcf"))
@@ -145,7 +145,7 @@ rule delly_merge:  # used by both modes
 
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
-            cat "{input}" > "{output}"
+            cat {input} > {output}
         else
             # concatenate rather than merge BCF files
             bcftools concat \

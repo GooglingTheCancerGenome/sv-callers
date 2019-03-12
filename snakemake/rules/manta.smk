@@ -7,7 +7,7 @@ rule manta_p:  # paired-samples analysis
         normal_bam = get_bam("{path}/{normal}"),
         normal_bai = get_bai("{path}/{normal}")
     params:
-    #    excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
+    #    excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
         outfile = "results/variants/somaticSV.vcf.gz"
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("manta"),
@@ -56,7 +56,7 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
         bam = get_bam("{path}/{sample}"),
         bai = get_bai("{path}/{sample}")
     params:
-        # excl_opt = '-x "%s"' % get_bed() if get_bed() else ""
+        # excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
         bam_opt = "--tumorBam" if is_tumor_only() else "--bam",
         outfile = "results/variants/tumorSV.vcf.gz" if is_tumor_only() else
                   "results/variants/diploidSV.vcf.gz"
