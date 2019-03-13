@@ -24,7 +24,7 @@ rule survivor_filter:  # used by both modes
             cat "{input}" > "{output}"
         else
             if [ "{params.bed}" == "" ]; then
-                ln -s "{input}" "{output}"
+                ln -sr "{input}" "{output}"
             else
                 SURVIVOR filter "{input}" "{params.bed}" -1 -1 0 -1 "{output}"
             fi
