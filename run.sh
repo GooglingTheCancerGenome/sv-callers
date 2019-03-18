@@ -23,11 +23,10 @@ snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   --inherit-env --max-run-time 15 --working-directory . \
   --stderr stderr-%j.log --stdout stdout-%j.log"
 
-sleep 60
-echo "VCF output files:"
+echo -e "\nVCF output files:"
 if [ "$ECHO" -eq "0" ]; then
   for caller in "${CALLERS[@]}"; do
-    VCF_FILE="$(find data -name $caller.vcf)"
+    VCF_FILE="$(find data -mindepth 6 -name $caller.vcf)"
     BOOL=$([ -e  "$VCF_FILE" ] && echo 0 || echo 1)
     INFO=$([ $BOOL -eq 0 ] && echo "$VCF_FILE" || echo "None")
     if [ $BOOL -gt $EXIT_CODE ]; then
@@ -37,11 +36,11 @@ if [ "$ECHO" -eq "0" ]; then
   done
 fi
 
-echo "Log files:"
+echo -e "\nLog files:"
 ls *.log
 for f in $(ls stderr-*.log);
 do
-  echo "### $f ###"
+  echo -e "\n### $f ###\n"
   cat $f
 done
 
