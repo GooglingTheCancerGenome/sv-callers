@@ -17,6 +17,8 @@ install:
   - conda create -y -n wf
   - source activate wf
   - conda install -y snakemake xenon-cli
+  - conda install -y pytest pytest-cov
 script:
   - snakemake -C echo_run=1 enable_callers="['manta','delly','lumpy','gridss']"
   - find data -name *.vcf
+  - cd snakemake && pytest --cov=helper_functions
