@@ -21,4 +21,4 @@ install:
 script:
   - snakemake -C echo_run=1 enable_callers="['manta','delly','lumpy','gridss']"
   - find data -name *.vcf
-  - cd snakemake && pytest --cov=helper_functions
+  - pytest --cov=helper_functions
