@@ -1,4 +1,0 @@
-delly.vcf
-gridss.vcf
-lumpy.vcf
-manta.vcf

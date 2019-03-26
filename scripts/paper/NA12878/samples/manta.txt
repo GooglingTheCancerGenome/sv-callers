@@ -1,0 +1,10 @@
+bam/10/S10/manta_out/survivor/manta.vcf
+bam/1/S1/manta_out/survivor/manta.vcf
+bam/2/S2/manta_out/survivor/manta.vcf
+bam/3/S3/manta_out/survivor/manta.vcf
+bam/4/S4/manta_out/survivor/manta.vcf
+bam/5/S5/manta_out/survivor/manta.vcf
+bam/6/S6/manta_out/survivor/manta.vcf
+bam/7/S7/manta_out/survivor/manta.vcf
+bam/8/S8/manta_out/survivor/manta.vcf
+bam/9/S9/manta_out/survivor/manta.vcf

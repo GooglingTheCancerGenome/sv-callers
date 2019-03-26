@@ -1,0 +1,10 @@
+bam/10/S10/delly_out/survivor/delly.vcf
+bam/1/S1/delly_out/survivor/delly.vcf
+bam/2/S2/delly_out/survivor/delly.vcf
+bam/3/S3/delly_out/survivor/delly.vcf
+bam/4/S4/delly_out/survivor/delly.vcf
+bam/5/S5/delly_out/survivor/delly.vcf
+bam/6/S6/delly_out/survivor/delly.vcf
+bam/7/S7/delly_out/survivor/delly.vcf
+bam/8/S8/delly_out/survivor/delly.vcf
+bam/9/S9/delly_out/survivor/delly.vcf
