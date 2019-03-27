@@ -18,12 +18,15 @@ env:
     - ECHO=0 MODE=p PORT=10023 SCH=gridengine
     - ECHO=0 MODE=s PORT=10024 SCH=slurm
     - ECHO=0 MODE=p PORT=10025 SCH=slurm
-before_install:
+install:
+  - pip install -r test-requirements.txt
   - docker pull $PREFIX-$SCH:$TAG
   - docker run -d -p $PORT:22 --name $SCH-$MODE $PREFIX-$SCH:$TAG
   - sleep 10
   - docker ps -a
   - docker cp run.sh $SCH-$MODE:/home/xenon
-install: true
 script:
+  -  cd snakemake && pytest --cov=helper_functions --cov-report=xml
   - docker exec -u xenon -t $SCH-$MODE /bin/bash run.sh $ECHO $MODE $SCH
+after_success:
+  - python-codacy-coverage -r coverage.xml
