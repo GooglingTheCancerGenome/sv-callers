@@ -66,7 +66,7 @@ snakemake -C echo_run=1
 
 ```
 
-Note: One sample or sample pair (tumor/normal) generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job to merge DELLY call sets (per SV type) into one output file in [VCF](https://samtools.github.io/hts-specs/). See the workflow instance of [single-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/dev/doc/sv-callers_single.svg) (germline) or [paired-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/dev/doc/sv-callers_paired.svg) (somatic) analysis.
+Note: One sample or a tumor/normal pair generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job to merge DELLY call sets (per SV type) into one output file in [VCF](https://samtools.github.io/hts-specs/). See the workflow instance of [single-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/dev/doc/sv-callers_single.svg) (germline) or [paired-sample](https://github.com/GooglingTheCancerGenome/sv-callers/blob/dev/doc/sv-callers_paired.svg) (somatic) analysis.
 
 _Submit jobs to Grid Engine-based cluster_
 
@@ -83,9 +83,15 @@ snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss'
 ```
 
 To perform SV calling:
-- overwrite (default) parameters in `analysis.yaml` via _snakemake_ CLI
+- overwrite (default) parameters directly in `analysis.yaml` or via the _snakemake_ CLI (use the `-C` argument)
   - set `echo_run=0`
   - choose between two workflow `mode`s: `s` - single-sample or `p` - paired-samples analysis (default: `p`)
   - select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
-- set _xenon's_ `--max-run-time` option to a reasonable value (in minutes)
-- use temp disk space for intermediate files (in `TMPDIR`): `--temp-space {resources.tmp_mb}` (only supported by LUMPY and GRIDSS)
+- use `xenon` CLI to
+  - set `--max-run-time` of workflow jobs (in minutes)
+  - set `--temp-space` (in MB)
+- optionally adjust compute requirements per SV caller such as
+  - the number of `threads`, 
+  - the amount of `memory`(in MB) or
+  - the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
+
