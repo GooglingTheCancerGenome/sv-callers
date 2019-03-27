@@ -1,24 +1,34 @@
-language: python
-sudo: false
 dist: trusty
+sudo: required
+language: python
 python:
   - "3.6"
+services:
+  - docker
+env:
+  global:
+    - PREFIX=gtcg/sv-callers
+    - TAG=dev
+  matrix:
+    - ECHO=1 MODE=s PORT=10022 SCH=gridengine
+    - ECHO=1 MODE=p PORT=10023 SCH=gridengine
+    - ECHO=1 MODE=s PORT=10024 SCH=slurm
+    - ECHO=1 MODE=p PORT=10025 SCH=slurm
+    - ECHO=0 MODE=s PORT=10022 SCH=gridengine
+    - ECHO=0 MODE=p PORT=10023 SCH=gridengine
+    - ECHO=0 MODE=s PORT=10024 SCH=slurm
+    - ECHO=0 MODE=p PORT=10025 SCH=slurm
 before_install:
   - cd snakemake/
 install:
-  - sudo apt-get update
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - conda update -y conda
-  - conda config --add channels gtcg
-  - conda config --add channels bioconda
-  - conda config --add channels nlesc
-  - conda create -y -n wf
-  - source activate wf
-  - conda install -y snakemake xenon-cli
-  - conda install -y pytest pytest-cov
+  - pip install -r test-requirements.txt
+  - docker pull $PREFIX-$SCH:$TAG
+  - docker run -d -p $PORT:22 --name $SCH-$MODE $PREFIX-$SCH:$TAG
+  - sleep 10
+  - docker ps -a
+  - docker cp run.sh $SCH-$MODE:/home/xenon
 script:
-  - snakemake -C echo_run=1 enable_callers="['manta','delly','lumpy','gridss']"
-  - find data -name *.vcf
-  - pytest --cov=helper_functions
+  - pytest --cov=helper_functions --cov-report=xml
+  - docker exec -u xenon -t $SCH-$MODE /bin/bash run.sh $ECHO $MODE $SCH
+after_success:
+  - python-codacy-coverage -r coverage.xml
