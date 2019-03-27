@@ -31,19 +31,19 @@ def test_get_filext__unknownextension_exception():
 
 def test_get_fasta():
     result = hf.get_fasta()
-    expected = 'data/fasta/Homo_sapiens.GRCh37.GATK.illumina.fasta'
+    expected = 'data/fasta/chr22.fasta'
     assert result == expected
 
 
 def test_get_faidx():
     result = hf.get_faidx()
     expected = [
-        'data/fasta/Homo_sapiens.GRCh37.GATK.illumina.fasta.fai',
-        'data/fasta/Homo_sapiens.GRCh37.GATK.illumina.fasta.bwt',
-        'data/fasta/Homo_sapiens.GRCh37.GATK.illumina.fasta.amb',
-        'data/fasta/Homo_sapiens.GRCh37.GATK.illumina.fasta.ann',
-        'data/fasta/Homo_sapiens.GRCh37.GATK.illumina.fasta.pac',
-        'data/fasta/Homo_sapiens.GRCh37.GATK.illumina.fasta.sa',
+        'data/fasta/chr22.fasta.fai',
+        'data/fasta/chr22.fasta.bwt',
+        'data/fasta/chr22.fasta.amb',
+        'data/fasta/chr22.fasta.ann',
+        'data/fasta/chr22.fasta.pac',
+        'data/fasta/chr22.fasta.sa',
     ]
     assert result == expected
 
@@ -83,11 +83,7 @@ def test_get_tmpspace(caller, outdir, nthreads, memory, tmpspace):
 def test_make_output():
     result = hf.make_output()
     expected = [
-        'data/bam/1/T1--N1/manta_out/manta.vcf', 'data/bam/1/T1--N1/delly_out/delly.vcf',
-        'data/bam/1/T1--N1/lumpy_out/lumpy.vcf', 'data/bam/1/T1--N1/gridss_out/gridss.vcf',
-        'data/bam/2/T2.1--N2/manta_out/manta.vcf', 'data/bam/2/T2.1--N2/delly_out/delly.vcf',
-        'data/bam/2/T2.1--N2/lumpy_out/lumpy.vcf', 'data/bam/2/T2.1--N2/gridss_out/gridss.vcf',
-        'data/bam/2/T2.2--N2/manta_out/manta.vcf', 'data/bam/2/T2.2--N2/delly_out/delly.vcf',
-        'data/bam/2/T2.2--N2/lumpy_out/lumpy.vcf', 'data/bam/2/T2.2--N2/gridss_out/gridss.vcf'
+        'data/bam/3/T3--N3/manta_out/survivor/manta.vcf', 'data/bam/3/T3--N3/delly_out/survivor/delly.vcf',
+        'data/bam/3/T3--N3/lumpy_out/survivor/lumpy.vcf', 'data/bam/3/T3--N3/gridss_out/survivor/gridss.vcf'
     ]
     assert result == expected
