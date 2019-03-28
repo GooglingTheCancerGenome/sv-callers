@@ -21,7 +21,7 @@ localrules: all
 
 rule all:
     input:
-        make_output()
+        make_all()
 
 # include rules
 include: "rules/manta.smk"

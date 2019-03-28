@@ -149,7 +149,7 @@ def is_tumor_only():
 
 
 def make_output():
-    """Generate workflow targets or output files (.vcf).
+    """Generate workflow targets or output files (.vcf) from callers.
     """
     def is_ok(s):
         if s in (None, ""):
@@ -184,3 +184,13 @@ def make_output():
                 vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
                 outfiles.append(vcf)
         return outfiles
+
+
+def make_all():
+    """Generate workflow targets or output files (.vcf) merged over calers.
+    """
+    merged_outfiles = []
+    for f in make_output():
+        path = os.path.join(os.sep.join(f.split(os.sep)[:-3]), "all.vcf")
+        merged_outfiles.append(path)
+    return set(merged_outfiles)
