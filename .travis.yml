@@ -26,7 +26,7 @@ install:
   - docker ps -a
   - docker cp run.sh $SCH-$MODE:/home/xenon
 script:
-  -  cd snakemake && pytest --cov=helper_functions --cov-report=xml
+  - cd snakemake && pytest --cov=helper_functions --cov-report=xml
   - docker exec -u xenon -t $SCH-$MODE /bin/bash run.sh $ECHO $MODE $SCH
 after_success:
   - python-codacy-coverage -r coverage.xml

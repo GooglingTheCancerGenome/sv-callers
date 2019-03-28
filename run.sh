@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 source ~/.profile
-git clone -b bed_filter https://github.com/GooglingTheCancerGenome/sv-callers.git
+git clone -b survivor-postproc-21 https://github.com/GooglingTheCancerGenome/sv-callers.git
 cd sv-callers/snakemake
 
 CALLERS=(manta delly lumpy gridss)
