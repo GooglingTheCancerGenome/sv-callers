@@ -6,21 +6,22 @@ Structural variants (SVs) are an important class of genetic variation implicated
 
 ### Dependencies
 
-- python (>=3.6)
-- [conda](https://conda.io/) (>=4.5)
-- [snakemake](https://snakemake.readthedocs.io/) (>=4.8)
-- [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.0)
+- python  (>=3.6)
+- [conda](https://conda.io/)  (>=4.5)
+- [snakemake](https://snakemake.readthedocs.io/)  (>=4.8)
+- [xenon-cli](https://github.com/NLeSC/xenon-cli)  (3.0.0)
 
 These will be installed by the workflow itself:
 
 - SV callers
-  - [Manta](https://github.com/Illumina/manta) (1.1.0)
-  - [DELLY](https://github.com/dellytools/delly) (0.7.7)
-  - [LUMPY](https://github.com/arq5x/lumpy-sv) (0.2.13)
-  - [GRIDSS](https://github.com/PapenfussLab/gridss) (1.3.4)
+  - [Manta](https://github.com/Illumina/manta)  (1.1.0)
+  - [DELLY](https://github.com/dellytools/delly)  (0.7.7)
+  - [LUMPY](https://github.com/arq5x/lumpy-sv)  (0.2.13)
+  - [GRIDSS](https://github.com/PapenfussLab/gridss)  (1.3.4)
+
 - Post-processing
-  - [BCFtools](https://github.com/samtools/bcftools) (1.9)
-  - [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR) (1.0.6)
+  - [BCFtools](https://github.com/samtools/bcftools)  (1.9)
+  - [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)  (1.0.6)
 
 **1. Clone this repo.**
 
@@ -48,11 +49,13 @@ conda install -y -c nlesc xenon-cli  # optional but recommended;)
 - **config files**:
   - `analysis.yaml` - analysis-specific settings (e.g., workflow mode, SV callers or resources used etc.)
   - `environment.yaml` - software dependencies and versions
+
 - **input files**:
   - example data in the `sv-callers/data` directory
   - reference genome in `.fasta` (incl. index files)
   - (paired) samples in `*.bam` (incl. index files)
   - list of (paired) samples for analysis in `samples.csv`
+
 - **output files**: SVs in `.vcf` (incl. index files)
 
 **4. Execute the workflow.**
@@ -87,11 +90,12 @@ To perform SV calling:
   - set `echo_run=0`
   - choose between two workflow `mode`s: `s` - single-sample or `p` - paired-samples analysis (default: `p`)
   - select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
+
 - use `xenon` CLI to
   - set `--max-run-time` of workflow jobs (in minutes)
   - set `--temp-space` (in MB)
+
 - optionally adjust compute requirements per SV caller such as
   - the number of `threads`, 
   - the amount of `memory`(in MB) or
   - the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
-
