@@ -12,8 +12,8 @@ def get_callers():
     """
     callers = []
     for c in config["enable_callers"]:
-        assert c in config["callers"], \
-            "SV caller '{}' is not supported!".format(c)
+        if c not in config["callers"]:
+            raise AssertionError("SV caller '{}' is not supported!".format(c))
         callers.append(c)
     return callers
 
@@ -22,8 +22,8 @@ def get_filext(fmt):
     """Get file extension(s) given file type/format:
         ['fasta', 'fasta_idx', 'bam', 'bam_idx', 'vcf', 'bcf', 'bed']
     """
-    assert fmt in config["file_exts"].keys(), \
-        "Unknown input file format '{}'.".format(fmt.lower())
+    if fmt not in config["file_exts"].keys():
+        raise AssertionError("Unknown input file format '{}'.".format(fmt.lower()))
     return config["file_exts"][fmt]
 
 
@@ -33,10 +33,10 @@ def get_fasta():
     fname = config["genome"]
     sfx = get_filext("fasta")
     try:
-        assert os.path.exists(fname), \
-            "FASTA file not found: {}.".format(fname)
-        assert fname.endswith(sfx), \
-            "FASTA file '{}' (extension) not registered.".format(fname)
+        if not os.path.exists(fname):
+            raise AssertionError("FASTA file not found: {}.".format(fname))
+        if not fname.endswith(sfx):
+            raise AssertionError("FASTA file '{}' (extension) not registered.".format(fname))
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
@@ -50,8 +50,8 @@ def get_faidx():
     for sfx in get_filext("fasta_idx"):
         fname = get_fasta().split(get_filext("fasta"))[0] + sfx
         try:
-            assert os.path.exists(fname), \
-                "FASTA index file not found: {}.".format(fname)
+            if not os.path.exists(fname):
+                raise AssertionError("FASTA index file not found: {}.".format(fname))
         except AssertionError as err:
             print(str(err), file=sys.stderr)
             os._exit(1)
@@ -64,8 +64,8 @@ def exclude_regions():
     """
     excl = config["exclude_regions"]
     try:
-        assert excl in (0, 1), \
-            "Invalid value: 'exclude_regions' must be either 0 or 1."
+        if excl not in (0, 1):
+            raise AssertionError("Invalid value: 'exclude_regions' must be either 0 or 1.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
@@ -78,10 +78,10 @@ def get_bed():
     fname = config["exclusion_list"]
     sfx = get_filext("bed")
     try:
-        assert os.path.exists(fname), \
-            "Exclusion file not found: {}.".format(fname)
-        assert fname.endswith(sfx), \
-            "Exclusion file '{}' must end with '{}' suffix.".format(fname, sfx)
+        if not os.path.exists(fname):
+            raise AssertionError("Exclusion file not found: {}.".format(fname))
+        if not fname.endswith(sfx):
+            raise AssertionError("Exclusion file '{}' must end with '{}' suffix.".format(fname, sfx))
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
@@ -140,8 +140,8 @@ def is_tumor_only():
     """
     val = config["callers"]["manta"]["tumor_only"]
     try:
-        assert val in (0, 1), \
-            "Incorrect value for Manta 'tumor_only': must be either 0 or 1."
+        if val not in (0, 1):
+            raise AssertionError("Incorrect value for Manta 'tumor_only': must be either 0 or 1.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
@@ -159,8 +159,8 @@ def make_output():
     with open(config["samples"], "r") as fp:
         mode = config["mode"]
         try:
-            assert(mode in ('s', 'p')), \
-                "Invalid workflow mode: run (s)ingle- or (p)aired-samples analysis."
+            if mode not in ('s', 'p'):
+                raise AssertionError("Invalid workflow mode: run (s)ingle- or (p)aired-samples analysis.")
         except AssertionError as err:
             print(str(err), file=sys.stderr)
             os._exit(1)
