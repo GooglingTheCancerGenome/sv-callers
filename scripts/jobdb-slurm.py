@@ -4,10 +4,7 @@ import os
 import sys
 
 
-period = sys.argv[1:]
-
-if len(period) == 0:
-    period = ['2018-03-18', '2018-04-11']
+user, start, end = sys.argv[1:4] # start/end  in YY-MM-DD
 sep = ","
 csvfile = "jobs.csv"
 sqlfile = "create_db.sql"
@@ -105,7 +102,7 @@ ORDER BY T1.status, T1.rowid;
 with open(sqlfile, "w") as fout:
     fout.write(stmts)
 
-cmd = "sacct -u akuzniar -r normal -S {} -E {} -P --delimiter={} \
+cmd = "sacct -u {} -S {} -E {} -P --delimiter={} \
       -o jobid,jobname,submit,start,end,cputimeraw,maxvmsize,reqcpus,nodelist,state > {} \
-      && sqlite3 {} < {}".format(period[0], period[1], sep, csvfile, dbfile, sqlfile)
+      && sqlite3 {} < {}".format(user, start, end, sep, csvfile, dbfile, sqlfile)
 os.system(cmd)
