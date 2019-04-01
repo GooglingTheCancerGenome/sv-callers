@@ -5,6 +5,7 @@ import sys
 
 
 user, start, end = sys.argv[1:4] # start/end  in YY-MM-DD
+os.environ["SLURM_TIME_FORMAT"] = "standard"
 sep = ","
 csvfile = "jobs.csv"
 sqlfile = "create_db.sql"
