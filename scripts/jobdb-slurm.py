@@ -19,6 +19,7 @@ CREATE TABLE {0} (
     submit,
     start,
     end,
+    cputimeraw,
     mem,
     reqcpus,
     nodelist,
@@ -40,6 +41,7 @@ SELECT
     submit,
     start,
     end,
+    CAST(cputimeraw AS INTEGER) AS cputime, -- in sec
     MAX(CAST(REPLACE(mem, 'K', '') AS INTEGER) / 1024) AS mem_mb,
     MIN(CAST(reqcpus AS INTEGER)) AS reqcpus,
     nodelist,
@@ -59,6 +61,7 @@ SELECT
     strftime('%Y-%m-%d %H:%M:%S', end) AS etime,
     strftime('%s',start) - strftime('%s', submit) AS qtime, -- in sec
     strftime('%s',end) - strftime('%s', start) AS runtime,  -- in sec
+    cputime,
     strftime('%Y-%m-%d %H:00:00', start) AS stime_bin,
     strftime('%Y-%m-%d %H:00:00', end) AS etime_bin,
     mem_mb,
@@ -103,6 +106,6 @@ with open(sqlfile, "w") as fout:
     fout.write(stmts)
 
 cmd = "sacct -u akuzniar -r normal -S {} -E {} -P --delimiter={} \
-      -o jobid,jobname,submit,start,end,maxvmsize,reqcpus,nodelist,state > {} \
+      -o jobid,jobname,submit,start,end,cputimeraw,maxvmsize,reqcpus,nodelist,state > {} \
       && sqlite3 {} < {}".format(period[0], period[1], sep, csvfile, dbfile, sqlfile)
 os.system(cmd)
