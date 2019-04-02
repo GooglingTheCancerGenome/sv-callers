@@ -60,16 +60,16 @@ def get_faidx():
 
 
 def exclude_regions():
-    """Check flag for excluding genomic regions (using a BED file).
+    """Return flag for using an exclusion file in BED.
     """
-    excl = config["exclude_regions"]
+    flag = config["exclude_regions"]
     try:
-        if excl not in (0, 1):
+        if flag not in (0, 1):
             raise AssertionError("Invalid value: 'exclude_regions' must be either 0 or 1.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
-    return excl
+    return flag
 
 
 def get_bed():
@@ -108,48 +108,78 @@ def get_outdir(caller):
     return config["callers"][caller]["outdir"]
 
 
-def get_nthreads(caller):
-    """Get the number of threads used by a caller.
+def get_nthreads(tool):
+    """Get the number of threads requested by a tool.
     """
-    if "threads" in config["callers"][caller]:
-        return config["callers"][caller]["threads"]
-    else:
+    try:
+        if "survivor" in tool:
+            return config["postproc"][tool]["threads"]
+        else:
+            return config["callers"][tool]["threads"]
+    except:
         return 1  # default: one thread
 
 
-def get_memory(caller):
-    """Get the amount of allocated memory (MB) by a caller.
+def get_memory(tool):
+    """Get the amount of memory (MB) requested by a tool.
     """
-    if "memory" in config["callers"][caller]:
-        return config["callers"][caller]["memory"]
-    else:
+    try:
+        if "survivor" in tool:
+            return config["postproc"][tool]["memory"]
+        else:
+            return config["callers"][tool]["memory"]
+    except:
         return 1024  # default: 1GB
 
 
-def get_tmpspace(caller):
-    """Get the amount of temporary disk space (MB) requested by a caller.
+def get_tmpspace(tool):
+    """Get the amount of temporary disk space (MB) requested by a tool.
     """
-    if "tmpspace" in config["callers"][caller]:
-        return config["callers"][caller]["tmpspace"]
-    else:
+    try:
+        if "survivor" in config["callers"][tool]:
+            return config["postproc"][tool]["tmpspace"]
+        else:
+            return config["callers"][tool]["tmpspace"]
+    except:
         return 0  # default: no temp space
 
 
 def is_tumor_only():
-    """Check if Manta should perform tumor-only or germline analysis.
+    """Return flag to perform tumor-only or germline analysis using Manta.
     """
-    val = config["callers"]["manta"]["tumor_only"]
+    flag = config["callers"]["manta"]["tumor_only"]
     try:
-        if val not in (0, 1):
+        if flag not in (0, 1):
             raise AssertionError("Incorrect value for Manta 'tumor_only': must be either 0 or 1.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
-    return val
+    return flag
+
+
+def survivor_cmd(s):
+    """Return SURVIVOR command line.
+    """
+    try:
+        if s not in ("filter", "merge"):
+            raise AssertionError("Incorrect SURVIVOR sub-command: must be either 'filter' or 'merge'.")
+    except AssertionError as err:
+        print(str(err), file=sys.stderr)
+        os._exit(1)
+
+    cmd = []
+    p = config["postproc"]["survivor"][s]
+    if s in "filter":
+        cmd = ["SURVIVOR", s, "{input}", get_bed(), p["min_size"],
+               p["max_size"], p["min_freq"], p["min_sup"], "{output}"]
+    else:
+        cmd = ["SURVIVOR", s, p["input"], p["max_dist"], p["min_sup"],
+               p["use_type"], p["est_dist"], p["min_size"], p["output"]]
+    return cmd
 
 
 def make_output():
-    """Generate workflow targets or output files (.vcf) from callers.
+    """Generate workflow targets: outfiles of different callers (.vcf).
     """
     def is_ok(s):
         if s in (None, ""):
@@ -187,10 +217,11 @@ def make_output():
 
 
 def make_all():
-    """Generate workflow targets or output files (.vcf) merged over calers.
+    """Generate workflow targets: outfiles of merged SV calls (.vcf).
     """
-    merged_outfiles = []
+    outfiles = []
+    basename = config["postproc"]["survivor"]["merge"]["output"]
     for f in make_output():
-        path = os.path.join(os.sep.join(f.split(os.sep)[:-3]), "all.vcf")
-        merged_outfiles.append(path)
-    return set(merged_outfiles)
+        path = os.path.join(os.sep.join(f.split(os.sep)[:-3]), basename)
+        outfiles.append(path)
+    return set(outfiles)

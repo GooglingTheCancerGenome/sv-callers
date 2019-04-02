@@ -72,3 +72,22 @@ callers:
     memory: 63488
     tmpspace: 0  # 102400
     outdir: gridss_out
+
+postproc:
+  survivor:
+    threads: 1
+    memory: 1024
+    filter:         # filter SVs using a BED file (see 'exclusion_list')
+      min_size: -1  # min. SV size (-1 to disable)
+      max_size: -1  # max. SV size (-1 to disable)
+      min_freq: 0   # min. allele frequency (0 or 1)
+      min_sup: -1   # min. number of reads support: RE flag (-1 to disable)
+
+    merge:            # merge callers' output into one (union) SV set
+      input: all.txt  # list of VCF files/paths
+      max_dist: 100   # max. distance (bp) between breakpoints
+      min_sup: 1      # min. number of supporting callers
+      use_type: 0     # take SV type into account (1==yes, else no)
+      est_dist: 0     # estimate distance based on SV size (1==yes, else no)
+      min_size: 0     # min. SV size
+      output: all.vcf

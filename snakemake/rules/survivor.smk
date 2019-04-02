@@ -8,13 +8,15 @@ rule survivor_filter:  # used by both modes
         if config["mode"].startswith("p") is True else
         os.path.join("{path}", "{sample}", "{outdir}", "survivor", "{prefix}" + get_filext("vcf"))
     params:
-        bed = '"%s"' % get_bed() if exclude_regions() else ""
+        excl = exclude_regions(),
+        cmd = survivor_cmd("filter")
     conda:
         "../environment.yaml"
-    threads: 1
+    threads:
+        get_nthreads("survivor")
     resources:
-        mem_mb = 1024,
-        tmp_mb = 0
+        mem_mb = get_memory("survivor"),
+        tmp_mb = get_tmpspace("survivor")
     shell:
         """
         set -x
@@ -23,10 +25,10 @@ rule survivor_filter:  # used by both modes
         if [ "{config[echo_run]}" -eq "1" ]; then
             cat "{input}" > "{output}"
         else
-            if [ "{params.bed}" == "" ]; then
-                ln -sr "{input}" "{output}"
+            if [ "{params.excl}" -eq "1" ]; then
+                {params.cmd}
             else
-                SURVIVOR filter "{input}" "{params.bed}" -1 -1 0 -1 "{output}"
+                ln -sr "{input}" "{output}"
             fi
         fi
         """
@@ -38,16 +40,19 @@ rule survivor_merge:  # used by both modes
         if config["mode"].startswith("p") is True else
         [os.path.join("{path}", "{sample}", get_outdir(c), "survivor", c + get_filext("vcf"))
          for c in get_callers()]
+    params:
+        cmd = survivor_cmd("merge")
     output:
-        os.path.join("{path}", "{tumor}--{normal}",  "all" + get_filext("vcf"))
+        os.path.join("{path}", "{tumor}--{normal}", survivor_cmd("merge")[-1])
         if config["mode"].startswith("p") is True else
-        os.path.join("{path}", "{sample}", "all" + get_filext("vcf"))
+        os.path.join("{path}", "{sample}", survivor_cmd("merge")[-1])
     conda:
         "../environment.yaml"
-    threads: 1
+    threads:
+        get_nthreads("survivor")
     resources:
-        mem_mb = 1024,
-        tmp_mb = 0
+        mem_mb = get_memory("survivor"),
+        tmp_mb = get_tmpspace("survivor")
     shell:
         """
         set -x
@@ -56,7 +61,7 @@ rule survivor_merge:  # used by both modes
         if [ "{config[echo_run]}" -eq "1" ]; then
             cat "{input}" > "{output}"
         else
-            echo "{input}" | tr ' ' '\n' > all.vcf &&
-            SURVIVOR merge all.txt 100 1 0 0 0 0 "{output}"
+            echo "{input}" | tr ' ' '\n' > "{params.cmd[2]}" &&
+            {params.cmd}
         fi
         """
