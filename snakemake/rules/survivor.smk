@@ -41,11 +41,13 @@ rule survivor_merge:  # used by both modes
         [os.path.join("{path}", "{sample}", get_outdir(c), "survivor", c + get_filext("vcf"))
          for c in get_callers()]
     params:
-        args = survivor_args("merge")
+        args = survivor_args("merge")[1:-1]
     output:
-        os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[-1])
+        [os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[0]),
+         os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[-1])]
         if config["mode"].startswith("p") is True else
-        os.path.join("{path}", "{sample}", survivor_args("merge")[-1])
+        [os.path.join("{path}", "{sample}", survivor_args("merge")[0]),
+         os.path.join("{path}", "{sample}", survivor_args("merge")[-1])]
     conda:
         "../environment.yaml"
     threads:
@@ -64,8 +66,8 @@ rule survivor_merge:  # used by both modes
             # create a list of VCF files
             for f in $(echo "{input}")
             do
-                echo "$f" >> "{params.args[0]}"
+                echo "$f" >> "{output[0]}"
             done
-            SURVIVOR merge {params.args}
+            SURVIVOR merge "{output[0]}" {params.args} "{output[1]}"
         fi
         """

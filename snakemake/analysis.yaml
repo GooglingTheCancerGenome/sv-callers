@@ -83,12 +83,12 @@ postproc:
       min_freq: 0   # min. allele frequency (0 or 1)
       min_sup: -1   # min. number of reads support: RE flag (-1 to disable)
 
-    merge:            # merge callers' output into one (union) SV set
-      input: all.txt  # list of VCF files/paths
-      max_dist: 100   # max. distance (bp) between breakpoints
-      min_sup: 1      # min. number of supporting callers
-      use_type: 0     # take SV type into account (1==yes, else no)
-      use_strand: 0   # take the strands of SVs into account (1==yes, else no)
-      est_dist: 0     # estimate distance based on SV size (1==yes, else no)
-      min_size: 0     # min. SV size
-      output: all.vcf
+    merge:             # merge callers' output into one (union) SV set
+      infile: all.txt  # list of VCF files
+      max_dist: 100    # max. distance (bp) between breakpoints
+      min_sup: 1       # min. number of supporting callers
+      use_type: 0      # take SV type into account (1==yes, else no)
+      use_strand: 0    # take the strands of SVs into account (1==yes, else no)
+      use_size: 0      # estimate distance based on SV size (1==yes, else no)
+      min_size: 0      # min. SV size
+      outfile: all.vcf

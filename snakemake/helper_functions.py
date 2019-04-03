@@ -173,8 +173,8 @@ def survivor_args(c):
         args = ['"%s"' % get_bed(), p["min_size"], p["max_size"], p["min_freq"],
                 p["min_sup"]]
     else:
-        args = [p["input"], p["max_dist"], p["min_sup"], p["use_type"],
-                p["use_strand"], p["est_dist"], p["min_size"], p["output"]]
+        args = [p["infile"], p["max_dist"], p["min_sup"], p["use_type"],
+                p["use_strand"], p["use_size"], p["min_size"], p["outfile"]]
     return args
 
 
@@ -220,7 +220,7 @@ def make_all():
     """Generate workflow targets: outfiles of merged SV calls (.vcf).
     """
     outfiles = []
-    basename = config["postproc"]["survivor"]["merge"]["output"]
+    basename = survivor_args("merge")[-1]
     for f in make_output():
         path = os.path.join(os.sep.join(f.split(os.sep)[:-3]), basename)
         outfiles.append(path)
