@@ -91,11 +91,11 @@ To perform SV calling:
   - choose between two workflow `mode`s: `s` - single-sample or `p` - paired-samples analysis (default: `p`)
   - select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
 
-- use `xenon` CLI to
-  - set `--max-run-time` of workflow jobs (in minutes)
-  - set `--temp-space` (in MB)
+- use `xenon` CLI to set:
+  - `--max-run-time` of workflow jobs (in minutes)
+  - `--temp-space` (optional, in MB)
 
-- optionally adjust compute requirements per SV caller such as
+- adjust compute requirements per SV caller according to the system used:
   - the number of `threads`, 
   - the amount of `memory`(in MB) or
   - the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
