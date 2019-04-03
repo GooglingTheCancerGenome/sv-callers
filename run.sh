@@ -34,6 +34,7 @@ if [ "$ECHO" -eq "0" ]; then
     fi
     echo " $caller: $INFO"
   done
+  echo " merge:" $(find data -name all.vcf)
 fi
 
 echo -e "\nLog files:"
