@@ -61,7 +61,11 @@ rule survivor_merge:  # used by both modes
         if [ "{config[echo_run]}" -eq "1" ]; then
             cat "{input}" > "{output}"
         else
-            echo "{input}" | tr ' ' '\n' > "{params.args[0]}" &&
+            # create a list of VCF files
+            for f in $(echo "{input}")
+            do
+                echo "$f" >> "{params.args[0]}"
+            done
             SURVIVOR merge {params.args}
         fi
         """
