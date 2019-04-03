@@ -174,7 +174,7 @@ def survivor_args(c):
                 p["min_sup"]]
     else:
         args = [p["input"], p["max_dist"], p["min_sup"], p["use_type"],
-                p["est_dist"], p["min_size"], p["output"]]
+                p["use_strand"], p["est_dist"], p["min_size"], p["output"]]
     return args
 
 
