@@ -9,7 +9,7 @@ rule survivor_filter:  # used by both modes
         os.path.join("{path}", "{sample}", "{outdir}", "survivor", "{prefix}" + get_filext("vcf"))
     params:
         excl = exclude_regions(),
-        cmd = survivor_cmd("filter")
+        args = survivor_args("filter")
     conda:
         "../environment.yaml"
     threads:
@@ -26,7 +26,7 @@ rule survivor_filter:  # used by both modes
             cat "{input}" > "{output}"
         else
             if [ "{params.excl}" -eq "1" ]; then
-                {params.cmd}
+                SURVIVOR filter "{input}" {params.args} "{output}"
             else
                 ln -sr "{input}" "{output}"
             fi
@@ -41,11 +41,11 @@ rule survivor_merge:  # used by both modes
         [os.path.join("{path}", "{sample}", get_outdir(c), "survivor", c + get_filext("vcf"))
          for c in get_callers()]
     params:
-        cmd = survivor_cmd("merge")
+        args = survivor_args("merge")
     output:
-        os.path.join("{path}", "{tumor}--{normal}", survivor_cmd("merge")[-1])
+        os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[-1])
         if config["mode"].startswith("p") is True else
-        os.path.join("{path}", "{sample}", survivor_cmd("merge")[-1])
+        os.path.join("{path}", "{sample}", survivor_args("merge")[-1])
     conda:
         "../environment.yaml"
     threads:
@@ -61,7 +61,7 @@ rule survivor_merge:  # used by both modes
         if [ "{config[echo_run]}" -eq "1" ]; then
             cat "{input}" > "{output}"
         else
-            echo "{input}" | tr ' ' '\n' > "{params.cmd[2]}" &&
-            {params.cmd}
+            echo "{input}" | tr ' ' '\n' > "{params.args[0]}" &&
+            SURVIVOR merge {params.args}
         fi
         """

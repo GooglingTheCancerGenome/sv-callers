@@ -157,25 +157,25 @@ def is_tumor_only():
     return flag
 
 
-def survivor_cmd(s):
-    """Return SURVIVOR command line.
+def survivor_args(c):
+    """Return SURVIVOR args to construct the command line.
     """
     try:
-        if s not in ("filter", "merge"):
+        if c not in ("filter", "merge"):
             raise AssertionError("Incorrect SURVIVOR sub-command: must be either 'filter' or 'merge'.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
         os._exit(1)
 
-    cmd = []
-    p = config["postproc"]["survivor"][s]
-    if s in "filter":
-        cmd = ["SURVIVOR", s, "{input}", get_bed(), p["min_size"],
-               p["max_size"], p["min_freq"], p["min_sup"], "{output}"]
+    args = []
+    p = config["postproc"]["survivor"][c]
+    if c in "filter":
+        args = ['"%s"' % get_bed(), p["min_size"], p["max_size"], p["min_freq"],
+                p["min_sup"]]
     else:
-        cmd = ["SURVIVOR", s, p["input"], p["max_dist"], p["min_sup"],
-               p["use_type"], p["est_dist"], p["min_size"], p["output"]]
-    return cmd
+        args = [p["input"], p["max_dist"], p["min_sup"], p["use_type"],
+                p["est_dist"], p["min_size"], p["output"]]
+    return args
 
 
 def make_output():
