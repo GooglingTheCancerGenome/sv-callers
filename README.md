@@ -47,16 +47,18 @@ conda install -y -c nlesc xenon-cli  # optional but recommended;)
 **3. Configure the workflow.**
 
 - **config files**:
-  - `analysis.yaml` - analysis-specific settings (e.g., workflow mode, SV callers or resources used etc.)
+  - `analysis.yaml` - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
   - `environment.yaml` - software dependencies and versions
 
 - **input files**:
-  - example data in the `sv-callers/data` directory
+  - example data in `sv-callers/snakemake/data` directory
   - reference genome in `.fasta` (incl. index files)
-  - (paired) samples in `*.bam` (incl. index files)
-  - list of (paired) samples for analysis in `samples.csv`
+  - "exclusion" list of genomic regions in `.bed` (optional)
+  - WGS samples in `*.bam` (incl. index files)
+  - list of (paired) samples in `samples.csv`
 
-- **output files**: SVs in `.vcf` (incl. index files)
+- **output files**:
+  - (filtered) SVs per caller and merged calls in `.vcf` (incl. index files)
 
 **4. Execute the workflow.**
 
