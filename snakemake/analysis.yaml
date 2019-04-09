@@ -45,14 +45,14 @@ callers:
   manta:
     threads: 24         # number of threads used
     memory: 16384       # allocated memory (MB)
-    tmpspace: 0         # min. temporary disk space (MB); not supported by Manta
+    tmpspace: 0         # min. temporary disk space (MB); not in use by Manta
     outdir: manta_out   # output dir relative to PATH/SAMPLE/... (see above)
     tumor_only: 0       # germline (0) or tumor-only analysis (1)
 
   delly:
     threads: 2  # max. 2 for paired-samples otherwise defaults to 1
     memory: 8192
-    tmpspace: 0  # not supported
+    tmpspace: 0  # not in use
     outdir: delly_out
     sv_types:
         - BND  # translocation
@@ -64,19 +64,20 @@ callers:
   lumpy:
     threads: 1  # multi-threading not supported
     memory: 32768
-    tmpspace: 0  # 10240
+    tmpspace: 0  # e.g., 10240
     outdir: lumpy_out
 
   gridss:
     threads: 24
     memory: 63488
-    tmpspace: 0  # 102400
+    tmpspace: 0  # e.g., 102400
     outdir: gridss_out
 
 postproc:
   survivor:
     threads: 1
     memory: 1024
+    tmpspace: 0  # not in use
     filter:         # filter SVs using a BED file (see 'exclusion_list')
       min_size: -1  # min. SV size (-1 to disable)
       max_size: -1  # max. SV size (-1 to disable)
