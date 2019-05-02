@@ -1,5 +1,6 @@
 # sv-callers
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1217111.svg)](https://doi.org/10.5281/zenodo.1217111)
 [![Build Status](https://travis-ci.org/GooglingTheCancerGenome/sv-callers.svg?branch=dev)](https://travis-ci.org/GooglingTheCancerGenome/sv-callers)
 
 Structural variants (SVs) are an important class of genetic variation implicated in a wide array of genetic diseases. _sv-callers_ is a _Snakemake_-based workflow that combines several state-of-the-art tools for detecting SVs in whole genome sequencing (WGS) data. The workflow is easy to use and deploy on any Linux-based machine. In particular, the workflow supports automated software deployment, easy configuration and addition of new analysis tools as well as enables to scale from a single computer to different HPC clusters with minimal effort.
@@ -54,7 +55,7 @@ conda install -y -c nlesc xenon-cli  # optional but recommended;)
   - example data in `sv-callers/snakemake/data` directory
   - reference genome in `.fasta` (incl. index files)
   - "exclusion" list of genomic regions in `.bed` (optional)
-  - WGS samples in `*.bam` (incl. index files)
+  - WGS samples in `.bam` (incl. index files)
   - list of (paired) samples in `samples.csv`
 
 - **output files**:
@@ -90,7 +91,7 @@ snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss'
 To perform SV calling:
 - overwrite (default) parameters directly in `analysis.yaml` or via the _snakemake_ CLI (use the `-C` argument)
   - set `echo_run=0`
-  - choose between two workflow `mode`s: `s` - single-sample or `p` - paired-samples analysis (default: `p`)
+  - choose between two workflow `mode`s: single- (`s`) or paired-sample (`p` default)
   - select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
 
 - use `xenon` CLI to set:
