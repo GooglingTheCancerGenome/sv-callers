@@ -88,8 +88,8 @@ postproc:
       infile: all.txt  # list of VCF files
       max_dist: 100    # max. distance (bp) between breakpoints
       min_sup: 1       # min. number of supporting callers
-      use_type: 0      # take SV type into account (1==yes, else no)
-      use_strand: 0    # take the strands of SVs into account (1==yes, else no)
-      use_size: 0      # estimate distance based on SV size (1==yes, else no)
-      min_size: 0      # min. SV size
+      use_type: 0      # take SV type into account (1=yes or 0=no)
+      use_strand: 0    # take the strands of SVs into account (1=yes or 0=no)
+      use_size: 0      # estimate distance based on SV size (1=yes or 0=no)
+      min_size: 0      # min. SV size (bp)
       outfile: all.vcf
