@@ -1,7 +1,8 @@
 #!/bin/bash -xe
 
 source ~/.profile
-git clone -b survivor-postproc-21 https://github.com/GooglingTheCancerGenome/sv-callers.git
+export BRANCH=dev #$(git rev-parse --abbrev-ref HEAD)
+git clone -b $BRANCH https://github.com/GooglingTheCancerGenome/sv-callers.git
 cd sv-callers/snakemake
 
 CALLERS=(manta delly lumpy gridss)
