@@ -5,21 +5,24 @@ import helper_functions as hf
 
 def test_get_callers():
     result = hf.get_callers()
-
     expected = ['manta', 'delly', 'lumpy', 'gridss']
     assert result == expected
 
 
-@pytest.mark.parametrize("test_input,expected", [
+test_filext = [
     ('fasta', '.fasta'),
     ('fasta_idx', ['.fasta.fai', '.fasta.bwt', '.fasta.amb', '.fasta.ann', '.fasta.pac', '.fasta.sa']),
     ('bam', '.bam'),
     ('bam_idx', '.bam.bai'),
     ('vcf', '.vcf'),
-])
+    ('bcf', '.bcf'),
+    ('bed', '.bed')
+]
+
+
+@pytest.mark.parametrize("test_input,expected", test_filext)
 def test_get_filext(test_input, expected):
     result = hf.get_filext(test_input)
-
     assert result == expected
 
 
@@ -37,14 +40,7 @@ def test_get_fasta():
 
 def test_get_faidx():
     result = hf.get_faidx()
-    expected = [
-        'data/fasta/chr22.fasta.fai',
-        'data/fasta/chr22.fasta.bwt',
-        'data/fasta/chr22.fasta.amb',
-        'data/fasta/chr22.fasta.ann',
-        'data/fasta/chr22.fasta.pac',
-        'data/fasta/chr22.fasta.sa',
-    ]
+    expected = ['data/fasta/chr22' + e for e in test_filext[1][1]]
     assert result == expected
 
 
@@ -80,10 +76,59 @@ def test_get_tmpspace(caller, outdir, nthreads, memory, tmpspace):
     assert result == tmpspace
 
 
-def test_make_output():
-    result = hf.make_output()
-    expected = [
+def test_exclude_regions():
+    result = hf.exclude_regions()
+    assert result in (0, 1)
+
+
+def test_get_bed():
+    result = hf.get_bed()
+    expected = 'data/ENCFF001TDO.bed'
+    assert result == expected
+
+
+test_args = [
+    ('filter', ['"data/ENCFF001TDO.bed"', -1, -1, 0, -1]),
+    ('merge', ['all.txt', 100, 1, 0, 0, 0, 0, 'all.vcf'])
+]
+
+
+def test_is_tumor_only():
+    result = hf.is_tumor_only()
+    assert result in (0, 1)
+
+
+@pytest.mark.parametrize("test_input,expected", test_args)
+def test_survivor_args(test_input, expected):
+    result = hf.survivor_args(test_input)
+    assert result == expected
+
+
+test_mode_inter_output = [
+    ('p', [
         'data/bam/3/T3--N3/manta_out/survivor/manta.vcf', 'data/bam/3/T3--N3/delly_out/survivor/delly.vcf',
-        'data/bam/3/T3--N3/lumpy_out/survivor/lumpy.vcf', 'data/bam/3/T3--N3/gridss_out/survivor/gridss.vcf'
-    ]
+        'data/bam/3/T3--N3/lumpy_out/survivor/lumpy.vcf', 'data/bam/3/T3--N3/gridss_out/survivor/gridss.vcf']),
+    ('s', [
+        'data/bam/3/T3/manta_out/survivor/manta.vcf', 'data/bam/3/T3/delly_out/survivor/delly.vcf',
+        'data/bam/3/T3/lumpy_out/survivor/lumpy.vcf', 'data/bam/3/T3/gridss_out/survivor/gridss.vcf'])
+]
+
+
+@pytest.mark.parametrize("test_input,expected", test_mode_inter_output)
+def test_make_output(test_input, expected):
+    hf.config['mode'] = test_input
+    result = hf.make_output()
+    assert result == expected
+
+
+test_mode_output = [
+    ('p', {'data/bam/3/T3--N3/all.vcf'}),
+    ('s', {'data/bam/3/T3/all.vcf'})
+]
+
+
+@pytest.mark.parametrize("test_input,expected", test_mode_output)
+def test_make_all(test_input, expected):
+    hf.config['mode'] = test_input
+    result = hf.make_all()
     assert result == expected

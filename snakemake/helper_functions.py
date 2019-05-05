@@ -43,7 +43,7 @@ def get_fasta():
             raise AssertionError("FASTA file '{}' (extension) not registered.".format(fname))
     except AssertionError as err:
         print(str(err), file=sys.stderr)
-        os._exit(1)
+        sys.exit(1)
     return fname
 
 
@@ -59,7 +59,7 @@ def get_faidx():
                 raise AssertionError("FASTA index file not found: {}.".format(fname))
         except AssertionError as err:
             print(str(err), file=sys.stderr)
-            os._exit(1)
+            sys.exit(1)
         faidx.append(fname)
     return faidx
 
@@ -74,7 +74,7 @@ def exclude_regions():
             raise AssertionError("Invalid value: 'exclude_regions' must be either 0 or 1.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
-        os._exit(1)
+        sys.exit(1)
     return flag
 
 
@@ -91,7 +91,7 @@ def get_bed():
             raise AssertionError("Exclusion file '{}' must end with '{}' suffix.".format(fname, sfx))
     except AssertionError as err:
         print(str(err), file=sys.stderr)
-        os._exit(1)
+        sys.exit(1)
     return fname
 
 
@@ -177,7 +177,7 @@ def is_tumor_only():
             raise AssertionError("Incorrect value for Manta 'tumor_only': must be either 0 or 1.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
-        os._exit(1)
+        sys.exit(1)
     return flag
 
 
@@ -191,7 +191,7 @@ def survivor_args(c):
             raise AssertionError("Incorrect SURVIVOR sub-command: must be either 'filter' or 'merge'.")
     except AssertionError as err:
         print(str(err), file=sys.stderr)
-        os._exit(1)
+        sys.exit(1)
 
     args = []
     p = config["postproc"]["survivor"][c]
@@ -206,8 +206,9 @@ def survivor_args(c):
 
 def make_output():
     """Generate workflow targets: outfiles of different callers in VCF format.
-    :returns: (list) filepaths in this form:
-        PATH/SAMPLE1[--SAMPLE2]/CALLER_OUTDIR/*.vcf according to the config files
+    :returns: (list) filepaths:
+        PATH/SAMPLE1/CALLER_OUTDIR/*.vcf            # in single-sample mode
+        PATH/SAMPLE1--SAMPLE2/CALLER_OUTDIR/*.vcf   # in paired-sample mode
     """
     def is_ok(s):
         if s in (None, ""):
@@ -221,7 +222,7 @@ def make_output():
                 raise AssertionError("Invalid workflow mode: run (s)ingle- or (p)aired-samples analysis.")
         except AssertionError as err:
             print(str(err), file=sys.stderr)
-            os._exit(1)
+            sys.exit(1)
 
         reader = DictReader(line for line in fp if not line.startswith("#"))
         outfiles = []
@@ -234,7 +235,7 @@ def make_output():
                 print("Missing value(s) in '{}' at record #{}: {}"
                       .format(config["samples"], i + 1, list(r.values())),
                       file=sys.stderr)
-                os._exit(1)
+                sys.exit(1)
 
             for c in get_callers():
                 vcf = c + get_filext("vcf")
@@ -245,8 +246,9 @@ def make_output():
 
 def make_all():
     """Generate workflow targets: outfiles of merged SV calls in VCF format.
-    :returns: (list) filepaths in this form:
-        PATH/SAMPLE1[--SAMPLE2]/*.vcf according to the config files
+    :returns: (list) filepaths:
+        PATH/SAMPLE1/*.vcf          # in single-sample mode
+        PATH/SAMPLE1--SAMPLE2/*.vcf # in paired-sample mode
     """
     outfiles = []
     basename = survivor_args("merge")[-1]
