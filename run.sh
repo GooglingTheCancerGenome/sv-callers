@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 source ~/.profile
-export BRANCH=dev #$(git rev-parse --abbrev-ref HEAD)
+export BRANCH=master
 git clone -b $BRANCH https://github.com/GooglingTheCancerGenome/sv-callers.git
 cd sv-callers/snakemake
 
