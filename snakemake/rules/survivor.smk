@@ -59,15 +59,16 @@ rule survivor_merge:  # used by both modes
         """
         set -x
 
+        # create a list of VCF files
+        for f in $(echo "{input}")
+        do
+            echo "$f" >> "{output[0]}"
+        done
+
         # run dummy or real job
         if [ "{config[echo_run]}" -eq "1" ]; then
-            cat "{input}" > "{output}"
+            cat "{output[0]}" > "{output[1]}"
         else
-            # create a list of VCF files
-            for f in $(echo "{input}")
-            do
-                echo "$f" >> "{output[0]}"
-            done
             SURVIVOR merge "{output[0]}" {params.args} "{output[1]}"
         fi
         """
