@@ -6,24 +6,24 @@
 
 Structural variants (SVs) are an important class of genetic variation implicated in a wide array of genetic diseases. _sv-callers_ is a _Snakemake_-based workflow that combines several state-of-the-art tools for detecting SVs in whole genome sequencing (WGS) data. The workflow is easy to use and deploy on any Linux-based machine. In particular, the workflow supports automated software deployment, easy configuration and addition of new analysis tools as well as enables to scale from a single computer to different HPC clusters with minimal effort.
 
-### Dependencies
+## Dependencies
 
-- python  (>=3.6)
-- [conda](https://conda.io/)  (>=4.5)
-- [snakemake](https://snakemake.readthedocs.io/)  (>=4.8)
-- [xenon-cli](https://github.com/NLeSC/xenon-cli)  (3.0.0)
+-   python (>=3.6)
+-   [conda](https://conda.io/) (>=4.5)
+-   [snakemake](https://snakemake.readthedocs.io/) (>=4.8)
+-   [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.0)
 
 These will be installed by the workflow itself:
 
-- SV callers
-  - [Manta](https://github.com/Illumina/manta)  (1.1.0)
-  - [DELLY](https://github.com/dellytools/delly)  (0.7.7)
-  - [LUMPY](https://github.com/arq5x/lumpy-sv)  (0.2.13)
-  - [GRIDSS](https://github.com/PapenfussLab/gridss)  (1.3.4)
+-   SV callers
+    -   [Manta](https://github.com/Illumina/manta) (1.1.0)
+    -   [DELLY](https://github.com/dellytools/delly) (0.7.7)
+    -   [LUMPY](https://github.com/arq5x/lumpy-sv) (0.2.13)
+    -   [GRIDSS](https://github.com/PapenfussLab/gridss) (1.3.4)
 
-- Post-processing
-  - [BCFtools](https://github.com/samtools/bcftools)  (1.9)
-  - [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)  (1.0.6)
+-   Post-processing
+    -   [BCFtools](https://github.com/samtools/bcftools) (1.9)
+    -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR) (1.0.6)
 
 **1. Clone this repo.**
 
@@ -48,19 +48,19 @@ conda install -y -c nlesc xenon-cli  # optional but recommended;)
 
 **3. Configure the workflow.**
 
-- **config files**:
-  - `analysis.yaml` - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
-  - `environment.yaml` - software dependencies and versions
+-   **config files**:
+    -   `analysis.yaml` - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
+    -   `environment.yaml` - software dependencies and versions
 
-- **input files**:
-  - example data in `sv-callers/snakemake/data` directory
-  - reference genome in `.fasta` (incl. index files)
-  - "exclusion" list of genomic regions in `.bed` (optional)
-  - WGS samples in `.bam` (incl. index files)
-  - list of (paired) samples in `samples.csv`
+-   **input files**:
+    -   example data in `sv-callers/snakemake/data` directory
+    -   reference genome in `.fasta` (incl. index files)
+    -   "exclusion" list of genomic regions in `.bed` (optional)
+    -   WGS samples in `.bam` (incl. index files)
+    -   list of (paired) samples in `samples.csv`
 
-- **output files**:
-  - (filtered) SVs per caller and merged calls in `.vcf` (incl. index files)
+-   **output files**:
+    -   (filtered) SVs per caller and merged calls in `.vcf` (incl. index files)
 
 **4. Execute the workflow.**
 
@@ -90,16 +90,16 @@ snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss'
 ```
 
 To perform SV calling:
-- overwrite (default) parameters directly in `analysis.yaml` or via the _snakemake_ CLI (use the `-C` argument)
-  - set `echo_run=0`
-  - choose between two workflow `mode`s: single- (`s`) or paired-sample (`p` default)
-  - select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
+-   overwrite (default) parameters directly in `analysis.yaml` or via the _snakemake_ CLI (use the `-C` argument)
+    -   set `echo_run=0`
+    -   choose between two workflow `mode`s: single- (`s`) or paired-sample (`p` - default)
+    -   select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
 
-- use `xenon` CLI to set:
-  - `--max-run-time` of workflow jobs (in minutes)
-  - `--temp-space` (optional, in MB)
+-   use `xenon` CLI to set:
+    -   `--max-run-time` of workflow jobs (in minutes)
+    -   `--temp-space` (optional, in MB)
 
-- adjust compute requirements per SV caller according to the system used:
-  - the number of `threads`, 
-  - the amount of `memory`(in MB) or
-  - the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
+-   adjust compute requirements per SV caller according to the system used:
+    -   the number of `threads`, 
+    -   the amount of `memory`(in MB) or
+    -   the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
