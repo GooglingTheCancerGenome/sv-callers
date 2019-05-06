@@ -1,0 +1,4 @@
+3/S3/manta_out/survivor/manta.vcf
+3/S3/delly_out/survivor/delly.vcf
+3/S3/lumpy_out/survivor/lumpy.vcf
+3/S3/gridss_out/survivor/gridss.vcf

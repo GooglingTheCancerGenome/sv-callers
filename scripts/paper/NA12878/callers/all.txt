@@ -1,4 +1,0 @@
-bam/1/S1/delly_out/survivor/delly.vcf
-bam/3/S3/gridss_out/survivor/gridss.vcf
-bam/1/S1/lumpy_out/survivor/lumpy.vcf
-bam/1/S1/manta_out/survivor/manta.vcf
