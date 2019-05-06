@@ -8,7 +8,7 @@ services:
 env:
   global:
     - PREFIX=gtcg/sv-callers
-    - TAG=dev
+    - TAG=latest
   matrix:
     - ECHO=1 MODE=s PORT=10022 SCH=gridengine
     - ECHO=1 MODE=p PORT=10023 SCH=gridengine
