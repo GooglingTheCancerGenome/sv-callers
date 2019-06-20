@@ -43,7 +43,7 @@ source ~/.bashrc
 conda update -y conda  # update Conda
 conda create -y -n wf && source activate wf  # create & activate new env
 conda install -y -c bioconda snakemake
-conda install -y -c nlesc xenon-cli  # optional but recommended;)
+conda install -y -c nlesc xenon-cli=3.0.0a.dev5  # optional but recommended;)
 ```
 
 **3. Configure the workflow.**
