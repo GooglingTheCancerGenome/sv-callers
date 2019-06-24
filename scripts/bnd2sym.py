@@ -1,5 +1,6 @@
 import argparse
 import re
+import os
 from time import time
 from pysam import VariantFile
 import locations
@@ -67,20 +68,31 @@ def bnd2sym(vcf_input_file, vcf_output_file, sv_caller):
                 ct, chr2, pos2, indellen = locations.get_bnd_info(record, resultBP_bnd)
                 # print('CT:%s, chr2:%s, pos2:%s, indellen:%s' % (ct, chr2, pos2, indellen))
                 if record.chrom == chr2:
-                    if record.start < pos2 and ct == '3to5':
-                        record.alts = ('<DEL>',)
-                        record.stop = pos2
-                        record.info['SVTYPE'] = 'DEL'
-                        vcf_out.write(record)
+                    if ct == '3to5':
+                        if record.start < pos2:
+                            record.alts = ('<DEL>',)
+                            record.stop = pos2
+                            record.info['SVTYPE'] = 'DEL'
+                            vcf_out.write(record)
+                        elif record.start == pos2 - 1:
+                            record.alts = ('<INS>',)
+                            record.stop = pos2
+                            record.info['SVTYPE'] = 'INS'
+                            vcf_out.write(record)
                     elif ct == '5to5' or ct == '3to3':
                         record.alts = ('<INV>',)
                         record.stop = pos2
                         record.info['SVTYPE'] = 'INV'
                         vcf_out.write(record)
-                    else:
+                    elif ct == '5to3':
                         record.alts = ('<DUP>',)
                         record.stop = pos2
                         record.info['SVTYPE'] = 'DUP'
+                        vcf_out.write(record)
+                    else:
+                        record.alts = ('<BND>',)
+                        record.stop = pos2
+                        record.info['SVTYPE'] = 'BND'
                         vcf_out.write(record)
                 else:
                     vcf_out.write(record)
@@ -91,13 +103,13 @@ def bnd2sym(vcf_input_file, vcf_output_file, sv_caller):
 def main():
 
     # Test input and output
-    mills2011in = 'sv_benchmark/input.na12878/processed/lumpy-Mills2011_sorted.vcf'
-    mills2011out = 'sv_benchmark/input.na12878/processed/lumpy-Mills2011_sorted.sym.vcf'
+    svcaller_in = 'sv_benchmark/input.na12878/processed/lumpy-Mills2011_sorted.vcf'
+    svcaller_out = 'sv_benchmark/input.na12878/processed/lumpy-Mills2011_sorted.sym.vcf'
 
     parser = argparse.ArgumentParser(description='Filter VCF files from Delly, GRIDSS, Manta and Lumpy')
-    parser.add_argument('-i', '--input', type=str, default=mills2011in,
+    parser.add_argument('-i', '--input', type=str, default=svcaller_in,
                         help="Specify input file (VCF)")
-    parser.add_argument('-o', '--output', type=str, default=mills2011out,
+    parser.add_argument('-o', '--output', type=str, default=svcaller_out,
                         help="Specify output (VCF)")
     parser.add_argument('-c', '--caller', type=str, default='Delly',
                         help="Specify SV caller")
@@ -106,7 +118,14 @@ def main():
 
     t0 = time()
 
-    bnd2sym(vcf_input_file=args.input, vcf_output_file=args.output, sv_caller=args.caller)
+    # bnd2sym(vcf_input_file=args.input, vcf_output_file=args.output, sv_caller=args.caller)
+
+    for sv_caller in ['manta', 'gridss', 'lumpy', 'delly', 'last_nanosv.sorted']:
+
+        path = '/Users/lsantuari/Documents/Data/germline/patients/Patient2/SV/Filtered/VCF_SYM'
+        svcaller_in = os.path.join(path, sv_caller + '.flt.vcf')
+        svcaller_out = os.path.join(path, sv_caller + '.sym.vcf')
+        bnd2sym(vcf_input_file=svcaller_in, vcf_output_file=svcaller_out, sv_caller=sv_caller)
 
     print(time() - t0)
 

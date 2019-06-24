@@ -15,7 +15,7 @@ __genomicRE__ = None
 
 # DAC Blacklisted regions
 # https://www.encodeproject.org/annotations/ENCSR636HFF/
-black_file = 'Data/ENCODE/ENCFF001TDO.bed'
+black_file = '/Users/lsantuari/Documents/Data/ENCODE/ENCFF001TDO.bed'
 
 # The functions setupREs, stdchrom, locFromBkpt and get_bnd_info are derived/modified from
 # mergevcf by Jonathan Dursi (Simpson Lab) GitHub: https://github.com/ljdursi/mergevcf
@@ -277,6 +277,20 @@ def filter_vcf(vcf_input_file, vcf_output_file, sv_caller):
                 else:
                     n_removed += 1
 
+    elif sv_caller == 'DeepSV':
+        n_pass = 0
+        n_removed = 0
+        n_total = 0
+        for record in vcf_in:
+            n_total += 1
+            if 'PASS' in list(record.filter):
+                n_pass += 1
+                if not is_blacklisted(treedict, record):
+                    vcf_out.write(record)
+                    n_written += 1
+                else:
+                    n_removed += 1
+
         print('Total:%d records' % n_total)
         print('PASS:%d records' % n_pass)
         print('PASS and blacklisted:%d records' % n_removed)
@@ -306,19 +320,22 @@ def filter_vcf(vcf_input_file, vcf_output_file, sv_caller):
 
 def main():
 
-    context = 'trio/NA12878'
+    #context = 'trio/NA12878'
+    context = '/Users/lsantuari/Documents/Data/germline/patients/Patient1/SV/Filtered/Filtering_stages/SURVIVOR_merge/with_oversampling/input/'
 
     # working directory
-    mantain = context+'/SV/Unfiltered/manta.vcf'
-    mantaout = context+'/SV/Filtered/manta.flt.vcf'
+    #mantain = context+'/SV/Unfiltered/manta.vcf'
+    #mantaout = context+'/SV/Filtered/manta.flt.vcf'
 
+    deepsvin = context+'deepsv.DEL.vcf'
+    deepsvout = context + 'deepsv.DEL.filtered.vcf'
 
     parser = argparse.ArgumentParser(description='Filter VCF files from Delly, GRIDSS, Manta and Lumpy')
-    parser.add_argument('-i', '--input', type=str, default=mantain,
+    parser.add_argument('-i', '--input', type=str, default=deepsvin,
                         help="Specify input file (VCF)")
-    parser.add_argument('-o', '--output', type=str, default=mantaout,
+    parser.add_argument('-o', '--output', type=str, default=deepsvout,
                         help="Specify output (VCF)")
-    parser.add_argument('-c', '--caller', type=str, default='Manta',
+    parser.add_argument('-c', '--caller', type=str, default='DeepSV',
                         help="Specify SV caller")
 
     args = parser.parse_args()
