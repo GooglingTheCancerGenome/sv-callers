@@ -1,0 +1,5 @@
+Download benchmark data at
+# GIAB/NA12878 genome
+ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/NA12878/NIST_NA12878_HG001_HiSeq_300x/RMNISTHS_30xdownsample.bam
+
+Create 10 identical copies of this BAM file (e.g., with paths [1..10]/S[1..10].bam).

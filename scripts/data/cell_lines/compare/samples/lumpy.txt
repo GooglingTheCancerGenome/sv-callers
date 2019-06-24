@@ -1,0 +1,10 @@
+10/T10--N10/lumpy_out/survivor/lumpy.vcf
+1/T1--N1/lumpy_out/survivor/lumpy.vcf
+2/T2--N2/lumpy_out/survivor/lumpy.vcf
+3/T3--N3/lumpy_out/survivor/lumpy.vcf
+4/T4--N4/lumpy_out/survivor/lumpy.vcf
+5/T5--N5/lumpy_out/survivor/lumpy.vcf
+6/T6--N6/lumpy_out/survivor/lumpy.vcf
+7/T7--N7/lumpy_out/survivor/lumpy.vcf
+8/T8--N8/lumpy_out/survivor/lumpy.vcf
+9/T9--N9/lumpy_out/survivor/lumpy.vcf

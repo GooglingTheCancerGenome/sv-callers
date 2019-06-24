@@ -1,0 +1,10 @@
+10/S10/manta_out/survivor/manta.vcf
+1/S1/manta_out/survivor/manta.vcf
+2/S2/manta_out/survivor/manta.vcf
+3/S3/manta_out/survivor/manta.vcf
+4/S4/manta_out/survivor/manta.vcf
+5/S5/manta_out/survivor/manta.vcf
+6/S6/manta_out/survivor/manta.vcf
+7/S7/manta_out/survivor/manta.vcf
+8/S8/manta_out/survivor/manta.vcf
+9/S9/manta_out/survivor/manta.vcf

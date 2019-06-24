@@ -1,0 +1,10 @@
+10/T10--N10/gridss_out/survivor/gridss.vcf
+1/T1--N1/gridss_out/survivor/gridss.vcf
+2/T2--N2/gridss_out/survivor/gridss.vcf
+3/T3--N3/gridss_out/survivor/gridss.vcf
+4/T4--N4/gridss_out/survivor/gridss.vcf
+5/T5--N5/gridss_out/survivor/gridss.vcf
+6/T6--N6/gridss_out/survivor/gridss.vcf
+7/T7--N7/gridss_out/survivor/gridss.vcf
+8/T8--N8/gridss_out/survivor/gridss.vcf
+9/T9--N9/gridss_out/survivor/gridss.vcf

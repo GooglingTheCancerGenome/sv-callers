@@ -1,0 +1,10 @@
+10/T10--N10/delly_out/survivor/delly.vcf
+1/T1--N1/delly_out/survivor/delly.vcf
+2/T2--N2/delly_out/survivor/delly.vcf
+3/T3--N3/delly_out/survivor/delly.vcf
+4/T4--N4/delly_out/survivor/delly.vcf
+5/T5--N5/delly_out/survivor/delly.vcf
+6/T6--N6/delly_out/survivor/delly.vcf
+7/T7--N7/delly_out/survivor/delly.vcf
+8/T8--N8/delly_out/survivor/delly.vcf
+9/T9--N9/delly_out/survivor/delly.vcf

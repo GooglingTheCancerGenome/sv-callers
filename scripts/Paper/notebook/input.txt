@@ -1,4 +1,0 @@
-./manta_out/manta.vcf
-./delly_out/delly.vcf
-./lumpy_out/lumpy.vcf
-./gridss_out/gridss.vcf
