@@ -11,7 +11,7 @@ Structural variants (SVs) are an important class of genetic variation implicated
 -   python (>=3.6)
 -   [conda](https://conda.io/) (>=4.5)
 -   [snakemake](https://snakemake.readthedocs.io/) (>=4.8)
--   [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.0)
+-   [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.4)
 
 These will be installed by the workflow itself:
 
@@ -43,7 +43,7 @@ source ~/.bashrc
 conda update -y conda  # update Conda
 conda create -y -n wf && source activate wf  # create & activate new env
 conda install -y -c bioconda snakemake
-conda install -y -c nlesc xenon-cli=3.0.0a.dev5  # optional but recommended;)
+conda install -y -c nlesc xenon-cli=3.0.4  # optional but recommended;)
 ```
 
 **3. Configure the workflow.**
@@ -73,20 +73,20 @@ snakemake -C echo_run=1
 
 ```
 
-Note: One sample or a tumor/normal pair generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and one post-processing job to merge DELLY call sets (per SV type) into one output file in [VCF](https://samtools.github.io/hts-specs/). See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
+Note: One sample or a tumor/normal pair generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and six post-processing jobs. See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
 
 _Submit jobs to Grid Engine-based cluster_
 
 ```bash
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 9 \
---cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 14 \
+--cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
 _Submit jobs to Slurm-based cluster_
 
 ```bash
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 9 \
---cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --procs-per-node {threads} --start-single-process --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
+snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 14 \
+--cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
 To perform SV calling:
