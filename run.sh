@@ -14,6 +14,9 @@ SCH=$3
 SAMPLES=$([ "$ECHO" -eq "1" ] && echo "samples_dummy.csv" || echo "samples.csv")
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 
+snakemake --version
+xenon --version
+
 echo "Selected callers: $STR_CALLERS"
 snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   enable_callers="$STR_CALLERS" $USE_CONDA \
