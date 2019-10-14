@@ -23,7 +23,7 @@ system(cmd)
 # import truth set (DELs) from BEDPE file
 bedpe <- rtracklayer::import(bedpe_file)
 true_gr <- pairs2breakpointgr(bedpe)
-print(length(true_gr))
+print(paste('bedpe', length(true_gr)))
 
 # read SV callers' output in VCF
 sv_callers <- c('manta', 'delly', 'lumpy', 'gridss')
@@ -34,7 +34,7 @@ for (c in sv_callers) {
     gr <- breakpointRanges(vcf)
     print(paste(c, length(gr)))
     # select DELs only
-    gr <- gr[gr$svtype == 'DEL']
-    print(paste(c, length(gr))) # LS: 0 returned for gridss
+    gr <- gr[get_svtype(gr) %in% c('DEL')]
+    print(paste(c, 'DEL', length(gr)))
 }
 q()
