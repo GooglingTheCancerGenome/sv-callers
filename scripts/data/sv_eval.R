@@ -9,7 +9,19 @@ suppressPackageStartupMessages(require(tools))
 suppressPackageStartupMessages(require(StructuralVariantAnnotation))
 
 min.supp <- 3  # min. number of callers supporting an SV
-data.dir <- file.path('benchmark', 'out', '3', 'S3')
+data.dir <- file.path('benchmark', 'out', '3', 'S3')  # with SV callsets
+
+# "truth" sets with BED/BEDPE files
+truth.sets <- list()
+truth.sets$Personalis1kGP <- list(
+    sv.file='Personalis_1000_Genomes_deduplicated_deletions.bed',
+    excl.file='ENCFF001TDO.bed')
+truth.sets$PacbioMoleculo <- list(
+    sv.file='3717462611446476_add4.bedpe',
+    excl.file='ceph18.b37.lumpy.exclude.2014-01-15.bed')
+truth.sets <- lapply(truth.sets, lapply,
+                     function(fn){file.path('benchmark', 'in', fn)})
+sel.idx <- 1  # select either 1=Personalis1kGP or 2=PacbioMoleculo
 
 # get VCF file path given a caller
 getVcf <- function(caller) {
@@ -44,16 +56,30 @@ excludeRegions <- function(query.gr, subject.gr) {
                       overlapsAny(partner(query.gr), subject.gr)), ])
 }
 
-# convert the "truth" set in BED to BEDPE file
-bed.file <- file.path('benchmark', 'in',
-                      'Personalis_1000_Genomes_deduplicated_deletions.bed')
+# count breakpoint overlaps (hits)
+getHits <- function(query.gr, subject.gr) {
+    return(countBreakpointOverlaps(query.gr, subject.gr, maxgap=200,
+                                   sizemargin=0.25, ignore.strand=TRUE,
+                                   restrictMarginToSizeMultiple=0.5,
+                                   countOnlyBest=TRUE))
+}
+
+# convert BED file to BEDPE if applicable
+bed.file <- truth.sets$Personalis1kGP$sv.file
 bedpe.file <- paste0(file_path_sans_ext(bed.file), '.bedpe')
-#bedpe.file <- file.path('benchmark', 'in', '3717462611446476_add4.bedpe')
-cmd <- paste("awk 'BEGIN {a=0; OFS=\"\t\"} NR>1 {print $1,$2,$2+1,$1,$3,$3+1,\
-             \"DEL_\" a,-1,\"+\",\"+\",\"DEL\"; a+=1}'", bed.file, '>', bedpe.file)
-system(cmd)
+if(!file.exists(bedpe.file)) {
+    cmd <- paste("awk 'BEGIN {a=0; OFS=\"\t\"} NR>1 {print $1,$2,$2+1,$1,$3,\
+                 $3+1,\"DEL_\" a,-1,\"+\",\"+\",\"DEL\"; a+=1}'", bed.file, '>',
+                 bedpe.file)
+    system(cmd)
+    message("DEBUG:", cmd)
+} else {
+    truth.sets$Personalis1kGP$sv.file <- bedpe.file
+}
 
 # import deletions from BEDPE
+bedpe.file <- truth.sets[[sel.idx]]$sv.file
+message("DEBUG:", bedpe.file)
 true.gr <- pairs2breakpointgr(rtracklayer::import(bedpe.file))
 seqlevelsStyle(true.gr) <- 'NCBI'  # ensure chr[X] -> [X]
 min.svLen <- min(abs(end(partner(true.gr)) - start(true.gr)) + 1)
@@ -63,8 +89,7 @@ message('n = ', length(true.gr))
 message('min.svLen = ', min.svLen)
 
 # import the ENCODE's exclusion list
-bed.excl.file <- file.path('benchmark', 'in', 'ENCFF001TDO.bed')
-#bed.excl.file <- file.path('benchmark', 'in', 'ceph18.b37.lumpy.exclude.2014-01-15.bed')
+bed.excl.file <- truth.sets[[sel.idx]]$excl.file
 excl.gr <- rtracklayer::import(bed.excl.file)
 seqlevelsStyle(excl.gr) <- 'NCBI'  # chr[X] -> X
 message('\n### Exclusion list ###')
@@ -112,10 +137,7 @@ for (c in callers) {
   message('n = ', length(gr))
   print(summary(gr$svLen))
 
-  hits <- countBreakpointOverlaps(gr, true.gr, maxgap=200,
-                                  sizemargin=0.25, ignore.strand=TRUE,
-                                  restrictMarginToSizeMultiple=0.5,
-                                  countOnlyBest=TRUE)
+  hits <- getHits(gr, true.gr)
   pm <- getPerfMetrics(c, hits, n.true)
   hits.df <- rbind(hits.df, data.frame(pm))
 }
@@ -138,10 +160,7 @@ info(vcf)$CIPOS <- IntegerList(info(vcf)$CIPOS)  # fix type:
 info(vcf)$CIEND <- IntegerList(info(vcf)$CIEND)  # CharacterList->IntegerList
 gr <- breakpointRanges(vcf)
 gr <- excludeRegions(gr, excl.gr)
-hits <- countBreakpointOverlaps(gr, true.gr, maxgap=200,
-                                sizemargin=0.25, ignore.strand=TRUE,
-                                restrictMarginToSizeMultiple=0.5,
-                                countOnlyBest=TRUE)
+hits <- getHits(gr, true.gr)
 callset <- file_path_sans_ext(vcf.outfile)
 pm <- getPerfMetrics(callset, hits, n.true)
 hits.df <- rbind(hits.df, data.frame(pm))
