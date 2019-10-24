@@ -1,7 +1,6 @@
 #
-# This script evaluates SV callsets given a truth set, filtered by an exclusion list.
-#
-# Truth sets (DELs only):
+# This script evaluates SV callsets obtained by Manta, DELLY, LUMPY and/or GRIDSS
+# given a truth set (DELs only):
 #  1. Personalis + 1k Genomes Project (Parikh et al., 2016)
 #  2. PacBio/Moleculo (Layer et al., 2014)
 #
@@ -20,13 +19,14 @@ getVcf <- function(caller) {
 # assign SV types
 # https://github.com/PapenfussLab/gridss/blob/7b1fedfed32af9e03ed5c6863d368a821a4c699f/example/simple-event-annotation.R#L9
 getSvType <- function(gr) {
-    return(ifelse(seqnames(gr) != seqnames(partner(gr)), "CTX",
-        ifelse(gr$insLen >= abs(gr$svLen) * 0.7, "INS",
-            ifelse(strand(gr) == strand(partner(gr)), "INV",
-                ifelse(xor(start(gr) < start(partner(gr)), strand(gr) == "-"),
-                    "DEL", "DUP")))))
+    return(ifelse(seqnames(gr) != seqnames(partner(gr)), 'CTX',
+        ifelse(gr$insLen >= abs(gr$svLen) * 0.7, 'INS',
+            ifelse(strand(gr) == strand(partner(gr)), 'INV',
+                ifelse(xor(start(gr) < start(partner(gr)), strand(gr) == '-'),
+                    'DEL', 'DUP')))))
 }
 
+# compute performance metrics for a callset
 getPerfMetrics <- function(callset, hits, n.true) {
     n <- length(hits)
     tp <- sum(hits)
@@ -55,7 +55,7 @@ system(cmd)
 
 # import deletions from BEDPE
 true.gr <- pairs2breakpointgr(rtracklayer::import(bedpe.file))
-seqlevelsStyle(true.gr) <- 'NCBI'  # chr[X] -> X
+seqlevelsStyle(true.gr) <- 'NCBI'  # ensure chr[X] -> [X]
 min.svLen <- min(abs(end(partner(true.gr)) - start(true.gr)) + 1)
 message('### Truth set ###')
 message('input = ', bedpe.file)
@@ -116,12 +116,6 @@ for (c in callers) {
                                   sizemargin=0.25, ignore.strand=TRUE,
                                   restrictMarginToSizeMultiple=0.5,
                                   countOnlyBest=TRUE)
-  n <- length(hits)
-  tp <- sum(hits)
-  fp <- n - tp
-  fn <- n.true - tp
-  prec <- round(tp * 100 / n, digits=1)
-  rec <- round(tp * 100 / n.true, digits=1)
   pm <- getPerfMetrics(c, hits, n.true)
   hits.df <- rbind(hits.df, data.frame(pm))
 }
