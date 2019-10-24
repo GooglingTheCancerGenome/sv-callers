@@ -58,7 +58,7 @@ excludeRegions <- function(query.gr, subject.gr) {
 
 # count breakpoint overlaps (hits)
 getHits <- function(query.gr, subject.gr) {
-    return(countBreakpointOverlaps(query.gr, subject.gr, maxgap=200,
+    return(countBreakpointOverlaps(query.gr, subject.gr, maxgap=100,
                                    sizemargin=0.25, ignore.strand=TRUE,
                                    restrictMarginToSizeMultiple=0.5,
                                    countOnlyBest=TRUE))
@@ -79,7 +79,6 @@ if(!file.exists(bedpe.file)) {
 
 # import deletions from BEDPE
 bedpe.file <- truth.sets[[sel.idx]]$sv.file
-message("DEBUG:", bedpe.file)
 true.gr <- pairs2breakpointgr(rtracklayer::import(bedpe.file))
 seqlevelsStyle(true.gr) <- 'NCBI'  # ensure chr[X] -> [X]
 min.svLen <- min(abs(end(partner(true.gr)) - start(true.gr)) + 1)
@@ -154,8 +153,8 @@ info(header(vcf))$Type[1:2] <- c("Integer", "Integer")  # fix INFO/CI{END,POS}
                                                         # types: String->Integer
 vcf <- vcf[which(info(vcf)$SVTYPE == 'DEL')]  # keep only deletions
 vcf <- vcf[which(as.integer(info(vcf)$SUPP) >= min.supp, TRUE)]  # filter calls
-                                                                 # by support
-#vcf <- vcf[which(info(vcf)$SUPP_VEC == '1101', TRUE)]
+                                                                 # by support or
+#vcf <- vcf[which(info(vcf)$SUPP_VEC == '1101', TRUE)]            # binvec MDLG
 info(vcf)$CIPOS <- IntegerList(info(vcf)$CIPOS)  # fix type:
 info(vcf)$CIEND <- IntegerList(info(vcf)$CIEND)  # CharacterList->IntegerList
 gr <- breakpointRanges(vcf)
