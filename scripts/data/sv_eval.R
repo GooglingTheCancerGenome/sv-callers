@@ -8,10 +8,11 @@
 suppressPackageStartupMessages(require(tools))
 suppressPackageStartupMessages(require(StructuralVariantAnnotation))
 
-min.supp <- 3  # min. number of callers supporting an SV
+min.supp <- 3  # min. number of supporting callers
 data.dir <- file.path('benchmark', 'out', '3', 'S3')  # with SV callsets
 
 # "truth" sets with BED/BEDPE files
+sel.idx <- 1  # select either 1=Personalis1kGP or 2=PacbioMoleculo
 truth.sets <- list()
 truth.sets$Personalis1kGP <- list(
     sv.file='Personalis_1000_Genomes_deduplicated_deletions.bed',
@@ -21,7 +22,6 @@ truth.sets$PacbioMoleculo <- list(
     excl.file='ceph18.b37.lumpy.exclude.2014-01-15.bed')
 truth.sets <- lapply(truth.sets, lapply,
                      function(fn){file.path('benchmark', 'in', fn)})
-sel.idx <- 1  # select either 1=Personalis1kGP or 2=PacbioMoleculo
 
 # get VCF file path given a caller
 getVcf <- function(caller) {
