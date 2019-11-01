@@ -1,0 +1,12 @@
+channels:
+  - bioconda
+  - r
+  - defaults
+  - conda-forge
+dependencies:
+  - jupyter
+  - r-ggplot2
+  - r-irkernel
+  - r-upsetr
+  - r-vcfr
+  - r-venn
