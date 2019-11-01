@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - r
+  - bioconda
+dependencies:
+  - jupyter
+  - r-irkernel
+  - bioconductor-structuralvariantannotation=1.0

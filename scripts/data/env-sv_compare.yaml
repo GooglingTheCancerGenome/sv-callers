@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+  - r
+  - bioconda
+dependencies:
+  - jupyter
+  - r-ggplot2
+  - r-irkernel
+  - r-upsetr=1.3
+  - r-vcfr=1.8
+  - r-venn=1.7
