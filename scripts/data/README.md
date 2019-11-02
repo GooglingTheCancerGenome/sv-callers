@@ -16,8 +16,8 @@ matched [normal](https://identifiers.org/ena.embl:ERX2765495) sample.
 ```bash
 sudo apt-get install libopenblas-dev  # on Debian-based Linux distros
 
-conda env create -f example_1/environment.yaml  # or example_2
-conda activate example_1                        #
+conda env create -f example_1/environment.yaml  # or create &
+conda activate example_1                        # activate example_2 env
 R BATCH -e "IRkernel::installspec()"            # enable R kernel
 ```
 
