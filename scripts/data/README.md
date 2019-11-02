@@ -16,9 +16,9 @@ matched [normal](https://identifiers.org/ena.embl:ERX2765495) sample.
 ```bash
 sudo apt-get install libopenblas-dev  # on Debian-based Linux distros
 
-conda env create -n ex1 -f example_1/environment.yaml  # or ex2 with example_2/
-conda activate ex1                                     #
-R BATCH -e "IRkernel::installspec()"                   # enable R kernel
+conda env create -f example_1/environment.yaml  # or example_2
+conda activate example_1                        #
+R BATCH -e "IRkernel::installspec()"            # enable R kernel
 ```
 
 ### 2. Run analyses.
@@ -26,3 +26,5 @@ R BATCH -e "IRkernel::installspec()"                   # enable R kernel
 ```bash
 jupyter notebook
 ```
+
+Note: Each example works only in its own conda env due to some dependency conflicts.

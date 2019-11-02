@@ -1,3 +1,4 @@
+name: example_2
 channels:
   - conda-forge
   - r
