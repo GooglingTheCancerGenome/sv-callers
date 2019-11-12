@@ -41,6 +41,8 @@ def get_fasta():
     if not fname.endswith(sfx):
         raise ValueError("FASTA file extension '{}' not registered."
             .format(os.path.splitext(fname)[-1]))
+    if os.path.getsize(fname) == 0:
+        raise OSError("FASTA file '{}' is empty.".format(fname))
     return fname
 
 
@@ -53,6 +55,8 @@ def get_faidx():
         fname = get_fasta().split(get_filext("fasta"))[0] + sfx
         if not os.path.exists(fname):
             raise FileNotFoundError("FASTA index file '{}' not found.".format(fname))
+        if os.path.getsize(fname) == 0:
+            raise OSError("FASTA index file '{}' is empty.".format(fname))
         faidx.append(fname)
     return faidx
 
@@ -79,6 +83,8 @@ def get_bed():
     if not fname.endswith(sfx):
         raise ValueError("BED file extension '{}' not registered."
             .format(os.path.splitext(fname)[-1]))
+    if os.path.getsize(fname) == 0:
+        raise OSError("BED file '{}' is empty.".format(fname))
     return fname
 
 
