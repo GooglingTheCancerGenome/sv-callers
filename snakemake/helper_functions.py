@@ -14,7 +14,7 @@ def get_callers():
     callers = []
     for c in config["enable_callers"]:
         if c not in config["callers"]:
-            raise AssertionError("SV caller '{}' is not supported!".format(c))
+            raise ValueError("SV caller '{}' not found.".format(c))
         callers.append(c)
     return callers
 
@@ -26,7 +26,7 @@ def get_filext(fmt):
     :returns: (str) file extension
     """
     if fmt not in config["file_exts"].keys():
-        raise AssertionError("Unknown input file format '{}'.".format(fmt.lower()))
+        raise ValueError("Input file format '{}' not supported.".format(fmt.lower()))
     return config["file_exts"][fmt]
 
 
@@ -36,14 +36,11 @@ def get_fasta():
     """
     fname = config["genome"]
     sfx = get_filext("fasta")
-    try:
-        if not os.path.exists(fname):
-            raise AssertionError("FASTA file not found: {}.".format(fname))
-        if not fname.endswith(sfx):
-            raise AssertionError("FASTA file '{}' (extension) not registered.".format(fname))
-    except AssertionError as err:
-        print(str(err), file=sys.stderr)
-        sys.exit(1)
+    if not os.path.exists(fname):
+        raise FileNotFoundError("FASTA file '{}' not found.".format(fname))
+    if not fname.endswith(sfx):
+        raise ValueError("FASTA file extension '{}' not registered."
+            .format(os.path.splitext(fname)[-1]))
     return fname
 
 
@@ -54,12 +51,8 @@ def get_faidx():
     faidx = []
     for sfx in get_filext("fasta_idx"):
         fname = get_fasta().split(get_filext("fasta"))[0] + sfx
-        try:
-            if not os.path.exists(fname):
-                raise AssertionError("FASTA index file not found: {}.".format(fname))
-        except AssertionError as err:
-            print(str(err), file=sys.stderr)
-            sys.exit(1)
+        if not os.path.exists(fname):
+            raise FileNotFoundError("FASTA index file '{}' not found.".format(fname))
         faidx.append(fname)
     return faidx
 
@@ -69,12 +62,8 @@ def exclude_regions():
     :returns: (int) flag 1=yes, 0=no
     """
     flag = config["exclude_regions"]
-    try:
-        if flag not in (0, 1):
-            raise AssertionError("Invalid value: 'exclude_regions' must be either 0 or 1.")
-    except AssertionError as err:
-        print(str(err), file=sys.stderr)
-        sys.exit(1)
+    if flag not in (0, 1):
+        raise ValueError("Set 'exclude_regions' to either 0 or 1.")
     return flag
 
 
@@ -84,14 +73,12 @@ def get_bed():
     """
     fname = config["exclusion_list"]
     sfx = get_filext("bed")
-    try:
-        if not os.path.exists(fname):
-            raise AssertionError("Exclusion file not found: {}.".format(fname))
-        if not fname.endswith(sfx):
-            raise AssertionError("Exclusion file '{}' must end with '{}' suffix.".format(fname, sfx))
-    except AssertionError as err:
-        print(str(err), file=sys.stderr)
-        sys.exit(1)
+    if not os.path.exists(fname):
+        raise FileNotFoundError("BED file '{}' with excluded regions not found."
+            .format(fname))
+    if not fname.endswith(sfx):
+        raise ValueError("BED file extension '{}' not registered."
+            .format(os.path.splitext(fname)[-1]))
     return fname
 
 
@@ -122,7 +109,13 @@ def get_outdir(caller):
     :param caller: (str) SV caller
     :returns: (str) outdir relative to sample dir
     """
-    return config["callers"][caller]["outdir"]
+    key = "outdir"
+    cf = config["callers"][caller]
+    if key not in cf:
+        raise KeyError("The '{}' is missing for '{}' caller.".format(key, caller))
+    if cf[key] is None:
+        raise ValueError("The '{}' is not set for '{}'.".format(key, caller))
+    return cf[key]
 
 
 def get_nthreads(tool):
@@ -172,12 +165,8 @@ def is_tumor_only():
     :returns: (int) flag 1=yes, 0=no
     """
     flag = config["callers"]["manta"]["tumor_only"]
-    try:
-        if flag not in (0, 1):
-            raise AssertionError("Incorrect value for Manta 'tumor_only': must be either 0 or 1.")
-    except AssertionError as err:
-        print(str(err), file=sys.stderr)
-        sys.exit(1)
+    if flag not in (0, 1):
+        raise ValueError("Set 'tumor_only' for Manta to either 0 or 1.")
     return flag
 
 
@@ -186,15 +175,11 @@ def survivor_args(c):
     :param c: sub-command 'filter' or 'merge'
     :returns: (list) arguments or values
     """
-    try:
-        if c not in ("filter", "merge"):
-            raise AssertionError("Incorrect SURVIVOR sub-command: must be either 'filter' or 'merge'.")
-    except AssertionError as err:
-        print(str(err), file=sys.stderr)
-        sys.exit(1)
-
     args = []
-    p = config["postproc"]["survivor"][c]
+    cf = config["postproc"]["survivor"]
+    if c not in cf:
+        raise ValueError("SURVIVOR sub-command must be either 'filter' or 'merge'.")
+    p = cf[c]
     if c in "filter":
         args = ['"%s"' % get_bed(), p["min_size"], p["max_size"], p["min_freq"],
                 p["min_sup"]]
@@ -210,33 +195,28 @@ def make_output():
         PATH/SAMPLE1/CALLER_OUTDIR/*.vcf            # in single-sample mode
         PATH/SAMPLE1--SAMPLE2/CALLER_OUTDIR/*.vcf   # in paired-sample mode
     """
-    def is_ok(s):
-        if s in (None, ""):
-            return False
-        return s
-
-    with open(config["samples"], "r") as fp:
+    csvfile = config["samples"]
+    empty = (None, "")
+    with open(csvfile, "r") as csv:
         mode = config["mode"]
-        try:
-            if mode not in ('s', 'p'):
-                raise AssertionError("Invalid workflow mode: run (s)ingle- or (p)aired-samples analysis.")
-        except AssertionError as err:
-            print(str(err), file=sys.stderr)
-            sys.exit(1)
-
-        reader = DictReader(line for line in fp if not line.startswith("#"))
+        if mode not in ('s', 'p'):
+            raise ValueError("Set the workflow mode to either (s)ingle- or (p)aired-sample analysis.")
+        reader = DictReader(ln for ln in csv if not ln.startswith("#")) # ignore commented lines
         outfiles = []
         for i, r in enumerate(reader):
-            try:
-                path = os.path.join(r["PATH"], is_ok(r["SAMPLE1"]))
-                if mode.startswith('p') is True:  # for paired-samples
-                    path += "--" + is_ok(r["SAMPLE2"])
-            except TypeError as err:
-                print("Missing value(s) in '{}' at record #{}: {}"
-                      .format(config["samples"], i + 1, list(r.values())),
-                      file=sys.stderr)
-                sys.exit(1)
-
+            if "PATH" not in r or r["PATH"] in empty:
+                raise ValueError("Missing column 'PATH' or value in '{}'."
+                    .format(csvfile))
+            if "SAMPLE1" not in r or r["SAMPLE1"] in empty:
+                raise ValueError("Missing column 'SAMPLE1' or value in '{}'."
+                    .format(csvfile))
+            if ("SAMPLE2" not in r or r["SAMPLE2"] in empty) and \
+                mode.startswith('p'):  # paired-sample mode
+                raise ValueError("Missing column 'SAMPLE2' or value in '{}'."
+                    .format(csvfile))
+            path = os.path.join(r["PATH"], r["SAMPLE1"])
+            if mode.startswith('p'):  # paired-sample mode
+                path += "--" + r["SAMPLE2"]
             for c in get_callers():
                 vcf = c + get_filext("vcf")
                 vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
