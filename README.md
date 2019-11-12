@@ -55,7 +55,7 @@ conda install -y -c nlesc xenon-cli=3.0.4  # optional but recommended;)
 -   **input files**:
     -   example data in `sv-callers/snakemake/data` directory
     -   reference genome in `.fasta` (incl. index files)
-    -   "exclusion" list of genomic regions in `.bed` (optional)
+    -   excluded regions in `.bed` (optional)
     -   WGS samples in `.bam` (incl. index files)
     -   list of (paired) samples in `samples.csv`
 
@@ -101,5 +101,5 @@ To perform SV calling:
 
 -   adjust compute requirements per SV caller according to the system used:
     -   the number of `threads`, 
-    -   the amount of `memory`(in MB) or
+    -   the amount of `memory`(in MB),
     -   the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
