@@ -1,5 +1,4 @@
 import os
-import sys
 
 from snakemake import load_configfile
 from csv import DictReader
@@ -209,7 +208,7 @@ def make_output():
             raise ValueError("Set the workflow mode to either (s)ingle- or (p)aired-sample analysis.")
         reader = DictReader(ln for ln in csv if not ln.startswith("#")) # ignore commented lines
         outfiles = []
-        for i, r in enumerate(reader):
+        for r in enumerate(reader):
             if "PATH" not in r or r["PATH"] in empty:
                 raise ValueError("Missing column 'PATH' or value in '{}'."
                     .format(csvfile))
