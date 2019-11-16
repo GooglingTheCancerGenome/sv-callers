@@ -201,24 +201,23 @@ def make_output():
         PATH/SAMPLE1--SAMPLE2/CALLER_OUTDIR/*.vcf   # in paired-sample mode
     """
     csvfile = config["samples"]
-    empty = (None, "")
+    notvalid = (None, "")
     with open(csvfile, "r") as csv:
+        outfiles = []
         mode = config["mode"]
         if mode not in ('s', 'p'):
             raise ValueError("Set the workflow mode to either (s)ingle- or (p)aired-sample analysis.")
-        reader = DictReader(ln for ln in csv if not ln.startswith("#")) # ignore commented lines
-        outfiles = []
-        for r in enumerate(reader):
-            if "PATH" not in r or r["PATH"] in empty:
+        for i, r in enumerate(DictReader(csv)):
+            if "PATH" not in r or r["PATH"] in notvalid:
                 raise ValueError("Missing column 'PATH' or value in '{}'."
                     .format(csvfile))
-            if "SAMPLE1" not in r or r["SAMPLE1"] in empty:
+            if "SAMPLE1" not in r or r["SAMPLE1"] in notvalid:
                 raise ValueError("Missing column 'SAMPLE1' or value in '{}'."
                     .format(csvfile))
-            if ("SAMPLE2" not in r or r["SAMPLE2"] in empty) and \
-                mode.startswith('p'):  # paired-sample mode
-                raise ValueError("Missing column 'SAMPLE2' or value in '{}'."
-                    .format(csvfile))
+            if mode.startswith('p'):  # paired-sample mode
+                if "SAMPLE2" not in r or r["SAMPLE2"] in notvalid:
+                    raise ValueError("Missing column 'SAMPLE2' or value in '{}'."
+                        .format(csvfile))
             path = os.path.join(r["PATH"], r["SAMPLE1"])
             if mode.startswith('p'):  # paired-sample mode
                 path += "--" + r["SAMPLE2"]
