@@ -133,7 +133,7 @@ def get_nthreads(tool):
             return config["postproc"][tool]["threads"]
         else:
             return config["callers"][tool]["threads"]
-    except:
+    except KeyError:
         return 1
 
 
@@ -147,7 +147,7 @@ def get_memory(tool):
             return config["postproc"][tool]["memory"]
         else:
             return config["callers"][tool]["memory"]
-    except:
+    except KeyError:
         return 1024
 
 
@@ -161,7 +161,7 @@ def get_tmpspace(tool):
             return config["postproc"][tool]["tmpspace"]
         else:
             return config["callers"][tool]["tmpspace"]
-    except:
+    except KeyError:
         return 0
 
 
