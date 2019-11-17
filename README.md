@@ -41,9 +41,7 @@ bash miniconda.sh  # install Conda (accept defaults)
 # export PATH="$HOME/miniconda3/bin:$PATH"
 source ~/.bashrc
 conda update -y conda  # update Conda
-conda create -y -n wf && source activate wf  # create & activate new env
-conda install -y -c bioconda snakemake
-conda install -y -c nlesc xenon-cli=3.0.4  # optional but recommended;)
+conda env create -n wf -f environment.yaml
 ```
 
 **3. Configure the workflow.**

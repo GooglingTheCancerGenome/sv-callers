@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+  - nlesc
+
+dependencies:
+  - snakemake>=4.8
+  - xenon-cli=3.0
