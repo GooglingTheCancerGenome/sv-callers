@@ -13,7 +13,7 @@ Structural variants (SVs) are an important class of genetic variation implicated
 -   [snakemake](https://snakemake.readthedocs.io/) (>=4.8)
 -   [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.4)
 
-These will be installed by the workflow itself:
+The workflow includes the following tools:
 
 -   SV callers
     -   [Manta](https://github.com/Illumina/manta) (1.1.0)
@@ -29,7 +29,7 @@ These will be installed by the workflow itself:
 
 ```bash
 git clone https://github.com/GooglingTheCancerGenome/sv-callers.git
-cd sv-callers/snakemake
+cd sv-callers
 ```
 
 **2. Install dependencies.**
@@ -42,6 +42,8 @@ bash miniconda.sh  # install Conda (accept defaults)
 source ~/.bashrc
 conda update -y conda  # update Conda
 conda env create -n wf -f environment.yaml
+conda activate wf
+cd snakemake
 ```
 
 **3. Configure the workflow.**
