@@ -6,3 +6,4 @@ channels:
 dependencies:
   - snakemake>=4.8
   - xenon-cli=3.0
+  - jq>=1.5
