@@ -9,10 +9,12 @@ Structural variants (SVs) are an important class of genetic variation implicated
 
 ## Dependencies
 
--   python (>=3.6)
--   [conda](https://conda.io/) (>=4.5)
--   [snakemake](https://snakemake.readthedocs.io/) (>=4.8)
--   [xenon-cli](https://github.com/NLeSC/xenon-cli) (3.0.4)
+-   [Python 3](https://www.python.org/)
+-   [Conda](https://conda.io/)
+-   [Snakemake](https://snakemake.readthedocs.io/) (5.10.0)
+-   [Xenon CLI](https://github.com/NLeSC/xenon-cli) (3.0.4)
+-   [jq](https://stedolan.github.io/jq/) (1.6) <- this is optional for parsing \
+    job accounting in JSON output by `xenon --json ...`
 
 The workflow includes the following tools:
 
@@ -36,12 +38,13 @@ cd sv-callers
 **2. Install dependencies.**
 
 ```bash
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh  # download Miniconda installer (with Python 3)
-bash miniconda.sh  # install Conda (accept defaults)
-# add the following line to ~/.bashrc & source env
-# export PATH="$HOME/miniconda3/bin:$PATH"
-source ~/.bashrc
-conda update -y conda  # update Conda
+# download Miniconda3 installer
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+# install Conda (respond by 'yes')
+bash miniconda.sh
+# update Conda
+conda update -y conda
+# create & activate new env with installed deps
 conda env create -n wf -f environment.yaml
 conda activate wf
 cd snakemake
