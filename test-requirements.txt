@@ -1,5 +1,4 @@
-snakemake==4.8
-pytest>=3.6
-pytest-cov>=2.5
+snakemake==5.10.0
+pytest
+pytest-cov
 codacy-coverage
-
