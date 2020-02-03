@@ -4,6 +4,6 @@ channels:
   - nlesc
 
 dependencies:
-  - snakemake>=4.8
-  - xenon-cli=3.0
-  - jq>=1.5
+  - snakemake=5.10.0
+  - xenon-cli=3.0.4
+  - jq=1.6
