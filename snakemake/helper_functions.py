@@ -219,6 +219,8 @@ def make_output():
             if "PATH" not in r or r["PATH"] in notvalid:
                 raise ValueError("Missing column 'PATH' or value in '{}'."
                     .format(csvfile))
+            if r["PATH"].startswith("#"):
+                continue
             if "SAMPLE1" not in r or r["SAMPLE1"] in notvalid:
                 raise ValueError("Missing column 'SAMPLE1' or value in '{}'."
                     .format(csvfile))
