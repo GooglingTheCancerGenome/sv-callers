@@ -8,7 +8,7 @@ EXIT_CODE=0
 ECHO=$1
 MODE=$2
 SCH=$3
-SAMPLES=$([ "$ECHO" -eq "1" ] && echo "samples_dummy.csv" || echo "samples.csv")
+SAMPLES="samples.csv"
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 MY_ENV=wf
 
