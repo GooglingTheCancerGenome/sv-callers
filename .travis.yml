@@ -25,6 +25,7 @@ install:
   - sleep 10
   - docker ps -a
   - docker cp ./ $SCH-$MODE:/home/xenon
+  - docker exec -t $SCH-$MODE chown -R xenon:xenon /home/xenon
   - docker exec -u xenon -t $SCH-$MODE ./install.sh
 script:
   - cd snakemake && pytest --cov=helper_functions --cov-report=xml
