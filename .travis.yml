@@ -7,7 +7,7 @@ services:
   - docker
 env:
   global:
-    - PREFIX=gtcg/sv-callers
+    - PREFIX=gtcg/xenon
     - TAG=dev
   matrix:
     - ECHO=1 MODE=s PORT=10022 SCH=gridengine
@@ -24,9 +24,10 @@ install:
   - docker run -d -p $PORT:22 --name $SCH-$MODE $PREFIX-$SCH:$TAG
   - sleep 10
   - docker ps -a
-  - docker cp run.sh $SCH-$MODE:/home/xenon
+  - docker cp ./ $SCH-$MODE:/home/xenon
+  - docker exec -u xenon -t $SCH-$MODE ./install.sh
 script:
   - cd snakemake && pytest --cov=helper_functions --cov-report=xml
-  - docker exec -u xenon -t $SCH-$MODE /bin/bash run.sh $ECHO $MODE $SCH
+  - docker exec -u xenon -t $SCH-$MODE ./run.sh $ECHO $MODE $SCH
 after_success:
   - python-codacy-coverage -r coverage.xml

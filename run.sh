@@ -1,9 +1,6 @@
-#!/bin/bash -xe
+#!/usr/bin/env bash
 
-source ~/.profile
-export BRANCH=dev
-git clone -b $BRANCH https://github.com/GooglingTheCancerGenome/sv-callers.git
-cd sv-callers/snakemake
+set -xe
 
 CALLERS=(manta delly lumpy gridss)
 STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
@@ -13,10 +10,12 @@ MODE=$2
 SCH=$3
 SAMPLES=$([ "$ECHO" -eq "1" ] && echo "samples_dummy.csv" || echo "samples.csv")
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
+MY_ENV=wf
 
-snakemake --version
-xenon --version
-
+eval "$(conda shell.bash hook)"
+conda activate $MY_ENV
+conda list
+cd snakemake && ls -alh
 echo "Selected callers: $STR_CALLERS"
 snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
   enable_callers="$STR_CALLERS" $USE_CONDA \
@@ -43,7 +42,7 @@ fi
 
 echo -e "\nLog files:"
 ls *.log
-for f in $(ls stderr-*.log); do
+for f in *.log; do
   echo -e "\n### $f ###\n"
   cat $f
 done
