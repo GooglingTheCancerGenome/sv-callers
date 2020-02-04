@@ -210,7 +210,6 @@ def make_output():
     """
     csvfile = config["samples"]
     notvalid = (None, "")
-    log = open("log", "w")
     with open(csvfile, "r") as csv:
         outfiles = []
         mode = config["mode"]
@@ -240,7 +239,6 @@ def make_output():
                 vcf = c + get_filext("vcf")
                 vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
                 outfiles.append(vcf)
-        log.close()
         return outfiles
 
 

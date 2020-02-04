@@ -57,7 +57,7 @@ def test_get_filext(test_input, expected):
 
 
 def test_get_filext__unknownextension_exception():
-    with pytest.raises(Exception) as e_info:
+    with pytest.raises(Exception):
         hf.get_filext('nobodyknowns')
 
 
@@ -86,7 +86,7 @@ def test_get_bai():
 
 
 def test_file_is_empty__emptyfile_exception():
-    with pytest.raises(Exception) as exc_info:
+    with pytest.raises(Exception):
         hf.file_is_empty('data/bam/1/T1.bam')
 
 
