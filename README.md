@@ -52,8 +52,8 @@ cd snakemake
 **3. Configure the workflow.**
 
 -   **config files**:
-    -   `analysis.yaml` - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
-    -   `environment.yaml` - software dependencies and versions
+    -   [`analysis.yaml`](/snakemake/analysis.yaml) - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
+    -   [`environment.yaml`](/snakemake/environment.yaml) - software dependencies and versions
 
 -   **input files**:
     -   example data in `sv-callers/snakemake/data` directory
