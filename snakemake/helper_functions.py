@@ -25,7 +25,7 @@ def get_filext(fmt):
     :returns: (str) file extension
     """
     if fmt not in config["file_exts"].keys():
-        raise ValueError("Input file format '{}' not supported.".format(fmt.lower()))
+         raise ValueError("Input file format '{}' not supported.".format(fmt.lower()))
     return config["file_exts"][fmt]
 
 
@@ -123,6 +123,14 @@ def get_outdir(caller):
     return cf[key]
 
 
+def file_is_empty(filepath):
+    """Raise error if the input file is empty.
+    :param filepath (str) input file
+    """
+    if os.path.getsize(filepath) == 0:
+        raise OSError("File '{}' is empty.".format(filepath))
+
+
 def get_nthreads(tool):
     """Get the number of threads requested by a tool.
     :param tool: (str) SV detection or post-processing tool
@@ -202,6 +210,7 @@ def make_output():
     """
     csvfile = config["samples"]
     notvalid = (None, "")
+    log = open("log", "w")
     with open(csvfile, "r") as csv:
         outfiles = []
         mode = config["mode"]
@@ -214,10 +223,16 @@ def make_output():
             if "SAMPLE1" not in r or r["SAMPLE1"] in notvalid:
                 raise ValueError("Missing column 'SAMPLE1' or value in '{}'."
                     .format(csvfile))
-            if mode.startswith('p'):  # paired-sample mode
+            else:
+                for f in (get_bam(r["SAMPLE1"]), get_bai(r["SAMPLE1"])):
+                    file_is_empty(os.path.join(r["PATH"], f))
+            if mode.startswith('p'):
                 if "SAMPLE2" not in r or r["SAMPLE2"] in notvalid:
                     raise ValueError("Missing column 'SAMPLE2' or value in '{}'."
                         .format(csvfile))
+                else:
+                    for f in (get_bam(r["SAMPLE2"]), get_bai(r["SAMPLE2"])):
+                        file_is_empty(os.path.join(r["PATH"], f))
             path = os.path.join(r["PATH"], r["SAMPLE1"])
             if mode.startswith('p'):  # paired-sample mode
                 path += "--" + r["SAMPLE2"]
@@ -225,6 +240,7 @@ def make_output():
                 vcf = c + get_filext("vcf")
                 vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
                 outfiles.append(vcf)
+        log.close()
         return outfiles
 
 
