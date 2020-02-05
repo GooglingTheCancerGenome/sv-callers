@@ -1,8 +1,8 @@
 # YAML 1.2
 # Metadata for citation of this software according to the CFF format (https://citation-file-format.github.io/)
---- 
-authors: 
-  - 
+---
+authors:
+  -
     affiliation: "Netherlands eScience Center"
     family-names: Kuzniar
     given-names: Arnold
@@ -14,4 +14,4 @@ license: Apache-2.0
 message: "If you use this software, please cite it using these metadata"
 repository-code: "https://github.com/GooglingTheCancerGenome/sv-callers"
 title: sv-callers
-version: "1.1.0"
+version: "1.1.1"
