@@ -11,7 +11,6 @@ fi
 ECHO=$1
 MODE=$2
 SCH=$3
-EXIT_CODE=0
 CALLERS=(manta delly lumpy gridss)
 STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
 JOBS=() # array of job IDs
