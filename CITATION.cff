@@ -10,6 +10,18 @@ authors:
 cff-version: "1.0.3"
 date-released: "2019-05-06"
 doi: 10.5281/zenodo.1217111
+keywords:
+  - "bioinformatics"
+  - "variant calling"
+  - "structural vatiants"
+  - "cancer genomics"
+  - "whole genome sequencing"
+  - "workflow"
+  - "high-performance computing"
+  - "HPC"
+  - "WGS"
+  - "BAM"
+  - "VCF"
 license: Apache-2.0
 message: "If you use this software, please cite it using these metadata"
 repository-code: "https://github.com/GooglingTheCancerGenome/sv-callers"
