@@ -10,12 +10,12 @@ Structural variants (SVs) are an important class of genetic variation implicated
 ## Dependencies
 
 -   [Python 3](https://www.python.org/)
--   [Conda](https://conda.io/)
--   [Snakemake](https://snakemake.readthedocs.io/) (5.10.0)
--   [Xenon CLI](https://github.com/NLeSC/xenon-cli) (3.0.4)
--   [jq](https://stedolan.github.io/jq/) (1.6) to query job accounting output by `xenon --json ...` (optional)
+-   [Conda](https://conda.io/) - package/environment management system
+-   [Snakemake](https://snakemake.readthedocs.io/) (5.10.0) - workflow management system
+-   [Xenon CLI](https://github.com/NLeSC/xenon-cli) (3.0.4) - command-line interface to compute and storage resources
+-   [jq](https://stedolan.github.io/jq/) (optional) - command-line JSON processor to parse job accounting info (see `xenon --json ...`
 
-The workflow includes the following tools:
+The workflow includes the following bioinformatics tools:
 
 -   SV callers
     -   [Manta](https://github.com/Illumina/manta) (1.1.0)
