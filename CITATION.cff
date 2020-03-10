@@ -13,15 +13,17 @@ doi: 10.5281/zenodo.1217111
 keywords:
   - "bioinformatics"
   - "variant calling"
-  - "structural vatiants"
+  - "structural variants"
   - "cancer genomics"
   - "whole genome sequencing"
   - "workflow"
   - "high-performance computing"
   - "HPC"
   - "WGS"
+  - "FASTA"
   - "BAM"
   - "VCF"
+  - "BED"
 license: Apache-2.0
 message: "If you use this software, please cite it using these metadata"
 repository-code: "https://github.com/GooglingTheCancerGenome/sv-callers"
