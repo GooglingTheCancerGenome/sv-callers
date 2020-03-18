@@ -8,27 +8,23 @@ services:
 env:
   global:
     - PREFIX=gtcg/xenon
-    - TAG=dev
   matrix:
-    - ECHO=1 MODE=s PORT=10022 SCH=gridengine
-    - ECHO=1 MODE=p PORT=10023 SCH=gridengine
-    - ECHO=1 MODE=s PORT=10024 SCH=slurm
-    - ECHO=1 MODE=p PORT=10025 SCH=slurm
-    - ECHO=0 MODE=s PORT=10022 SCH=gridengine
-    - ECHO=0 MODE=p PORT=10023 SCH=gridengine
-    - ECHO=0 MODE=s PORT=10024 SCH=slurm
-    - ECHO=0 MODE=p PORT=10025 SCH=slurm
+    - ECHO=0 MODE=s PORT=10022 SCH=gridengine TAG=6
+    - ECHO=0 MODE=p PORT=10023 SCH=gridengine TAG=6
+    - ECHO=0 MODE=s PORT=10024 SCH=slurm TAG=17
+    - ECHO=0 MODE=p PORT=10025 SCH=slurm TAG=17
+    - ECHO=0 MODE=s PORT=10026 SCH=slurm TAG=19
+    - ECHO=0 MODE=p PORT=10027 SCH=slurm TAG=19
 install:
   - pip install -r test-requirements.txt
-  - docker pull $PREFIX-$SCH:$TAG
-  - docker run -d -p $PORT:22 --name $SCH-$MODE $PREFIX-$SCH:$TAG
+  - docker run -d -p $PORT:22 --name $SCH-$TAG-$MODE $PREFIX-$SCH:$TAG
   - sleep 10
   - docker ps -a
-  - docker cp ./ $SCH-$MODE:/home/xenon
-  - docker exec -t $SCH-$MODE chown -R xenon:xenon /home/xenon
-  - docker exec -u xenon -t $SCH-$MODE ./install.sh
+  - docker cp ./ $SCH-$TAG-$MODE:/home/xenon
+  - docker exec -t $SCH-$TAG-$MODE chown -R xenon:xenon /home/xenon
+  - docker exec -u xenon -t $SCH-$TAG-$MODE ./install.sh
 script:
   - cd snakemake && pytest --cov=helper_functions --cov-report=xml
-  - docker exec -u xenon -t $SCH-$MODE ./run.sh $ECHO $MODE $SCH
+  - docker exec -u xenon -t $SCH-$TAG-$MODE ./run.sh $ECHO $MODE $SCH
 after_success:
   - python-codacy-coverage -r coverage.xml
