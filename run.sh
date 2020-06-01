@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -xe
+set -e
 
 # check input arg(s)
 if [ $# -lt "3" ]; then
@@ -16,11 +16,25 @@ STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
 JOBS=() # array of job IDs
 JOBS_LOG=jobs.json # job accounting log
 SAMPLES=samples.csv
+CONFIG=analysis.yaml
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 MY_ENV=wf
 
 monitor () {  # monitor a job via Xenon CLI
   xenon -v --json scheduler $SCH --location local:// list --identifier $1
+}
+
+edit() {  # edit config file
+  if [ "$ECHO" == "1" ]; then
+    sed -i.org 's/echo_run:\s*0/echo_run: 1/' $CONFIG
+  else
+    sed -i.org 's/echo_run:\s*1/echo_run: 0/' $CONFIG
+
+  if [ "$MODE" == 'p' ]; then
+    sed -i.org 's/mode:\s*s/mode: p/' $CONFIG
+  else
+    sed -i.org 's/mode:\s*p/mode: s/' $CONFIG
+  fi
 }
 
 # activate conda env
@@ -31,9 +45,8 @@ conda list
 # run workflow
 cd snakemake && ls -alh
 echo "Selected callers: $STR_CALLERS"
-snakemake -C echo_run=$ECHO samples=$SAMPLES mode=$MODE \
-  enable_callers="$STR_CALLERS" $USE_CONDA \
-  --configfile analysis_test.yaml \
+snakemake $USE_CONDA \
+  --configfile $CONFIG \
   --latency-wait 60 --jobs \
   --cluster "xenon -vvv scheduler $SCH --location local:// submit \
   --name smk.{rule} --cores-per-task {threads} --inherit-env \

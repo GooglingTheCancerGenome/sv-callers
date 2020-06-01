@@ -9,12 +9,10 @@ env:
   global:
     - PREFIX=gtcg/xenon
   matrix:
-    - ECHO=0 MODE=s PORT=10022 SCH=gridengine TAG=6
-    - ECHO=0 MODE=p PORT=10023 SCH=gridengine TAG=6
-    - ECHO=0 MODE=s PORT=10024 SCH=slurm TAG=17
-    - ECHO=0 MODE=p PORT=10025 SCH=slurm TAG=17
-    - ECHO=0 MODE=s PORT=10026 SCH=slurm TAG=19
-    - ECHO=0 MODE=p PORT=10027 SCH=slurm TAG=19
+    - ECHO=0 MODE=s PORT=10020 SCH=gridengine TAG=6
+    - ECHO=0 MODE=p PORT=10021 SCH=gridengine TAG=6
+    - ECHO=0 MODE=s PORT=10022 SCH=slurm TAG=19
+    - ECHO=0 MODE=p PORT=10023 SCH=slurm TAG=19
 install:
   - pip install -r test-requirements.txt
   - docker run -d -p $PORT:22 --name $SCH-$TAG-$MODE $PREFIX-$SCH:$TAG
