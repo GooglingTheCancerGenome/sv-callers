@@ -3,10 +3,10 @@ echo_run: 1
 
 # select one or more callers
 enable_callers:
-    - manta
-    - delly
-    - lumpy
-    - gridss
+  - manta
+  - delly
+  - lumpy
+  - gridss
 
 # (s)ingle-sample or (p)aired-samples analysis
 mode: p

@@ -10,14 +10,14 @@ rule lumpy_p:  # paired-samples analysis
         excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("lumpy"),
-                     "lumpy" + get_filext("vcf"))
+                     "lumpy" + config.file_exts.vcf)
     conda:
         "../environment.yaml"
     threads:
-        get_nthreads("lumpy")
+        config.callers.lumpy.threads
     resources:
-        mem_mb = get_memory("lumpy"),
-        tmp_mb = get_tmpspace("lumpy")
+        mem_mb = config.callers.lumpy.memory,
+        tmp_mb = config.callers.lumpy.tmpspace
     shell:
         """
         set -x
@@ -30,7 +30,7 @@ rule lumpy_p:  # paired-samples analysis
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
 
         # run dummy or real job
-        if [ "{config[echo_run]}" -eq "1" ]; then
+        if [ "{config.echo_run}" -eq "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
         else
             lumpyexpress \
@@ -40,7 +40,7 @@ rule lumpy_p:  # paired-samples analysis
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \
-                -T "${{TMP}}/lumpy.${{RANDOM}}" &&
+                -T "${{TMP}}/lumpy.${{RANDOM}}"
             # somatic + SV quality filtering
             #   'normal' sample assumes index 1
             bcftools filter \
@@ -61,14 +61,14 @@ rule lumpy_s:  # single-sample analysis
         excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
     output:
         os.path.join("{path}/{sample}", get_outdir("lumpy"), "lumpy" +
-                     get_filext("vcf"))
+                     config.file_exts.vcf)
     conda:
         "../environment.yaml"
     threads:
-        get_nthreads("lumpy")
+        config.callers.lumpy.threads
     resources:
-        mem_mb = get_memory("lumpy"),
-        tmp_mb = get_tmpspace("lumpy")
+        mem_mb = config.callers.lumpy.memory,
+        tmp_mb = config.callers.lumpy.tmpspace
     shell:
         """
         set -x
@@ -81,7 +81,7 @@ rule lumpy_s:  # single-sample analysis
             echo "${{OUTDIR}}" || echo "${{TMPDIR}}")
 
         # run dummy or real job
-        if [ "{config[echo_run]}" -eq "1" ]; then
+        if [ "{config.echo_run}" -eq "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
         else
             lumpyexpress \
@@ -91,7 +91,7 @@ rule lumpy_s:  # single-sample analysis
                 -m 4 `# min. sample weight` \
                 -r 0 `# trim threshold` \
                 -k `# keep tmp files` \
-                -T "${{TMP}}/lumpy.${{RANDOM}}" &&
+                -T "${{TMP}}/lumpy.${{RANDOM}}"
             # SV quality filtering
             bcftools filter \
                 -O v `# uncompressed VCF format` \

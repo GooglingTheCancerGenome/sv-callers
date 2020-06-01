@@ -1,28 +1,31 @@
 rule survivor_filter:  # used by both modes
     input:
-        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "{prefix}" + get_filext("vcf"))
-        if config["mode"].startswith("p") is True else
-        os.path.join("{path}", "{sample}", "{outdir}", "{prefix}" + get_filext("vcf"))
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "{prefix}" +
+        config.file_exts.vcf) if config.mode.PAIRED_SAMPLE is True else
+        os.path.join("{path}", "{sample}", "{outdir}", "{prefix}" +
+        config.file_exts.vcf)
     output:
-        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "survivor", "{prefix}" + get_filext("vcf"))
-        if config["mode"].startswith("p") is True else
-        os.path.join("{path}", "{sample}", "{outdir}", "survivor", "{prefix}" + get_filext("vcf"))
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "survivor",
+        "{prefix}" + config.file_exts.vcf)
+        if config.mode.PAIRED_SAMPLE is True else
+        os.path.join("{path}", "{sample}", "{outdir}", "survivor", "{prefix}" +
+        config.file_exts.vcf)
     params:
         excl = exclude_regions(),
         args = survivor_args("filter")
     conda:
         "../environment.yaml"
     threads:
-        get_nthreads("survivor")
+        config.postproc.survivor.threads
     resources:
-        mem_mb = get_memory("survivor"),
-        tmp_mb = get_tmpspace("survivor")
+        mem_mb = config.postproc.survivor.memory,
+        tmp_mb = config.postproc.survivor.tmpspace
     shell:
         """
         set -x
 
         # run dummy or real job
-        if [ "{config[echo_run]}" -eq "1" ]; then
+        if [ "{config.echo_run}" -eq "1" ]; then
             cat "{input}" > "{output}"
         else
             if [ "{params.excl}" -eq "1" ]; then
@@ -35,26 +38,26 @@ rule survivor_filter:  # used by both modes
 
 rule survivor_merge:  # used by both modes
     input:
-        [os.path.join("{path}", "{tumor}--{normal}", get_outdir(c), "survivor", c + get_filext("vcf"))
-         for c in get_callers()]
-        if config["mode"].startswith("p") is True else
-        [os.path.join("{path}", "{sample}", get_outdir(c), "survivor", c + get_filext("vcf"))
-         for c in get_callers()]
+        [os.path.join("{path}", "{tumor}--{normal}", get_outdir(c), "survivor",
+         c + config.file_exts.vcf) for c in config.enable_callers]
+        if config.mode.PAIRED_SAMPLE is True else
+        [os.path.join("{path}", "{sample}", get_outdir(c), "survivor",
+         c + config.file_exts.vcf) for c in config.enable_callers]
     params:
         args = survivor_args("merge")[1:-1]
     output:
         [os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[0]),
          os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[-1])]
-        if config["mode"].startswith("p") is True else
+        if config.mode.PAIRED_SAMPLE is True else
         [os.path.join("{path}", "{sample}", survivor_args("merge")[0]),
          os.path.join("{path}", "{sample}", survivor_args("merge")[-1])]
     conda:
         "../environment.yaml"
     threads:
-        get_nthreads("survivor")
+        config.postproc.survivor.threads
     resources:
-        mem_mb = get_memory("survivor"),
-        tmp_mb = get_tmpspace("survivor")
+        mem_mb = config.postproc.survivor.memory,
+        tmp_mb = config.postproc.survivor.tmpspace
     shell:
         """
         set -x
@@ -66,7 +69,7 @@ rule survivor_merge:  # used by both modes
         done
 
         # run dummy or real job
-        if [ "{config[echo_run]}" -eq "1" ]; then
+        if [ "{config.echo_run}" -eq "1" ]; then
             cat "{output[0]}" > "{output[1]}"
         else
             SURVIVOR merge "{output[0]}" {params.args} "{output[1]}"
