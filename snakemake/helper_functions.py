@@ -143,32 +143,29 @@ def make_output():
     notvalid = (None, "")
     with open(csvfile, "r") as csv:
         outfiles = []
-        mode = config.mode
         for i, r in enumerate(DictReader(csv)):
             if "PATH" not in r or r["PATH"] in notvalid:
                 raise ValueError("Missing column 'PATH' or value in '{}'."
                     .format(csvfile))
-            if r["PATH"].startswith("#"):
+            if r["PATH"].startswith("#"):  # skip comment lines
                 continue
             if "SAMPLE1" not in r or r["SAMPLE1"] in notvalid:
                 raise ValueError("Missing column 'SAMPLE1' or value in '{}'."
                     .format(csvfile))
-            else:
-                for f in (get_bam(r["SAMPLE1"]), get_bai(r["SAMPLE1"])):
-                    file_is_empty(os.path.join(r["PATH"], f))
-            if mode.PAIRED_SAMPLE is True:
+            for f in (get_bam(r["SAMPLE1"]), get_bai(r["SAMPLE1"])):
+                file_is_empty(os.path.join(r["PATH"], f))
+            path = os.path.join(r["PATH"], r["SAMPLE1"])
+
+            if config.mode is config.mode.PAIRED_SAMPLE:
                 if "SAMPLE2" not in r or r["SAMPLE2"] in notvalid:
                     raise ValueError("Missing column 'SAMPLE2' or value in '{}'."
                         .format(csvfile))
-                else:
-                    for f in (get_bam(r["SAMPLE2"]), get_bai(r["SAMPLE2"])):
-                        file_is_empty(os.path.join(r["PATH"], f))
-            path = os.path.join(r["PATH"], r["SAMPLE1"])
-            if mode.PAIRED_SAMPLE is True:
+                for f in (get_bam(r["SAMPLE2"]), get_bai(r["SAMPLE2"])):
+                    file_is_empty(os.path.join(r["PATH"], f))
                 path += "--" + r["SAMPLE2"]
             for c in config.enable_callers:
-                vcf = c + config.file_exts.vcf
-                vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
+                vcf = os.path.join(path, get_outdir(c), "survivor",
+                    c + config.file_exts.vcf)
                 outfiles.append(vcf)
         return outfiles
 
