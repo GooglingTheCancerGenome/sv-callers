@@ -4,9 +4,9 @@ channels:
   - bioconda
   - nlesc
 dependencies:
-  - snakemake=5.10.0
+  - snakemake=5.19.2
   - xenon-cli=3.0.5
   - jq=1.6
   - pip
   - pip:
-      - yatiml==0.5.0
+      - yatiml==0.5.1
