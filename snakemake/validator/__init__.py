@@ -8,15 +8,6 @@ from ruamel import yaml
 import yatiml
 
 
-# # Create document classes
-# class Input:
-#     """
-#     Input class to hold the 'input' node.
-#     """
-#     def __init__(self, fasta: str, seqids: List[Union[int, str]]) -> None:
-#         self.fasta = fasta
-#         self.seqids = seqids
-
 class Mode(enum.Enum):
     SINGLE_SAMPLE = 's'
     PAIRED_SAMPLE = 'p'

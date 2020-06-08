@@ -2,6 +2,7 @@
 import pytest
 import helper_functions as hf
 
+
 test_filext = [
     ('fasta', '.fasta'),
     ('fasta_idx', ['.fasta.fai', '.fasta.bwt', '.fasta.amb', '.fasta.ann', '.fasta.pac', '.fasta.sa']),
@@ -12,6 +13,8 @@ test_filext = [
     ('bed', '.bed')
 ]
 
+test_modes = [hf.config.mode.SINGLE_SAMPLE, hf.config.mode.PAIRED_SAMPLE]
+
 test_callers = [
     ('manta', 'manta_out', 24, 16384, 0),
     ('delly', 'delly_out', 2, 8192, 0),
@@ -19,13 +22,22 @@ test_callers = [
     ('gridss', 'gridss_out', 24, 63488, 0),
 ]
 
-test_mode_inter_output = [
-    (hf.config.mode.PAIRED_SAMPLE, [
-        'data/bam/3/T3--N3/manta_out/survivor/manta.vcf', 'data/bam/3/T3--N3/delly_out/survivor/delly.vcf',
-        'data/bam/3/T3--N3/lumpy_out/survivor/lumpy.vcf', 'data/bam/3/T3--N3/gridss_out/survivor/gridss.vcf']),
-    (hf.config.mode.SINGLE_SAMPLE, [
-        'data/bam/3/T3/manta_out/survivor/manta.vcf', 'data/bam/3/T3/delly_out/survivor/delly.vcf',
-        'data/bam/3/T3/lumpy_out/survivor/lumpy.vcf', 'data/bam/3/T3/gridss_out/survivor/gridss.vcf'])
+test_inter_output = [
+    ("s", [
+        'data/bam/3/T3/manta_out/survivor/manta.vcf',
+        'data/bam/3/T3/delly_out/survivor/delly.vcf',
+        'data/bam/3/T3/lumpy_out/survivor/lumpy.vcf',
+        'data/bam/3/T3/gridss_out/survivor/gridss.vcf']),
+    ("p", [
+        'data/bam/3/T3--N3/manta_out/survivor/manta.vcf',
+        'data/bam/3/T3--N3/delly_out/survivor/delly.vcf',
+        'data/bam/3/T3--N3/lumpy_out/survivor/lumpy.vcf',
+        'data/bam/3/T3--N3/gridss_out/survivor/gridss.vcf'])
+]
+
+test_output = [
+    ("s", ["data/bam/3/T3/all.vcf"]),
+    ("p", ["data/bam/3/T3--N3/all.vcf"])
 ]
 
 test_args = [
@@ -33,10 +45,6 @@ test_args = [
     ('merge', ['all.txt', 100, 1, 0, 0, 0, 0, 'all.vcf'])
 ]
 
-test_mode_output = [
-    (hf.config.mode.PAIRED_SAMPLE, {'data/bam/3/T3--N3/all.vcf'}),
-    (hf.config.mode.SINGLE_SAMPLE, {'data/bam/3/T3/all.vcf'})
-]
 
 def test_get_fasta():
     result = hf.get_fasta()
@@ -85,14 +93,20 @@ def test_survivor_args(test_input, expected):
     result = hf.survivor_args(test_input)
     assert result == expected
 
-# @pytest.mark.parametrize("test_input,expected", test_mode_inter_output)
-# def test_make_output(test_input, expected):
-#     hf.config.mode = test_input
-#     result = hf.make_output()
-#     assert result == expected
-#
-# @pytest.mark.parametrize("test_input,expected", test_mode_output)
-# def test_make_all(test_input, expected):
-#     hf.config.mode = test_input
-#     result = hf.make_all()
-#     assert result == expected
+@pytest.fixture(params=test_modes)
+def set_mode(request):
+    return request.param
+
+@pytest.mark.parametrize("test_input,expected", test_inter_output)
+def test_make_output(set_mode, test_input, expected):
+    hf.config.mode = set_mode
+    result = hf.make_output()
+    if hf.config.mode == test_input:
+        assert set(result) == set(expected)
+
+@pytest.mark.parametrize("test_input,expected", test_output)
+def test_make_all(set_mode, test_input, expected):
+    hf.config.mode = set_mode
+    result = hf.make_all()
+    if hf.config.mode == test_input:
+        assert set(result) == set(expected)
