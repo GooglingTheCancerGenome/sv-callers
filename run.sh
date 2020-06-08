@@ -29,6 +29,7 @@ edit() {  # edit config file
     sed -i.org 's/echo_run:\s*0/echo_run: 1/' $CONFIG
   else
     sed -i.org 's/echo_run:\s*1/echo_run: 0/' $CONFIG
+  fi
 
   if [ "$MODE" == 'p' ]; then
     sed -i.org 's/mode:\s*s/mode: p/' $CONFIG
