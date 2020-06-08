@@ -13,6 +13,7 @@ MODE=$2
 SCH=$3
 CALLERS=(manta delly lumpy gridss)
 STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
+THREADS=1
 JOBS=() # array of job IDs
 JOBS_LOG=jobs.json # job accounting log
 SAMPLES=samples.csv
@@ -50,7 +51,7 @@ snakemake $USE_CONDA \
   --configfile $CONFIG \
   --latency-wait 60 --jobs \
   --cluster "xenon -vvv scheduler $SCH --location local:// submit \
-  --name smk.{rule} --cores-per-task {threads} --inherit-env \
+  --name smk.{rule} --cores-per-task $THREADS --inherit-env \
   --max-run-time 15 --working-directory . \
   --stderr stderr-%j.log --stdout stdout-%j.log"
 
