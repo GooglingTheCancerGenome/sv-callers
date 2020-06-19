@@ -3,10 +3,10 @@ echo_run: 1
 
 # select one or more callers
 enable_callers:
-    - manta
-    - delly
-    - lumpy
-    - gridss
+  - manta
+  - delly
+  - lumpy
+  - gridss
 
 # (s)ingle-sample or (p)aired-samples analysis
 mode: p
@@ -78,6 +78,7 @@ postproc:
     threads: 1
     memory: 1024
     tmpspace: 0  # not in use
+    outdir: survivor
     filter:         # filter SVs using a BED file (see 'exclusion_list')
       min_size: -1  # min. SV size (-1 to disable)
       max_size: -1  # max. SV size (-1 to disable)

@@ -10,14 +10,14 @@ rule gridss_p:  # paired-samples analysis
         excl_opt = "BLACKLIST=" + get_bed() if exclude_regions() else ""
     output:
         os.path.join("{path}/{tumor}--{normal}", get_outdir("gridss"),
-                     "gridss" + get_filext("vcf"))
+                     "gridss" + config.file_exts.vcf)
     conda:
         "../environment.yaml"
     threads:
-        get_nthreads("gridss")
+        config.callers.gridss.threads
     resources:
-        mem_mb = get_memory("gridss"),
-        tmp_mb = get_tmpspace("gridss")
+        mem_mb = config.callers.gridss.memory,
+        tmp_mb = config.callers.gridss.tmpspace
     shell:
         """
         set -x
@@ -38,11 +38,11 @@ rule gridss_p:  # paired-samples analysis
         export _JAVA_OPTIONS="-Djava.io.tmpdir=${{TMP}} -Xmx${{MAX_HEAP}}"
 
         # run dummy or real job
-        if [ "{config[echo_run]}" -eq "1" ]; then
+        if [ "{config.echo_run}" -eq "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
         else
             # clean-up outdir prior to SV calling
-            rm -fr ${{OUTDIR}}/*gridss* &&
+            rm -fr ${{OUTDIR}}/*gridss*
             gridss gridss.CallVariants \
                 WORKER_THREADS={threads} \
                 REFERENCE_SEQUENCE="{input.fasta}" \
@@ -52,7 +52,7 @@ rule gridss_p:  # paired-samples analysis
                 OUTPUT="${{OUTFILE}}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
-                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" &&
+                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
             # somatic + SV quality filtering
             #   'normal' sample assumes index 0
             bcftools filter \
@@ -73,14 +73,14 @@ rule gridss_s:  # single-sample analysis
         excl_opt = "BLACKLIST=" + get_bed() if exclude_regions() else ""
     output:
         os.path.join("{path}/{sample}", get_outdir("gridss"), "gridss" +
-                     get_filext("vcf"))
+                     config.file_exts.vcf)
     conda:
         "../environment.yaml"
     threads:
-        get_nthreads("gridss")
+        config.callers.gridss.threads
     resources:
-        mem_mb = get_memory("gridss"),
-        tmp_mb = get_tmpspace("gridss")
+        mem_mb = config.callers.gridss.memory,
+        tmp_mb = config.callers.gridss.tmpspace
     shell:
         """
         set -x
@@ -101,7 +101,7 @@ rule gridss_s:  # single-sample analysis
         export _JAVA_OPTIONS="-Djava.io.tmpdir=${{TMP}} -Xmx${{MAX_HEAP}}"
 
         # run dummy or real job
-        if [ "{config[echo_run]}" -eq "1" ]; then
+        if [ "{config.echo_run}" -eq "1" ]; then
             echo "{input}" "${{TMP}}" > "{output}"
         else
             # clean-up outdir prior to SV calling
@@ -114,7 +114,7 @@ rule gridss_s:  # single-sample analysis
                 OUTPUT="${{OUTFILE}}" \
                 ASSEMBLY="${{OUTDIR}}/gridss_assembly.bam" \
                 WORKING_DIR="${{TMP}}" \
-                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}" &&
+                TMP_DIR="${{TMP}}/gridss.${{RANDOM}}"
             # SV quality filtering
             bcftools filter \
                 -O v `# uncompressed VCF format` \

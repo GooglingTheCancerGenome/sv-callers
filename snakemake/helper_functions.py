@@ -1,45 +1,24 @@
+"""Helper functions."""
 import os
 
-from snakemake import load_configfile
 from csv import DictReader
+from validator import load_configfile
 
 config = load_configfile('analysis.yaml')
 
 
-def get_callers():
-    """Get a list of SV callers enabled by a user.
-    :returns: (list) of selected SV callers
-    """
-    callers = []
-    for c in config["enable_callers"]:
-        if c not in config["callers"]:
-            raise ValueError("SV caller '{}' not found.".format(c))
-        callers.append(c)
-    return callers
-
-
-def get_filext(fmt):
-    """Get file extension(s) given file type/format:
-        ['fasta', 'fasta_idx', 'bam', 'bam_idx', 'vcf', 'bcf', 'bed']
-    :param fmt: (str) input file format
-    :returns: (str) file extension
-    """
-    if fmt not in config["file_exts"].keys():
-         raise ValueError("Input file format '{}' not supported.".format(fmt.lower()))
-    return config["file_exts"][fmt]
-
-
 def get_fasta():
-    """Get reference genome in FASTA format.
+    """
+    Get reference genome in FASTA format.
+
     :returns: filepath
     """
-    fname = config["genome"]
-    sfx = get_filext("fasta")
+    fname = config.genome
     if not os.path.exists(fname):
         raise FileNotFoundError("FASTA file '{}' not found.".format(fname))
-    if not fname.endswith(sfx):
-        raise ValueError("FASTA file extension '{}' not registered."
-            .format(os.path.splitext(fname)[-1]))
+    if not fname.endswith(config.file_exts.fasta):
+        raise ValueError("FASTA file extension '{}' not registered.".format(
+            os.path.splitext(fname)[-1]))
     if os.path.getsize(fname) == 0:
         raise OSError("FASTA file '{}' is empty.".format(fname))
     return fname
@@ -50,8 +29,8 @@ def get_faidx():
     :returns: (list) filepaths
     """
     faidx = []
-    for sfx in get_filext("fasta_idx"):
-        fname = get_fasta().split(get_filext("fasta"))[0] + sfx
+    for sfx in config.file_exts.fasta_idx:
+        fname = os.path.splitext(config.genome)[0] + sfx
         if not os.path.exists(fname):
             raise FileNotFoundError("FASTA index file '{}' not found.".format(fname))
         if os.path.getsize(fname) == 0:
@@ -64,7 +43,7 @@ def exclude_regions():
     """Use an exclusion list of genomic regions in BED format.
     :returns: (int) flag 1=yes, 0=no
     """
-    flag = config["exclude_regions"]
+    flag = config.exclude_regions
     if flag not in (0, 1):
         raise ValueError("Set 'exclude_regions' to either 0 or 1.")
     return flag
@@ -74,8 +53,8 @@ def get_bed():
     """Get the exclusion file in BED format.
     :returns: (str) filepath
     """
-    fname = config["exclusion_list"]
-    sfx = get_filext("bed")
+    fname = config.exclusion_list
+    sfx = config.file_exts.bed
     if not os.path.exists(fname):
         raise FileNotFoundError("BED file '{}' with excluded regions not found."
             .format(fname))
@@ -92,7 +71,7 @@ def get_bam(sample):
     :param sample: (str) sample name
     :returns: (str) filepath
     """
-    sfx = get_filext("bam")
+    sfx = config.file_exts.bam
     if sample.endswith(sfx) is False:
         sample += sfx
     return sample
@@ -103,24 +82,23 @@ def get_bai(sample):
     :param sample: (str) sample name
     :returns: (str) filepath
     """
-    sfx = get_filext("bam_idx")
+    sfx = config.file_exts.bam_idx
     if sample.endswith(sfx) is False:
         sample += sfx
     return sample
 
 
-def get_outdir(caller):
-    """Get the caller's output directory.
-    :param caller: (str) SV caller
+def get_outdir(tool):
+    """Get the output directory of a tool.
+    :param tool: (str) SV caller or post-processing tool
     :returns: (str) outdir relative to sample dir
     """
-    key = "outdir"
-    cf = config["callers"][caller]
-    if key not in cf:
-        raise KeyError("The '{}' is missing for '{}' caller.".format(key, caller))
-    if cf[key] is None:
-        raise ValueError("The '{}' is not set for '{}'.".format(key, caller))
-    return cf[key]
+    cf = dict(manta=config.callers.manta.outdir,
+              delly=config.callers.delly.outdir,
+              lumpy=config.callers.lumpy.outdir,
+              gridss=config.callers.gridss.outdir,
+              survivor=config.postproc.survivor.outdir)
+    return cf[tool]
 
 
 def file_is_empty(filepath):
@@ -131,53 +109,11 @@ def file_is_empty(filepath):
         raise OSError("File '{}' is empty.".format(filepath))
 
 
-def get_nthreads(tool):
-    """Get the number of threads requested by a tool.
-    :param tool: (str) SV detection or post-processing tool
-    :returns: (int) number of threads (default: 1)
-    """
-    try:
-        if "survivor" in tool:
-            return config["postproc"][tool]["threads"]
-        else:
-            return config["callers"][tool]["threads"]
-    except KeyError:
-        return 1
-
-
-def get_memory(tool):
-    """Get the amount of memory requested by a tool.
-    :param tool: (str) SV detection or post-processing tool
-    :returns: (int) memory used in MB (default: 1024)
-    """
-    try:
-        if "survivor" in tool:
-            return config["postproc"][tool]["memory"]
-        else:
-            return config["callers"][tool]["memory"]
-    except KeyError:
-        return 1024
-
-
-def get_tmpspace(tool):
-    """Get the amount of temporary disk space requested by a tool.
-    :param tool: (str) SV detection or post-processing tool
-    :returns: (int) disk space used in MB (default: 0)
-    """
-    try:
-        if "survivor" in config["callers"][tool]:
-            return config["postproc"][tool]["tmpspace"]
-        else:
-            return config["callers"][tool]["tmpspace"]
-    except KeyError:
-        return 0
-
-
 def is_tumor_only():
     """Perform tumor-only or germline analysis using Manta.
     :returns: (int) flag 1=yes, 0=no
     """
-    flag = config["callers"]["manta"]["tumor_only"]
+    flag = config.callers.manta.tumor_only
     if flag not in (0, 1):
         raise ValueError("Set 'tumor_only' for Manta to either 0 or 1.")
     return flag
@@ -188,58 +124,49 @@ def survivor_args(c):
     :param c: sub-command 'filter' or 'merge'
     :returns: (list) arguments or values
     """
-    args = []
-    cf = config["postproc"]["survivor"]
-    if c not in cf:
-        raise ValueError("SURVIVOR sub-command must be either 'filter' or 'merge'.")
+    cf = dict(filter = config.postproc.survivor.filter,
+              merge = config.postproc.survivor.merge)
     p = cf[c]
     if c in "filter":
-        args = ['"%s"' % get_bed(), p["min_size"], p["max_size"], p["min_freq"],
-                p["min_sup"]]
-    else:
-        args = [p["infile"], p["max_dist"], p["min_sup"], p["use_type"],
-                p["use_strand"], p["use_size"], p["min_size"], p["outfile"]]
-    return args
+        return ['"%s"' % get_bed(), p.min_size, p.max_size, p.min_freq,
+                p.min_sup]
+    return [p.infile, p.max_dist, p.min_sup, p.use_type, p.use_strand,
+                p.use_size, p.min_size, p.outfile]
 
 
 def make_output():
     """Generate workflow targets: outfiles of different callers in VCF format.
     :returns: (list) filepaths:
-        PATH/SAMPLE1/CALLER_OUTDIR/*.vcf            # in single-sample mode
-        PATH/SAMPLE1--SAMPLE2/CALLER_OUTDIR/*.vcf   # in paired-sample mode
+        PATH/SAMPLE1/CALLER_OUTDIR/*.vcf           # in single-sample mode
+        PATH/SAMPLE1--SAMPLE2/CALLER_OUTDIR/*.vcf  # in paired-sample mode
     """
-    csvfile = config["samples"]
+    csvfile = config.samples
     notvalid = (None, "")
     with open(csvfile, "r") as csv:
         outfiles = []
-        mode = config["mode"]
-        if mode not in ('s', 'p'):
-            raise ValueError("Set the workflow mode to either (s)ingle- or (p)aired-sample analysis.")
         for i, r in enumerate(DictReader(csv)):
             if "PATH" not in r or r["PATH"] in notvalid:
                 raise ValueError("Missing column 'PATH' or value in '{}'."
                     .format(csvfile))
-            if r["PATH"].startswith("#"):
+            if r["PATH"].startswith("#"):  # skip comment lines
                 continue
             if "SAMPLE1" not in r or r["SAMPLE1"] in notvalid:
                 raise ValueError("Missing column 'SAMPLE1' or value in '{}'."
                     .format(csvfile))
-            else:
-                for f in (get_bam(r["SAMPLE1"]), get_bai(r["SAMPLE1"])):
-                    file_is_empty(os.path.join(r["PATH"], f))
-            if mode.startswith('p'):
+            for f in (get_bam(r["SAMPLE1"]), get_bai(r["SAMPLE1"])):
+                file_is_empty(os.path.join(r["PATH"], f))
+            path = os.path.join(r["PATH"], r["SAMPLE1"])
+
+            if config.mode is config.mode.PAIRED_SAMPLE:
                 if "SAMPLE2" not in r or r["SAMPLE2"] in notvalid:
                     raise ValueError("Missing column 'SAMPLE2' or value in '{}'."
                         .format(csvfile))
-                else:
-                    for f in (get_bam(r["SAMPLE2"]), get_bai(r["SAMPLE2"])):
-                        file_is_empty(os.path.join(r["PATH"], f))
-            path = os.path.join(r["PATH"], r["SAMPLE1"])
-            if mode.startswith('p'):  # paired-sample mode
+                for f in (get_bam(r["SAMPLE2"]), get_bai(r["SAMPLE2"])):
+                    file_is_empty(os.path.join(r["PATH"], f))
                 path += "--" + r["SAMPLE2"]
-            for c in get_callers():
-                vcf = c + get_filext("vcf")
-                vcf = os.path.join(path, get_outdir(c), "survivor", vcf)
+            for c in config.enable_callers:
+                vcf = os.path.join(path, get_outdir(c), "survivor",
+                    c + config.file_exts.vcf)
                 outfiles.append(vcf)
         return outfiles
 
@@ -247,8 +174,8 @@ def make_output():
 def make_all():
     """Generate workflow targets: outfiles of merged SV calls in VCF format.
     :returns: (list) filepaths:
-        PATH/SAMPLE1/*.vcf          # in single-sample mode
-        PATH/SAMPLE1--SAMPLE2/*.vcf # in paired-sample mode
+        PATH/SAMPLE1/*.vcf           # in single-sample mode
+        PATH/SAMPLE1--SAMPLE2/*.vcf  # in paired-sample mode
     """
     outfiles = []
     basename = survivor_args("merge")[-1]
