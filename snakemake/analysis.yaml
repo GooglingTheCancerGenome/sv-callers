@@ -78,6 +78,7 @@ postproc:
     threads: 1
     memory: 1024
     tmpspace: 0  # not in use
+    outdir: survivor
     filter:         # filter SVs using a BED file (see 'exclusion_list')
       min_size: -1  # min. SV size (-1 to disable)
       max_size: -1  # max. SV size (-1 to disable)

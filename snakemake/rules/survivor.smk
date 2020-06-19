@@ -5,11 +5,11 @@ rule survivor_filter:  # used by both modes
         os.path.join("{path}", "{sample}", "{outdir}", "{prefix}" +
         config.file_exts.vcf)
     output:
-        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "survivor",
-        "{prefix}" + config.file_exts.vcf)
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}",
+                     get_outdir("survivor"), "{prefix}" + config.file_exts.vcf)
         if config.mode.PAIRED_SAMPLE is True else
-        os.path.join("{path}", "{sample}", "{outdir}", "survivor", "{prefix}" +
-        config.file_exts.vcf)
+        os.path.join("{path}", "{sample}", "{outdir}", get_outdir("survivor"),
+                     "{prefix}" + config.file_exts.vcf)
     params:
         excl = exclude_regions(),
         args = survivor_args("filter")
@@ -38,10 +38,10 @@ rule survivor_filter:  # used by both modes
 
 rule survivor_merge:  # used by both modes
     input:
-        [os.path.join("{path}", "{tumor}--{normal}", get_outdir(c), "survivor",
+        [os.path.join("{path}", "{tumor}--{normal}", get_outdir(c), get_outdir("survivor"),
          c + config.file_exts.vcf) for c in config.enable_callers]
         if config.mode.PAIRED_SAMPLE is True else
-        [os.path.join("{path}", "{sample}", get_outdir(c), "survivor",
+        [os.path.join("{path}", "{sample}", get_outdir(c), get_outdir("survivor"),
          c + config.file_exts.vcf) for c in config.enable_callers]
     params:
         args = survivor_args("merge")[1:-1]

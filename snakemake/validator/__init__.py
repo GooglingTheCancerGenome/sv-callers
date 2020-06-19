@@ -2,7 +2,7 @@
 import enum
 import logging
 
-from typing import Dict, List, Union
+from typing import Dict, List
 from ruamel import yaml
 
 import yatiml
@@ -40,42 +40,38 @@ class FileExtension:
         self.vcf = vcf
 
 
-class Manta:
-    def __init__(self, threads: int, memory: int, tmpspace: int, outdir: str,
-                 tumor_only: int) -> None:
+class Resource:
+    def __init__(self, threads: int, memory: int, tmpspace: int, outdir: str) -> None:
         self.threads = threads
         self.memory = memory
         self.tmpspace = tmpspace
         self.outdir = outdir
+
+
+class Manta(Resource):
+    def __init__(self, threads: int, memory: int, tmpspace: int, outdir: str,
+                 tumor_only: int) -> None:
+        super().__init__(threads, memory, tmpspace, outdir)
         self.tumor_only = tumor_only
 
 
-class Delly:
+class Delly(Resource):
     def __init__(self, threads: int, memory: int, tmpspace: int, outdir: str,
                  sv_types: List[str]) -> None:
-        self.threads = threads
-        self.memory = memory
-        self.tmpspace = tmpspace
-        self.outdir = outdir
+        super().__init__(threads, memory, tmpspace, outdir)
         self.sv_types = sv_types
 
 
-class Lumpy:
-    def __init__(self, threads: int, memory: int, tmpspace: int, outdir: str) \
-                 -> None:
-        self.threads = threads
-        self.memory = memory
-        self.tmpspace = tmpspace
-        self.outdir = outdir
+class Lumpy(Resource):
+    def __init__(self, threads: int, memory: int, tmpspace: int,
+                 outdir: str) -> None:
+        super().__init__(threads, memory, tmpspace, outdir)
 
 
-class Gridss:
-    def __init__(self, threads: int, memory: int, tmpspace: int, outdir: str) \
-                 -> None:
-        self.threads = threads
-        self.memory = memory
-        self.tmpspace = tmpspace
-        self.outdir = outdir
+class Gridss(Resource):
+    def __init__(self, threads: int, memory: int, tmpspace: int,
+                 outdir: str) -> None:
+        super().__init__(threads, memory, tmpspace, outdir)
 
 
 class Caller:
@@ -110,12 +106,10 @@ class SurvivorMerge:
         self.outfile = outfile
 
 
-class Survivor:
-    def __init__(self, threads: int, memory: int, tmpspace: int,
+class Survivor(Resource):
+    def __init__(self, threads: int, memory: int, tmpspace: int, outdir: str,
                  filter: SurvivorFilter, merge: SurvivorMerge) -> None:
-        self.threads = threads
-        self.memory = memory
-        self.tmpspace = tmpspace
+        super().__init__(threads, memory, tmpspace, outdir)
         self.filter = filter
         self.merge = merge
 
@@ -159,6 +153,7 @@ def load_configfile(yaml_file: str) -> Dict:
 
 
 yatiml.logger.setLevel(logging.DEBUG)
-yatiml.add_to_loader(MyLoader, [Mode, FileExtension, Manta, Delly, Lumpy, Gridss,
-    Caller, SurvivorFilter, SurvivorMerge, Survivor, PostProcess, Analysis])
+yatiml.add_to_loader(MyLoader, [Mode, FileExtension, Resource, Manta, Delly,
+                     Lumpy, Gridss, Caller, SurvivorFilter, SurvivorMerge,
+                     Survivor, PostProcess, Analysis])
 yatiml.set_document_type(MyLoader, Analysis)

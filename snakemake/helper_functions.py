@@ -88,16 +88,17 @@ def get_bai(sample):
     return sample
 
 
-def get_outdir(caller):
-    """Get the caller's output directory.
-    :param caller: (str) SV caller
+def get_outdir(tool):
+    """Get the output directory of a tool.
+    :param tool: (str) SV caller or post-processing tool
     :returns: (str) outdir relative to sample dir
     """
-    cf = dict(manta = config.callers.manta.outdir,
-              delly = config.callers.delly.outdir,
-              lumpy = config.callers.lumpy.outdir,
-              gridss = config.callers.gridss.outdir)
-    return cf[caller]
+    cf = dict(manta=config.callers.manta.outdir,
+              delly=config.callers.delly.outdir,
+              lumpy=config.callers.lumpy.outdir,
+              gridss=config.callers.gridss.outdir,
+              survivor=config.postproc.survivor.outdir)
+    return cf[tool]
 
 
 def file_is_empty(filepath):
