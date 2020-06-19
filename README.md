@@ -67,37 +67,32 @@ cd snakemake
 
 **4. Execute the workflow.**
 
+_Locally_
+
 ```bash
 # 'dry' run only checks I/O files
 snakemake -np
 
-# 'vanilla' run (default) mimics the execution of SV callers by writing (dummy) VCF files
-snakemake -C echo_run=1
+# 'vanilla' run mimics the execution of SV callers by writing (dummy) VCF files
+# if echo_run set to 1 (default) in analysis.yaml 
+snakemake --cores
+```
 
+_Submit jobs to Slurm or GridEngine cluster_
+
+```bash
+SCH=slurm   # or gridengine
+snakemake  --use-conda --latency-wait 30 --jobs 14 \
+--cluster "xenon scheduler $SCH --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log" &>smk.log&
 ```
 
 Note: One sample or a tumor/normal pair generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and six post-processing jobs. See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
 
-_Submit jobs to Slurm/GridEngine-based cluster_
-
-```bash
-SCH=slurm   # or gridengine
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 14 \
---cluster "xenon scheduler $SCH --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log" &>smk.log&
-```
-
-_Query job accounting information_
-
-```bash
-SCH=slurm   # or gridengine
-xenon --json scheduler $SCH --location local:// list --identifier [jobID] | jq ...
-```
-
 To perform SV calling:
--   overwrite (default) parameters directly in `analysis.yaml` or via the _snakemake_ CLI (use the `-C` argument)
-    -   set `echo_run=0`
+-   edit (default) parameters in `analysis.yaml`
+    -   set `echo_run` to `0`
     -   choose between two workflow `mode`s: single- (`s`) or paired-sample (`p` - default)
-    -   select one or more callers using `enable_callers` (default all: `"['manta','delly,'lumpy','gridss']"`)
+    -   select one or more callers using `enable_callers` (default all)
 
 -   use `xenon` CLI to set:
     -   `--max-run-time` of workflow jobs (in minutes)
@@ -107,3 +102,10 @@ To perform SV calling:
     -   the number of `threads`, 
     -   the amount of `memory`(in MB),
     -   the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
+
+_Query job accounting information_
+
+```bash
+SCH=slurm   # or gridengine
+xenon --json scheduler $SCH --location local:// list --identifier [jobID] | jq ...
+```
