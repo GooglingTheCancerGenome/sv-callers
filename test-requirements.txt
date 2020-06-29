@@ -1,4 +1,4 @@
 snakemake==5.10.0
-pytest
+pytest>=4.6
 pytest-cov
 codacy-coverage
