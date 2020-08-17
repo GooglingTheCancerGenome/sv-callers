@@ -11,9 +11,10 @@ Structural variants (SVs) are an important class of genetic variation implicated
 
 -   [Python 3](https://www.python.org/)
 -   [Conda](https://conda.io/) - package/environment management system
--   [Snakemake](https://snakemake.readthedocs.io/) (5.10.0) - workflow management system
--   [Xenon CLI](https://github.com/NLeSC/xenon-cli) (3.0.4) - command-line interface to compute and storage resources
--   [jq](https://stedolan.github.io/jq/) (optional) - command-line JSON processor to parse job accounting info (see `xenon --json ...`
+-   [Snakemake](https://snakemake.readthedocs.io/) - workflow management system
+-   [Xenon CLI](https://github.com/NLeSC/xenon-cli) - command-line interface to compute and storage resources
+-   [jq](https://stedolan.github.io/jq/) - command-line JSON processor (optional)
+-   [YAtiML](https://github.com/yatiml/yatiml) - library for YAML type inference and schema validation
 
 The workflow includes the following bioinformatics tools:
 
@@ -26,6 +27,8 @@ The workflow includes the following bioinformatics tools:
 -   Post-processing
     -   [BCFtools](https://github.com/samtools/bcftools) (1.9)
     -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR) (1.0.6)
+
+The software dependencies and versions can be found in the conda `environment.yaml` files ([1](/environment.yaml), [2](/snakemake/environment.yaml)).
 
 **1. Clone this repo.**
 
