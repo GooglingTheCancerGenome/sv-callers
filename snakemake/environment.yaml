@@ -3,6 +3,7 @@ channels:
   - bioconda
 
 dependencies:
+  - bc=1.06
   - manta=1.1.0
   - delly=0.7.7
   - lumpy-sv=0.2.13
