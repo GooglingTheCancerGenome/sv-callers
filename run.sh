@@ -15,14 +15,13 @@ CALLERS=(manta delly lumpy gridss)
 STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
 THREADS=1
 JOBS=() # array of job IDs
-JOBS_LOG=jobs.json # job accounting log
 SAMPLES=samples.csv
 CONFIG=analysis.yaml
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 MY_ENV=wf
 
 monitor () {  # monitor a job via Xenon CLI
-  xenon -v --json scheduler $SCH --location local:// list --identifier $1
+  xenon --json scheduler $SCH --location local:// list --identifier $1
 }
 
 edit() {  # edit config file
@@ -80,10 +79,10 @@ done
 
 # collect job accounting info
 for j in ${JOBS[@]}; do
-  monitor $j >> $JOBS_LOG
+  monitor $j > jobacct-$j.json
 done
-cat $JOBS_LOG
+cat *.json
 
 # exit with non-zero if there are failed jobs
-[[ $(jq ".statuses | .[] | select(.done==true and .exitCode!=0)" $JOBS_LOG) ]] \
+[[ $(jq ".statuses | .[] | select(.done==true and .exitCode!=0)" *.json) ]] \
   && exit 1 || exit 0
