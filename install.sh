@@ -10,5 +10,5 @@ conda env create -n $MY_ENV -f environment.yaml
 conda activate $MY_ENV
 conda list
 cd ./snakemake
-echo " - bc=1.06" >> environment.yaml
+echo "  - bc=1.06" >> environment.yaml
 snakemake --use-conda --create-envs-only --cores 1
