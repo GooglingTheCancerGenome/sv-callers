@@ -11,21 +11,21 @@ Structural variants (SVs) are an important class of genetic variation implicated
 
 -   [Python 3](https://www.python.org/)
 -   [Conda](https://conda.io/) - package/environment management system
--   [Snakemake](https://snakemake.readthedocs.io/) (5.10.0) - workflow management system
--   [Xenon CLI](https://github.com/NLeSC/xenon-cli) (3.0.5) - command-line interface to compute and storage resources
+-   [Snakemake](https://snakemake.readthedocs.io/) - workflow management system
+-   [Xenon CLI](https://github.com/NLeSC/xenon-cli) - command-line interface to compute and storage resources
 -   [jq](https://stedolan.github.io/jq/) - command-line JSON processor (optional)
 
 The workflow includes the following bioinformatics tools:
 
 -   SV callers
-    -   [Manta](https://github.com/Illumina/manta) (1.1.0)
-    -   [DELLY](https://github.com/dellytools/delly) (0.7.7)
-    -   [LUMPY](https://github.com/arq5x/lumpy-sv) (0.2.13)
-    -   [GRIDSS](https://github.com/PapenfussLab/gridss) (1.3.4)
+    -   [Manta](https://github.com/Illumina/manta)
+    -   [DELLY](https://github.com/dellytools/delly)
+    -   [LUMPY](https://github.com/arq5x/lumpy-sv)
+    -   [GRIDSS](https://github.com/PapenfussLab/gridss)
 
 -   Post-processing
-    -   [BCFtools](https://github.com/samtools/bcftools) (1.9)
-    -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR) (1.0.6)
+    -   [BCFtools](https://github.com/samtools/bcftools)
+    -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)
 
 **1. Clone this repo.**
 
