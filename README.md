@@ -12,8 +12,8 @@ Structural variants (SVs) are an important class of genetic variation implicated
 -   [Python 3](https://www.python.org/)
 -   [Conda](https://conda.io/) - package/environment management system
 -   [Snakemake](https://snakemake.readthedocs.io/) (5.10.0) - workflow management system
--   [Xenon CLI](https://github.com/NLeSC/xenon-cli) (3.0.4) - command-line interface to compute and storage resources
--   [jq](https://stedolan.github.io/jq/) (optional) - command-line JSON processor to parse job accounting info (see `xenon --json ...`
+-   [Xenon CLI](https://github.com/NLeSC/xenon-cli) (3.0.5) - command-line interface to compute and storage resources
+-   [jq](https://stedolan.github.io/jq/) - command-line JSON processor (optional)
 
 The workflow includes the following bioinformatics tools:
 
@@ -78,18 +78,12 @@ snakemake -C echo_run=1
 
 Note: One sample or a tumor/normal pair generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and six post-processing jobs. See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
 
-_Submit jobs to Grid Engine-based cluster_
+_Submit jobs to Slurm or GridEngine cluster_
 
 ```bash
+SCH=slurm   # or gridengine
 snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 14 \
---cluster 'xenon scheduler gridengine --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
-```
-
-_Submit jobs to Slurm-based cluster_
-
-```bash
-snakemake -C echo_run=1 mode=p enable_callers="['manta','delly','lumpy','gridss']" --use-conda --latency-wait 30 --jobs 14 \
---cluster 'xenon scheduler slurm --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
+--cluster 'xenon scheduler $SCH --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log' &>smk.log&
 ```
 
 To perform SV calling:
@@ -106,3 +100,10 @@ To perform SV calling:
     -   the number of `threads`, 
     -   the amount of `memory`(in MB),
     -   the amount of temporary disk space or `tmpspace` (path in `TMPDIR` env variable) can be used for intermediate files by LUMPY and GRIDSS only.
+
+_Query job accounting information_
+
+```bash
+SCH=slurm   # or gridengine
+xenon --json scheduler $SCH --location local:// list --identifier [jobID] | jq ...
+```
