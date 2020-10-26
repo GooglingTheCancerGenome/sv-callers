@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.2] - 2020-10-26
+- update Xenon CLI (v3.0.5): fixed Slurm 19 issue (#40)
+- speed up conda install (#49)
+
 ## [1.1.1] - 2020-02-06
 - added `environment.yaml` to install initial dependencies via Conda
   - updated Xenon CLI (v3.0.4): `--cores-per-task {threads}` replaces `--procs-per-node {threads}` and `--start-single-process` args
