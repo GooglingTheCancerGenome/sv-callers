@@ -1,13 +1,13 @@
 name: CI
-on: [push, pull_request]
+on: ["push", "pull_request"]
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        mode: ['s', 'p']
-        scheduler: ['gridengine', 'slurm']
+        mode: ["s", "p"]
+        scheduler: ["gridengine", "slurm"]
     env:
       NAME: ${{ matrix.scheduler }}-${{ matrix.mode }}
       IMAGE: gtcg/sv-callers-${{ matrix.scheduler }}:latest
@@ -40,5 +40,3 @@ jobs:
       - name: Run workflow
         run: |
           docker exec -u xenon -t $NAME bash -c "cd sv-callers && ./run.sh $ARGS"
-      - name: Report coverage
-        run: python-codacy-coverage -r coverage.xml
