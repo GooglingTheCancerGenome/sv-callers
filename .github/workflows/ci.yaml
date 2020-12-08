@@ -30,7 +30,10 @@ jobs:
       - name: Show pip list
         run: pip list
       - name: Run unit tests
-        run: pytest --cov=helper_functions --cov-report=xml
+        run: |
+          pytest --cov=helper_functions --cov-report=xml
+          pwd
+          echo ${{ github.workspace }}
         working-directory: snakemake
       - name: Run workflow
         run: |
@@ -39,3 +42,4 @@ jobs:
           docker ps -a
           docker exec -u xenon -t $NAME bash -c "cd sv-callers && ./run.sh $ARGS"
           echo ${{ github.workspace }}
+
