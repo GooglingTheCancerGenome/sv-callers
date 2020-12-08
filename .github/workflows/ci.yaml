@@ -1,7 +1,7 @@
-name: CI
+name: continuous_integration
 on: ["push", "pull_request"]
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
