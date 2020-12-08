@@ -4,9 +4,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         mode: ['s', 'p']
         scheduler: ['gridengine', 'slurm']
+    env:
+      NAME: ${{ matrix.scheduler }}-${{ matrix.mode }}
+      IMAGE: gtcg/sv-callers-${{ matrix.scheduler }}:latest
+      ARGS: 0 ${{ matrix.mode }} ${{ matrix.scheduler }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -29,18 +34,11 @@ jobs:
           docker run -d -p 10000:22 --name $NAME $IMAGE:$TAG
           sleep 10
           docker ps -a
-        env:
-          NAME: ${{ matrix.scheduler }}-${{ matrix.mode }}
-          IMAGE: gtcg/sv-callers-${{ matrix.scheduler }}
-          TAG: latest
       - name: Unit testing
         run: |
           cd snakemake && pytest --cov=helper_functions --cov-report=xml
       - name: Run workflow
         run: docker exec -u xenon -t $NAME \
           bash -c "cd sv-callers && ./run.sh $ARGS
-        env:
-          NAME: ${{ matrix.scheduler }}-${{ matrix.mode }}
-          ARGS: 0 ${{ matrix.mode }} ${{ matrix.scheduler }}
       - name: Report coverage
         run: python-codacy-coverage -r coverage.xml
