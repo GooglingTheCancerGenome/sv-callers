@@ -1,0 +1,46 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mode: ['s', 'p']
+        scheduler: ['gridengine', 'slurm']
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+      - name: Python info
+        run: |
+          which python
+          python --version
+      - name: Install dependencies (test)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r test-requirements.txt
+      - name: Show pip list
+        run: pip list
+      - name: Start batch service
+        run: |
+          docker run -d -p 10000:22 --name $NAME $IMAGE:$TAG
+          sleep 10
+          docker ps -a
+        env:
+          NAME: ${{ matrix.scheduler }}-${{ matrix.mode }}
+          IMAGE: gtcg/sv-callers-${{ matrix.scheduler }}
+          TAG: latest
+      - name: Unit testing
+        run: |
+          cd snakemake && pytest --cov=helper_functions --cov-report=xml
+      - name: Run workflow
+        run: docker exec -u xenon -t $NAME \
+          bash -c "cd sv-callers && ./run.sh $ARGS
+        env:
+          NAME: ${{ matrix.scheduler }}-${{ matrix.mode }}
+          ARGS: 0 ${{ matrix.mode }} ${{ matrix.scheduler }}
+      - name: Report coverage
+        run: python-codacy-coverage -r coverage.xml
