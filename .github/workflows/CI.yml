@@ -31,7 +31,7 @@ jobs:
         run: pip list
       - name: Start batch service
         run: |
-          docker run -d -p 10000:22 --name $NAME $IMAGE:$TAG
+          docker run -d -p 10000:22 --name $NAME $IMAGE
           sleep 10
           docker ps -a
       - name: Unit testing
