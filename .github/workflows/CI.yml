@@ -39,6 +39,6 @@ jobs:
           cd snakemake && pytest --cov=helper_functions --cov-report=xml
       - name: Run workflow
         run: docker exec -u xenon -t $NAME \
-          bash -c "cd sv-callers && ./run.sh $ARGS
+          bash -c "cd sv-callers && ./run.sh $ARGS"
       - name: Report coverage
         run: python-codacy-coverage -r coverage.xml
