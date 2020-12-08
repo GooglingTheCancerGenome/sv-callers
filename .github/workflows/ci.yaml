@@ -32,8 +32,7 @@ jobs:
       - name: Run unit tests
         run: |
           pytest --cov=helper_functions --cov-report=xml
-          pwd
-          echo ${{ github.workspace }}
+          mv coverage.xml ${{ github.workspace }}
         working-directory: snakemake
       - name: Run workflow
         run: |
@@ -41,5 +40,9 @@ jobs:
           sleep 10
           docker ps -a
           docker exec -u xenon -t $NAME bash -c "cd sv-callers && ./run.sh $ARGS"
-          echo ${{ github.workspace }}
+      - name: Upload coverage report to Codacy
+        uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: coverage.xml
 
