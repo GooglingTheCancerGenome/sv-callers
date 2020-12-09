@@ -32,7 +32,6 @@ jobs:
       - name: Run unit tests
         run: |
           pytest --cov=helper_functions --cov-report=xml
-          mv coverage.xml ${{ github.workspace }}
         working-directory: snakemake
       - name: Run workflow
         run: |
