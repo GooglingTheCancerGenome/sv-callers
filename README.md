@@ -1,5 +1,6 @@
 # sv-callers
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cb946942476b4dd39e39100253f2d9c9)](https://app.codacy.com/gh/GooglingTheCancerGenome/sv-callers?utm_source=github.com&utm_medium=referral&utm_content=GooglingTheCancerGenome/sv-callers&utm_campaign=Badge_Grade)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1217111.svg)](https://doi.org/10.5281/zenodo.1217111)
 [![Published in PeerJ](https://img.shields.io/badge/published%20in-PeerJ-blue.svg)](https://doi.org/10.7717/peerj.8214)
 [![Build Status](https://travis-ci.org/GooglingTheCancerGenome/sv-callers.svg?branch=master)](https://travis-ci.org/GooglingTheCancerGenome/sv-callers)
