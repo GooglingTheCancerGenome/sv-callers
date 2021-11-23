@@ -1,5 +1,9 @@
 name: continuous_integration
-on: ["push", "pull_request"]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 0"  # run weekly
 jobs:
   build:
     runs-on: ubuntu-latest
