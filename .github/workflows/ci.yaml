@@ -1,4 +1,4 @@
-name: continuous_integration
+name: CI
 on:
   push:
   pull_request:
