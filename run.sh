@@ -15,7 +15,6 @@ CALLERS=(manta delly lumpy gridss)
 STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
 THREADS=1
 JOBS=() # array of job IDs
-SAMPLES=samples.csv
 CONFIG=analysis.yaml
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 MY_ENV=wf
@@ -62,7 +61,7 @@ echo "-----------------"
 echo "VCF output files:"
 if [ "$ECHO" -eq "0" ]; then
   for caller in "${CALLERS[@]}"; do
-    VCF_FILE="$(find data -mindepth 6 -name $caller.vcf)"
+    VCF_FILE=$(find data -mindepth 6 -name "$caller.vcf")
     BOOL=$([ -e  "$VCF_FILE" ] && echo 0 || echo 1)
     INFO=$([ "$BOOL" -eq "0" ] && echo "$VCF_FILE" || echo "None")
     echo " $caller: $INFO"
