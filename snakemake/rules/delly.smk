@@ -59,6 +59,7 @@ rule delly_p:  # paired-samples analysis
             printf "${{TID}}\ttumor\n${{CID}}\tcontrol\n" > ${{TSV}}
             delly filter \
                 -f somatic \
+                -t "{wildcards.sv_type}" \
                 -p \
                 -s "${{TSV}}" \
                 -o "{output}" \
