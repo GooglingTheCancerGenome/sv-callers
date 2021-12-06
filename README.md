@@ -20,14 +20,14 @@ Structural variants (SVs) are an important class of genetic variation implicated
 The workflow includes the following bioinformatics tools:
 
 -   SV callers
-    -   [Manta](https://github.com/Illumina/manta) (1.1.0)
-    -   [DELLY](https://github.com/dellytools/delly) (0.7.7)
-    -   [LUMPY](https://github.com/arq5x/lumpy-sv) (0.2.13)
-    -   [GRIDSS](https://github.com/PapenfussLab/gridss) (1.3.4)
+    -   [Manta](https://github.com/Illumina/manta)
+    -   [DELLY](https://github.com/dellytools/delly)
+    -   [LUMPY](https://github.com/arq5x/lumpy-sv)
+    -   [GRIDSS](https://github.com/PapenfussLab/gridss)
 
 -   Post-processing
-    -   [BCFtools](https://github.com/samtools/bcftools) (1.9)
-    -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR) (1.0.6)
+    -   [BCFtools](https://github.com/samtools/bcftools)
+    -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)
 
 The software dependencies and versions can be found in the conda `environment.yaml` files ([1](/environment.yaml), [2](/snakemake/environment.yaml)).
 
