@@ -1,28 +1,30 @@
 {
-    "creators": [
-        {
-            "affiliation": "Netherlands eScience Center",
-            "name": "Kuzniar, Arnold",
-            "orcid": "0000-0003-1711-7961"
-        }
-    ],
-    "keywords": [
-        "bioinformatics",
-        "variant calling",
-        "structural variants",
-        "cancer genomics",
-        "whole genome sequencing",
-        "workflow",
-        "high-performance computing",
-        "HPC",
-        "WGS",
-        "FASTA",
-        "BAM",
-        "VCF",
-        "BED"
-    ],
-    "license": {
-        "id": "Apache-2.0"
-    },
-    "title": "sv-callers"
+  "creators": [
+    {
+      "affiliation": "Netherlands eScience Center",
+      "name": "Kuzniar, Arnold",
+      "orcid": "0000-0003-1711-7961"
+    }
+  ],
+  "keywords": [
+    "bioinformatics",
+    "variant calling",
+    "structural variants",
+    "cancer genomics",
+    "whole genome sequencing",
+    "workflow",
+    "high-performance computing",
+    "HPC",
+    "WGS",
+    "FASTA",
+    "BAM",
+    "VCF",
+    "BED"
+  ],
+  "license": {
+    "id": "Apache-2.0"
+  },
+  "publication_date": "2022-02-02",
+  "title": "sv-callers",
+  "version": "1.1.3"
 }
