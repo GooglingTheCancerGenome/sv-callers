@@ -13,6 +13,7 @@ jobs:
         modes: ["s", "p"]
         schedulers: ["gridengine", "slurm"]
     env:
+      REGISTRY: ghcr.io
       NAME: ${{ matrix.schedulers }}-${{ matrix.modes }}
       IMAGE: ${{ github.repository_owner }}/sv-callers-${{ matrix.schedulers }}:latest
       ARGS: 0 ${{ matrix.modes }} ${{ matrix.schedulers }}
@@ -38,9 +39,15 @@ jobs:
           pytest --cov=helper_functions --cov-report=xml
           mv coverage.xml ${{ github.workspace }}
         working-directory: snakemake
+      - name: Log into registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run workflow
         run: |
-          docker run -d -p 10000:22 --name $NAME ${IMAGE,,}
+          docker run -d -p 10000:22 --name $NAME ${REGISTRY}/${IMAGE,,}
           sleep 10
           docker ps -a
           docker exec -u xenon -t $NAME bash -c "cd sv-callers && ./run.sh $ARGS"
