@@ -14,7 +14,7 @@ jobs:
         schedulers: ["gridengine", "slurm"]
     env:
       NAME: ${{ matrix.schedulers }}-${{ matrix.modes }}
-      IMAGE: gtcg/sv-callers-${{ matrix.schedulers }}:latest
+      IMAGE: ${{ github.repository_owner }}/sv-callers-${{ matrix.schedulers }}:latest
       ARGS: 0 ${{ matrix.modes }} ${{ matrix.schedulers }}
     steps:
       - name: Checkout repo
@@ -40,7 +40,7 @@ jobs:
         working-directory: snakemake
       - name: Run workflow
         run: |
-          docker run -d -p 10000:22 --name $NAME $IMAGE
+          docker run -d -p 10000:22 --name $NAME ${IMAGE,,}
           sleep 10
           docker ps -a
           docker exec -u xenon -t $NAME bash -c "cd sv-callers && ./run.sh $ARGS"
