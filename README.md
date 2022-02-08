@@ -29,7 +29,7 @@ The workflow includes the following bioinformatics tools:
     -   [BCFtools](https://github.com/samtools/bcftools)
     -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)
 
-The software dependencies and versions can be found in the conda `environment.yaml` files ([1](/environment.yaml), [2](/snakemake/environment.yaml)).
+The software dependencies and versions can be found in the conda `environment.yaml` files ([1](/environment.yaml), [2](/workflow/environment.yaml)).
 
 **1. Clone this repo.**
 
@@ -56,8 +56,8 @@ conda activate wf
 
 -   **config files**:
     -   [`analysis.yaml`](/config/analysis.yaml) - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
-    -   [`environment.yaml`](/config/environment.yaml) - software dependencies and versions
-    -   [`samples.csv`](/config/samples.csv`) - list of (paired) samples
+    -   `environment.yaml` - software dependencies and versions
+    -   [`samples.csv`](/config/samples.csv) - list of (paired) samples
 
 -   **input files**:
     -   example data in `workflow/data` directory
