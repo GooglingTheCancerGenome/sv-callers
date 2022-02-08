@@ -1,7 +1,10 @@
 # Changelog
 
-## [1.1.3] - 2022-02-02
-- fixed somatic SV type filtering for DELLY (#68)
+## [1.1.3] - 2022-02-08
+- fixed filtering of somatic SV types in DELLY (#68)
+- updated testing infra
+  - Travis CI -> GitHub Actions (#55)
+  - Docker Hub -> GitHub Container Registry (#71)
 
 ## [1.1.2] - 2020-10-26
 - update Xenon CLI (v3.0.5): fixed Slurm 19 issue (#40)
