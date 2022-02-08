@@ -50,26 +50,29 @@ conda update -y conda
 # create & activate new env with installed deps
 conda env create -n wf -f environment.yaml
 conda activate wf
-cd snakemake
 ```
 
 **3. Configure the workflow.**
 
 -   **config files**:
-    -   [`analysis.yaml`](/snakemake/analysis.yaml) - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
-    -   [`environment.yaml`](/snakemake/environment.yaml) - software dependencies and versions
+    -   [`analysis.yaml`](/config/analysis.yaml) - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
+    -   [`environment.yaml`](/config/environment.yaml) - software dependencies and versions
+    -   [`samples.csv`](/config/samples.csv`) - list of (paired) samples
 
 -   **input files**:
-    -   example data in `sv-callers/snakemake/data` directory
+    -   example data in `workflow/data` directory
     -   reference genome in `.fasta` (incl. index files)
     -   excluded regions in `.bed` (optional)
     -   WGS samples in `.bam` (incl. index files)
-    -   list of (paired) samples in `samples.csv`
 
 -   **output files**:
     -   (filtered) SVs per caller and merged calls in `.vcf` (incl. index files)
 
 **4. Execute the workflow.**
+
+```bash
+cd workflow
+```
 
 _Locally_
 

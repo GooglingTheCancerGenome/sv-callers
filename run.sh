@@ -15,7 +15,7 @@ CALLERS=(manta delly lumpy gridss)
 STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
 THREADS=1
 JOBS=() # array of job IDs
-CONFIG=analysis.yaml
+CONFIG="config/analysis.yaml"
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 MY_ENV=wf
 
@@ -43,7 +43,7 @@ conda activate "$MY_ENV"
 conda list
 
 # edit CONFIG
-cd ./snakemake && ls -alh
+cd ./workflow && ls -alh
 edit "$CONFIG"
 
 # run workflow

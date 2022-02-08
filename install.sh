@@ -9,5 +9,5 @@ printenv
 conda env create -n $MY_ENV -f environment.yaml
 conda activate $MY_ENV
 conda list
-cd ./snakemake
+cd ./workflow
 snakemake --use-conda --conda-create-envs-only --cores 1

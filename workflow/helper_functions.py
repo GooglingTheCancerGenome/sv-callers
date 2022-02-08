@@ -4,7 +4,8 @@ import os
 from csv import DictReader
 from validator import load_configfile
 
-config = load_configfile('analysis.yaml')
+config_path = "../config"
+config = load_configfile(os.path.join(config_path, "analysis.yaml"))
 
 
 def get_fasta():
@@ -140,7 +141,7 @@ def make_output():
         PATH/SAMPLE1/CALLER_OUTDIR/*.vcf           # in single-sample mode
         PATH/SAMPLE1--SAMPLE2/CALLER_OUTDIR/*.vcf  # in paired-sample mode
     """
-    csvfile = config.samples
+    csvfile = os.path.join(config_path, config.samples)
     notvalid = (None, "")
     with open(csvfile, "r") as csv:
         outfiles = []
