@@ -15,7 +15,7 @@ CALLERS=(manta delly lumpy gridss)
 STR_CALLERS="[$(printf "'%s'," "${CALLERS[@]}"|sed 's/,$//')]"
 THREADS=1
 JOBS=() # array of job IDs
-CONFIG="config/analysis.yaml"
+CONFIG="../config/analysis.yaml"
 USE_CONDA=$([ "$ECHO" -eq "0" ] && echo "--use-conda" || echo "")
 MY_ENV=wf
 
