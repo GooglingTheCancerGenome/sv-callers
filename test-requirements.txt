@@ -1,5 +1,5 @@
-snakemake==5.19.2
+snakemake==6.15.3
 pytest>=4.6
 pytest-cov
 codacy-coverage
-yatiml==0.5.1
+yatiml==0.7
