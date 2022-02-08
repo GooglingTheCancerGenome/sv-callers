@@ -38,7 +38,7 @@ jobs:
         run: |
           pytest --cov=helper_functions --cov-report=xml
           mv coverage.xml ${{ github.workspace }}
-        working-directory: snakemake
+        working-directory: workflow
       - name: Log into registry
         uses: docker/login-action@v1
         with:
