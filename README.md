@@ -77,16 +77,19 @@ _Locally_
 # 'dry' run only checks I/O files
 snakemake -np
 
-# 'vanilla' run mimics the execution of SV callers by writing (dummy) VCF files
-# if echo_run set to 1 (default) in analysis.yaml 
-snakemake --cores
+# 'vanilla' run if echo_run set to 1 (default) in analysis.yaml
+# it merely mimics the execution of SV callers by writing (dummy) VCF files
+snakemake --jobs
+
+# SV calling if echo_run set to 0 in analysis.yaml
+snakemake --use-conda --jobs
 ```
 
 _Submit jobs to Slurm or GridEngine cluster_
 
 ```bash
 SCH=slurm   # or gridengine
-snakemake  --use-conda --latency-wait 30 --jobs 14 \
+snakemake  --use-conda --latency-wait 30 --jobs \
 --cluster "xenon scheduler $SCH --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log" &>smk.log&
 ```
 
