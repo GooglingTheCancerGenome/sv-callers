@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1217111.svg)](https://doi.org/10.5281/zenodo.1217111)
 [![Published in PeerJ](https://img.shields.io/badge/published%20in-PeerJ-blue.svg)](https://doi.org/10.7717/peerj.8214)
-[![CI](https://github.com/GooglingTheCancerGenome/sv-callers/actions/workflows/ci.yaml/badge.svg?branch=dev)](https://github.com/GooglingTheCancerGenome/sv-callers/actions/workflows/ci.yaml)
+[![CI](https://github.com/GooglingTheCancerGenome/sv-callers/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/GooglingTheCancerGenome/sv-callers/actions/workflows/ci.yaml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/eaa33d7d090048898c112a4a87815479)](https://www.codacy.com/gh/GooglingTheCancerGenome/sv-callers/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GooglingTheCancerGenome/sv-callers&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/eaa33d7d090048898c112a4a87815479)](https://www.codacy.com/gh/GooglingTheCancerGenome/sv-callers/dashboard?utm_source=github.com&utm_medium=referral&utm_content=GooglingTheCancerGenome/sv-callers&utm_campaign=Badge_Coverage)
 
