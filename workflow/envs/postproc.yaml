@@ -1,0 +1,11 @@
+---
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - survivor=1.0.6
+  - pyvcf=0.6.8
+  - pip
+  - pip:
+      - viola-sv==1.0.0
