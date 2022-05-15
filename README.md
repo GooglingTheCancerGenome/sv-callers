@@ -10,7 +10,7 @@ Structural variants (SVs) are an important class of genetic variation implicated
 
 ## Dependencies
 
--   [Python 3](https://www.python.org/)
+-   [Python](https://www.python.org/)
 -   [Conda](https://conda.io/) - package/environment management system
 -   [Snakemake](https://snakemake.readthedocs.io/) - workflow management system
 -   [Xenon CLI](https://github.com/NLeSC/xenon-cli) - command-line interface to compute and storage resources
@@ -27,9 +27,13 @@ The workflow includes the following bioinformatics tools:
 
 -   Post-processing
     -   [BCFtools](https://github.com/samtools/bcftools)
+    -   [Viola-SV](https://github.com/dermasugita/Viola-SV)
     -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)
 
-The software dependencies and versions can be found in the conda `environment.yaml` files ([1](/environment.yaml), [2](/workflow/environment.yaml)).
+The software dependencies can be found in the conda environment `*.yaml` files:
+-   (/environment.yaml)
+-   (/workflow/envs/caller.yaml)
+-   (/workflow/envs/postproc.yaml)
 
 **1. Clone this repo.**
 
@@ -47,8 +51,10 @@ wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O mi
 bash miniconda.sh
 # update Conda
 conda update -y conda
-# create & activate new env with installed deps
-conda env create -n wf -f environment.yaml
+# install Mamba
+conda install -n base -c conda-forge mamba
+# create a new environment with dependencies & activate it
+mamba env create -n wf -f environment.yaml
 conda activate wf
 ```
 
@@ -96,7 +102,7 @@ snakemake  --use-conda --latency-wait 30 --jobs \
 --cluster "xenon scheduler $SCH --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log" &>smk.log&
 ```
 
-Note: One sample or a tumor/normal pair generates eight SV calling jobs (i.e., 1 x Manta, 1 x LUMPY, 1 x GRIDSS and 5 x DELLY) and six post-processing jobs. See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
+Note: One sample or a tumor/normal pair generates in total 18 SV calling and post-processing. See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
 
 To perform SV calling:
 -   edit (default) parameters in `analysis.yaml`
