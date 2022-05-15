@@ -10,7 +10,7 @@ shell.executable("/bin/bash")
 
 
 __author__ = 'Arnold Kuzniar'
-__version__ = '1.1.3'
+__version__ = '1.2.0'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -25,4 +25,5 @@ include: "rules/manta.smk"
 include: "rules/delly.smk"
 include: "rules/lumpy.smk"
 include: "rules/gridss.smk"
+include: "rules/viola.smk"
 include: "rules/survivor.smk"
