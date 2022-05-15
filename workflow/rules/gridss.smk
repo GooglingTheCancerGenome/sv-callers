@@ -12,7 +12,7 @@ rule gridss_p:  # paired-samples analysis
         os.path.join("{path}/{tumor}--{normal}", get_outdir("gridss"),
                      "gridss" + config.file_exts.vcf)
     conda:
-        "../environment.yaml"
+        "../envs/caller.yaml"
     threads:
         config.callers.gridss.threads
     resources:
@@ -75,7 +75,7 @@ rule gridss_s:  # single-sample analysis
         os.path.join("{path}/{sample}", get_outdir("gridss"), "gridss" +
                      config.file_exts.vcf)
     conda:
-        "../environment.yaml"
+        "../envs/caller.yaml"
     threads:
         config.callers.gridss.threads
     resources:

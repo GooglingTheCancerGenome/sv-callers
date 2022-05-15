@@ -13,7 +13,7 @@ rule manta_p:  # paired-samples analysis
         os.path.join("{path}/{tumor}--{normal}", get_outdir("manta"), "manta" +
                      config.file_exts.vcf)
     conda:
-        "../environment.yaml"
+        "../envs/caller.yaml"
     threads:
         config.callers.manta.threads
     resources:
@@ -64,7 +64,7 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
         os.path.join("{path}/{sample}", get_outdir("manta"), "manta" +
                      config.file_exts.vcf)
     conda:
-        "../environment.yaml"
+        "../envs/caller.yaml"
     threads:
         config.callers.manta.threads
     resources:

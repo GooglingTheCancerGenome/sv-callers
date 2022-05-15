@@ -12,7 +12,7 @@ rule delly_p:  # paired-samples analysis
         os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
                      "delly-{sv_type}" + config.file_exts.bcf)
     conda:
-        "../environment.yaml"
+        "../envs/caller.yaml"
     threads:
         config.callers.delly.threads
     resources:
@@ -79,7 +79,7 @@ rule delly_s:  # single-sample analysis
         os.path.join("{path}/{sample}", get_outdir("delly"), "delly-{sv_type}" +
                      config.file_exts.bcf)
     conda:
-        "../environment.yaml"
+        "../envs/caller.yaml"
     threads: 1
     resources:
         mem_mb = config.callers.delly.memory,
@@ -135,7 +135,7 @@ rule delly_merge:  # used by both modes
         os.path.join("{path}/{sample}", get_outdir("delly"), "delly" +
                      config.file_exts.vcf)
     conda:
-        "../environment.yaml"
+        "../envs/caller.yaml"
     threads: 1
     resources:
         mem_mb = 1024,

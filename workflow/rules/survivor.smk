@@ -1,12 +1,12 @@
 rule survivor_filter:  # used by both modes
     input:
-        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "{prefix}" +
-        config.file_exts.vcf) if config.mode.PAIRED_SAMPLE is True else
-        os.path.join("{path}", "{sample}", "{outdir}", "{prefix}" +
-        config.file_exts.vcf)
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", "viola",
+        "{prefix}" + config.file_exts.vcf) if config.mode.PAIRED_SAMPLE is True else
+        os.path.join("{path}", "{sample}", "{outdir}", "viola",
+        "{prefix}" + config.file_exts.vcf)
     output:
-        os.path.join("{path}", "{tumor}--{normal}", "{outdir}",
-                     get_outdir("survivor"), "{prefix}" + config.file_exts.vcf)
+        os.path.join("{path}", "{tumor}--{normal}", "{outdir}", get_outdir("survivor"),
+                     "{prefix}" + config.file_exts.vcf)
         if config.mode.PAIRED_SAMPLE is True else
         os.path.join("{path}", "{sample}", "{outdir}", get_outdir("survivor"),
                      "{prefix}" + config.file_exts.vcf)
@@ -14,7 +14,7 @@ rule survivor_filter:  # used by both modes
         excl = exclude_regions(),
         args = survivor_args("filter")
     conda:
-        "../environment.yaml"
+        "../envs/postproc.yaml"
     threads:
         config.postproc.survivor.threads
     resources:
@@ -52,7 +52,7 @@ rule survivor_merge:  # used by both modes
         [os.path.join("{path}", "{sample}", survivor_args("merge")[0]),
          os.path.join("{path}", "{sample}", survivor_args("merge")[-1])]
     conda:
-        "../environment.yaml"
+        "../envs/postproc.yaml"
     threads:
         config.postproc.survivor.threads
     resources:
