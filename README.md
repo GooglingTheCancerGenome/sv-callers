@@ -30,10 +30,7 @@ The workflow includes the following bioinformatics tools:
     -   [Viola-SV](https://github.com/dermasugita/Viola-SV)
     -   [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)
 
-The software dependencies can be found in the conda environment `*.yaml` files:
--   (/environment.yaml)
--   (/workflow/envs/caller.yaml)
--   (/workflow/envs/postproc.yaml)
+The software dependencies can be found in the conda environment files: [[1]](/environment.yaml),[[2]](/workflow/envs/caller.yaml),[[3]](/workflow/envs/postproc.yaml).
 
 **1. Clone this repo.**
 
@@ -62,7 +59,6 @@ conda activate wf
 
 -   **config files**:
     -   [`analysis.yaml`](/config/analysis.yaml) - analysis-specific settings (e.g., workflow mode, I/O files, SV callers, post-processing or resources used etc.)
-    -   `environment.yaml` - software dependencies and versions
     -   [`samples.csv`](/config/samples.csv) - list of (paired) samples
 
 -   **input files**:
