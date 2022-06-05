@@ -1,23 +1,25 @@
 rule lumpy_p:  # paired-samples analysis
     input:
-        fasta = get_fasta(),
-        fai = get_faidx()[0],
-        tumor_bam = get_bam("{path}/{tumor}"),
-        tumor_bai = get_bai("{path}/{tumor}"),
-        normal_bam = get_bam("{path}/{normal}"),
-        normal_bai = get_bai("{path}/{normal}")
+        fasta=get_fasta(),
+        fai=get_faidx()[0],
+        tumor_bam=get_bam("{path}/{tumor}"),
+        tumor_bai=get_bai("{path}/{tumor}"),
+        normal_bam=get_bam("{path}/{normal}"),
+        normal_bai=get_bai("{path}/{normal}"),
     params:
-        excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
+        excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
-        os.path.join("{path}/{tumor}--{normal}", get_outdir("lumpy"),
-                     "lumpy" + config.file_exts.vcf)
+        os.path.join(
+            "{path}/{tumor}--{normal}",
+            get_outdir("lumpy"),
+            "lumpy{}".format(config.file_exts.vcf),
+        ),
     conda:
         "../envs/caller.yaml"
-    threads:
-        config.callers.lumpy.threads
+    threads: config.callers.lumpy.threads
     resources:
-        mem_mb = config.callers.lumpy.memory,
-        tmp_mb = config.callers.lumpy.tmpspace
+        mem_mb=config.callers.lumpy.memory,
+        tmp_mb=config.callers.lumpy.tmpspace,
     shell:
         """
         set -x
@@ -51,24 +53,27 @@ rule lumpy_p:  # paired-samples analysis
         fi
         """
 
+
 rule lumpy_s:  # single-sample analysis
     input:
-        fasta = get_fasta(),
-        fai = get_faidx()[0],
-        bam = get_bam("{path}/{sample}"),
-        bai = get_bai("{path}/{sample}")
+        fasta=get_fasta(),
+        fai=get_faidx()[0],
+        bam=get_bam("{path}/{sample}"),
+        bai=get_bai("{path}/{sample}"),
     params:
-        excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
+        excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
-        os.path.join("{path}/{sample}", get_outdir("lumpy"), "lumpy" +
-                     config.file_exts.vcf)
+        os.path.join(
+            "{path}/{sample}",
+            get_outdir("lumpy"),
+            "lumpy{}".format(config.file_exts.vcf),
+        ),
     conda:
         "../envs/caller.yaml"
-    threads:
-        config.callers.lumpy.threads
+    threads: config.callers.lumpy.threads
     resources:
-        mem_mb = config.callers.lumpy.memory,
-        tmp_mb = config.callers.lumpy.tmpspace
+        mem_mb=config.callers.lumpy.memory,
+        tmp_mb=config.callers.lumpy.tmpspace,
     shell:
         """
         set -x

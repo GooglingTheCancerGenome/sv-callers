@@ -1,23 +1,25 @@
 rule delly_p:  # paired-samples analysis
     input:
-        fasta = get_fasta(),
-        fai = get_faidx()[0],
-        tumor_bam = get_bam("{path}/{tumor}"),
-        tumor_bai = get_bai("{path}/{tumor}"),
-        normal_bam = get_bam("{path}/{normal}"),
-        normal_bai = get_bai("{path}/{normal}")
+        fasta=get_fasta(),
+        fai=get_faidx()[0],
+        tumor_bam=get_bam("{path}/{tumor}"),
+        tumor_bai=get_bai("{path}/{tumor}"),
+        normal_bam=get_bam("{path}/{normal}"),
+        normal_bai=get_bai("{path}/{normal}"),
     params:
-        excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
+        excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
-        os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
-                     "delly-{sv_type}" + config.file_exts.bcf)
+        os.path.join(
+            "{path}/{tumor}--{normal}",
+            get_outdir("delly"),
+            "delly-{}{}".format("{sv_type}", config.file_exts.bcf),
+        ),
     conda:
         "../envs/caller.yaml"
-    threads:
-        config.callers.delly.threads
+    threads: config.callers.delly.threads
     resources:
-        mem_mb = config.callers.delly.memory,
-        tmp_mb = config.callers.delly.tmpspace
+        mem_mb=config.callers.delly.memory,
+        tmp_mb=config.callers.delly.tmpspace,
     shell:
         """
         set -x
@@ -67,23 +69,27 @@ rule delly_p:  # paired-samples analysis
         fi
         """
 
+
 rule delly_s:  # single-sample analysis
     input:
-        fasta = get_fasta(),
-        fai = get_faidx()[0],
-        bam = get_bam("{path}/{sample}"),
-        bai = get_bai("{path}/{sample}")
+        fasta=get_fasta(),
+        fai=get_faidx()[0],
+        bam=get_bam("{path}/{sample}"),
+        bai=get_bai("{path}/{sample}"),
     params:
-        excl_opt = '-x "%s"' % get_bed() if exclude_regions() else ""
+        excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
-        os.path.join("{path}/{sample}", get_outdir("delly"), "delly-{sv_type}" +
-                     config.file_exts.bcf)
+        os.path.join(
+            "{path}/{sample}",
+            get_outdir("delly"),
+            "delly-{}{}".format("{sv_type}", config.file_exts.bcf),
+        ),
     conda:
         "../envs/caller.yaml"
     threads: 1
     resources:
-        mem_mb = config.callers.delly.memory,
-        tmp_mb = config.callers.delly.tmpspace
+        mem_mb=config.callers.delly.memory,
+        tmp_mb=config.callers.delly.tmpspace,
     shell:
         """
         set -x
@@ -119,40 +125,57 @@ rule delly_s:  # single-sample analysis
         fi
         """
 
+
 rule delly_merge:  # used by both modes
     input:
-        [os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"),
-                      "delly-" + sv + config.file_exts.bcf)
-         for sv in config.callers.delly.sv_types]
-        if config.mode.PAIRED_SAMPLE is True else
-        [os.path.join("{path}/{sample}", get_outdir("delly"), "delly-" + sv +
-                      config.file_exts.bcf)
-         for sv in config.callers.delly.sv_types]
+        [
+            os.path.join(
+                "{path}/{tumor}--{normal}",
+                get_outdir("delly"),
+                "delly-{}{}".format(sv, config.file_exts.bcf),
+            )
+            for sv in config.callers.delly.sv_types
+        ]
+        if config.mode.PAIRED_SAMPLE is True
+        else [
+            os.path.join(
+                "{path}/{sample}",
+                get_outdir("delly"),
+                "delly-{}{}".format(sv, config.file_exts.bcf),
+            )
+            for sv in config.callers.delly.sv_types
+        ],
     output:
-        os.path.join("{path}/{tumor}--{normal}", get_outdir("delly"), "delly" +
-                     config.file_exts.vcf)
-        if config.mode.PAIRED_SAMPLE is True else
-        os.path.join("{path}/{sample}", get_outdir("delly"), "delly" +
-                     config.file_exts.vcf)
+        os.path.join(
+            "{path}/{tumor}--{normal}",
+            get_outdir("delly"),
+            "delly{}".format(config.file_exts.vcf),
+        )
+        if config.mode.PAIRED_SAMPLE is True
+        else os.path.join(
+            "{path}/{sample}",
+            get_outdir("delly"),
+            "delly{}".format(config.file_exts.vcf),
+        ),
     conda:
         "../envs/caller.yaml"
     threads: 1
     resources:
-        mem_mb = 1024,
-        tmp_mb = 0
+        mem_mb=1024,
+        tmp_mb=0,
     shell:
         """
-        set -x
+         set -x
 
-        # run dummy or real job
-        if [ "{config.echo_run}" -eq "1" ]; then
-            cat {input} > "{output}"
-        else
-            # concatenate rather than merge BCF files
-            bcftools concat \
-               -a `# allow overlaps` \
-               -O v `# uncompressed VCF format` \
-               -o "{output}" \
-               {input}
-       fi
-       """
+         # run dummy or real job
+         if [ "{config.echo_run}" -eq "1" ]; then
+             cat {input} > "{output}"
+         else
+             # concatenate rather than merge BCF files
+             bcftools concat \
+                -a `# allow overlaps` \
+                -O v `# uncompressed VCF format` \
+                -o "{output}" \
+                {input}
+        fi
+        """

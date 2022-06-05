@@ -1,23 +1,25 @@
 rule gridss_p:  # paired-samples analysis
     input:
-        fasta = get_fasta(),
-        fai = get_faidx(),  # bwa index files also required
-        tumor_bam = get_bam("{path}/{tumor}"),
-        tumor_bai = get_bai("{path}/{tumor}"),
-        normal_bam = get_bam("{path}/{normal}"),
-        normal_bai = get_bai("{path}/{normal}")
+        fasta=get_fasta(),
+        fai=get_faidx(),  # bwa index files also required
+        tumor_bam=get_bam("{path}/{tumor}"),
+        tumor_bai=get_bai("{path}/{tumor}"),
+        normal_bam=get_bam("{path}/{normal}"),
+        normal_bai=get_bai("{path}/{normal}"),
     params:
-        excl_opt = "BLACKLIST=" + get_bed() if exclude_regions() else ""
+        excl_opt="BLACKLIST={}".format(get_bed()) if exclude_regions() else "",
     output:
-        os.path.join("{path}/{tumor}--{normal}", get_outdir("gridss"),
-                     "gridss" + config.file_exts.vcf)
+        os.path.join(
+            "{path}/{tumor}--{normal}",
+            get_outdir("gridss"),
+            "gridss{}".format(config.file_exts.vcf),
+        ),
     conda:
         "../envs/caller.yaml"
-    threads:
-        config.callers.gridss.threads
+    threads: config.callers.gridss.threads
     resources:
-        mem_mb = config.callers.gridss.memory,
-        tmp_mb = config.callers.gridss.tmpspace
+        mem_mb=config.callers.gridss.memory,
+        tmp_mb=config.callers.gridss.tmpspace,
     shell:
         """
         set -x
@@ -63,24 +65,27 @@ rule gridss_p:  # paired-samples analysis
         fi
         """
 
+
 rule gridss_s:  # single-sample analysis
     input:
-        fasta = get_fasta(),
-        fai = get_faidx(),  # bwa index files also required
-        bam = get_bam("{path}/{sample}"),
-        bai = get_bai("{path}/{sample}")
+        fasta=get_fasta(),
+        fai=get_faidx(),  # bwa index files also required
+        bam=get_bam("{path}/{sample}"),
+        bai=get_bai("{path}/{sample}"),
     params:
-        excl_opt = "BLACKLIST=" + get_bed() if exclude_regions() else ""
+        excl_opt="BLACKLIST={}".format(get_bed()) if exclude_regions() else "",
     output:
-        os.path.join("{path}/{sample}", get_outdir("gridss"), "gridss" +
-                     config.file_exts.vcf)
+        os.path.join(
+            "{path}/{sample}",
+            get_outdir("gridss"),
+            "gridss{}".format(config.file_exts.vcf),
+        ),
     conda:
         "../envs/caller.yaml"
-    threads:
-        config.callers.gridss.threads
+    threads: config.callers.gridss.threads
     resources:
-        mem_mb = config.callers.gridss.memory,
-        tmp_mb = config.callers.gridss.tmpspace
+        mem_mb=config.callers.gridss.memory,
+        tmp_mb=config.callers.gridss.tmpspace,
     shell:
         """
         set -x

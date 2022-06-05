@@ -6,19 +6,19 @@
 
 from helper_functions import *
 
-shell.executable("/bin/bash")
+__author__ = "Arnold Kuzniar"
+__version__ = "1.2.0"
+__license__ = "Apache License, Version 2.0"
 
 
-__author__ = 'Arnold Kuzniar'
-__version__ = '1.2.0'
-__license__ = 'Apache License, Version 2.0'
+localrules:
+    all,
 
-
-localrules: all
 
 rule all:
     input:
-        make_all()
+        make_all(),
+
 
 # include rules
 include: "rules/manta.smk"
