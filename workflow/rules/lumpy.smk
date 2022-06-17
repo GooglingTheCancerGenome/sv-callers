@@ -22,7 +22,7 @@ rule lumpy_p:  # paired-samples analysis
         tmp_mb=config.callers.lumpy.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
@@ -76,7 +76,7 @@ rule lumpy_s:  # single-sample analysis
         tmp_mb=config.callers.lumpy.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"

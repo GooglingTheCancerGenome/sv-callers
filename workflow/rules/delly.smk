@@ -22,7 +22,7 @@ rule delly_p:  # paired-samples analysis
         tmp_mb=config.callers.delly.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         OUTDIR="$(dirname "{output}")"
         PREFIX="$(basename "{output}" .bcf)"
@@ -92,7 +92,7 @@ rule delly_s:  # single-sample analysis
         tmp_mb=config.callers.delly.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         OUTDIR="$(dirname "{output}")"
         PREFIX="$(basename "{output}" .bcf)"

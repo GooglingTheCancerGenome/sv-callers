@@ -42,7 +42,7 @@ rule survivor_filter:  # used by both modes
         tmp_mb=config.postproc.survivor.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         # run dummy or real job
         if [ "{config.echo_run}" -eq "1" ]; then
@@ -100,7 +100,7 @@ rule survivor_merge:  # used by both modes
         tmp_mb=config.postproc.survivor.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         # create a list of VCF files
         for f in $(echo "{input}")

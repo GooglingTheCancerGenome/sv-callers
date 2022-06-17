@@ -22,7 +22,7 @@ rule gridss_p:  # paired-samples analysis
         tmp_mb=config.callers.gridss.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
@@ -88,7 +88,7 @@ rule gridss_s:  # single-sample analysis
         tmp_mb=config.callers.gridss.tmpspace,
     shell:
         """
-        set -x
+        set -xe
 
         # if 'tmpspace' set to >0MB use TMPDIR otherwise use OUTDIR
         OUTDIR="$(dirname "{output}")"
