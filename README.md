@@ -49,7 +49,7 @@ bash miniconda.sh
 # update Conda
 conda update -y conda
 # install Mamba
-conda install -n base -c conda-forge mamba
+conda install -n base -c conda-forge -y mamba
 # create a new environment with dependencies & activate it
 mamba env create -n wf -f environment.yaml
 conda activate wf
