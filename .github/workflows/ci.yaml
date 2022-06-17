@@ -16,7 +16,7 @@ jobs:
       REGISTRY: ghcr.io
       NAME: ${{ matrix.schedulers }}-${{ matrix.modes }}
       IMAGE: ${{ github.repository_owner }}/sv-callers-${{ matrix.schedulers }}
-      TAG: "1.1.3"
+      TAG: "dev"
       ARGS: 0 ${{ matrix.modes }} ${{ matrix.schedulers }}
     steps:
       - name: Checkout repo
