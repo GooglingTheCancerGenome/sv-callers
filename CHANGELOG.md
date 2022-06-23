@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.0] - 2022-02-08
+- integrate viola-sv into post-processing to harmonize SV types (#75)
+
 ## [1.1.3] - 2022-02-08
 - fixed filtering of somatic SV types in DELLY (#68)
 - updated testing infra
