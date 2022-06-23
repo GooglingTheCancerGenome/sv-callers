@@ -5,7 +5,7 @@ import viola
 vcf_in = str(snakemake.input)
 vcf_org = vcf_in + '.org'
 vcf_out = str(snakemake.output)
-caller = snakemake.wildcards.prefix
+caller = str(snakemake.wildcards.prefix)
 
 if caller == 'gridss':
     os.rename(vcf_in, vcf_org)
