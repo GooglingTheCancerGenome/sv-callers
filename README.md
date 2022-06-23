@@ -82,12 +82,11 @@ _Locally_
 # 'dry' run only checks I/O files
 snakemake -np
 
-# 'vanilla' run if echo_run set to 1 (default) in analysis.yaml
-# it merely mimics the execution of SV callers by writing (dummy) VCF files
-snakemake --jobs
-
-# SV calling if echo_run set to 0 in analysis.yaml
+# 'vanilla' run if echo_run set to 1 (default) in analysis.yaml,
+# it merely mimics the execution of SV callers by writing (dummy) VCF files;
+# SV calling if echo_run set to 0
 snakemake --use-conda --jobs
+
 ```
 
 _Submit jobs to Slurm or GridEngine cluster_
