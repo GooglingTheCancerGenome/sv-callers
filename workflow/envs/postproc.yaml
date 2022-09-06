@@ -8,4 +8,4 @@ dependencies:
   - pyvcf=0.6.8
   - pip
   - pip:
-      - viola-sv==1.0.0
+      - viola-sv==1.0.2
