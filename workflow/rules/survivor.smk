@@ -7,7 +7,7 @@ rule survivor_filter:  # used by both modes
             "viola",
             "{}{}".format("{prefix}", config.file_exts.vcf),
         )
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else os.path.join(
             "{path}",
             "{sample}",
@@ -23,7 +23,7 @@ rule survivor_filter:  # used by both modes
             get_outdir("survivor"),
             "{}{}".format("{prefix}", config.file_exts.vcf),
         )
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else os.path.join(
             "{path}",
             "{sample}",
@@ -69,7 +69,7 @@ rule survivor_merge:  # used by both modes
             )
             for c in config.enable_callers
         ]
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else [
             os.path.join(
                 "{path}",
@@ -87,7 +87,7 @@ rule survivor_merge:  # used by both modes
             os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[0]),
             os.path.join("{path}", "{tumor}--{normal}", survivor_args("merge")[-1]),
         ]
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else [
             os.path.join("{path}", "{sample}", survivor_args("merge")[0]),
             os.path.join("{path}", "{sample}", survivor_args("merge")[-1]),

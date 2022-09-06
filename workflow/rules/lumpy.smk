@@ -10,7 +10,8 @@ rule lumpy_p:  # paired-samples analysis
         excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
         os.path.join(
-            "{path}/{tumor}--{normal}",
+            "{path}",
+            "{tumor}--{normal}",
             get_outdir("lumpy"),
             "lumpy{}".format(config.file_exts.vcf),
         ),
@@ -64,7 +65,8 @@ rule lumpy_s:  # single-sample analysis
         excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
         os.path.join(
-            "{path}/{sample}",
+            "{path}",
+            "{sample}",
             get_outdir("lumpy"),
             "lumpy{}".format(config.file_exts.vcf),
         ),

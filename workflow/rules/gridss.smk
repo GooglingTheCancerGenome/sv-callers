@@ -10,7 +10,8 @@ rule gridss_p:  # paired-samples analysis
         excl_opt="BLACKLIST={}".format(get_bed()) if exclude_regions() else "",
     output:
         os.path.join(
-            "{path}/{tumor}--{normal}",
+            "{path}",
+            "{tumor}--{normal}",
             get_outdir("gridss"),
             "gridss{}".format(config.file_exts.vcf),
         ),
@@ -76,7 +77,8 @@ rule gridss_s:  # single-sample analysis
         excl_opt="BLACKLIST={}".format(get_bed()) if exclude_regions() else "",
     output:
         os.path.join(
-            "{path}/{sample}",
+            "{path}",
+            "{sample}",
             get_outdir("gridss"),
             "gridss{}".format(config.file_exts.vcf),
         ),

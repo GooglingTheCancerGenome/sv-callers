@@ -10,7 +10,8 @@ rule delly_p:  # paired-samples analysis
         excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
         os.path.join(
-            "{path}/{tumor}--{normal}",
+            "{path}",
+            "{tumor}--{normal}",
             get_outdir("delly"),
             "delly-{}{}".format("{sv_type}", config.file_exts.bcf),
         ),
@@ -80,7 +81,8 @@ rule delly_s:  # single-sample analysis
         excl_opt='-x "%s"' % get_bed() if exclude_regions() else "",
     output:
         os.path.join(
-            "{path}/{sample}",
+            "{path}",
+            "{sample}",
             get_outdir("delly"),
             "delly-{}{}".format("{sv_type}", config.file_exts.bcf),
         ),
@@ -130,16 +132,18 @@ rule delly_merge:  # used by both modes
     input:
         [
             os.path.join(
-                "{path}/{tumor}--{normal}",
+                "{path}",
+                "{tumor}--{normal}",
                 get_outdir("delly"),
                 "delly-{}{}".format(sv, config.file_exts.bcf),
             )
             for sv in config.callers.delly.sv_types
         ]
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else [
             os.path.join(
-                "{path}/{sample}",
+                "{path}",
+                "{sample}",
                 get_outdir("delly"),
                 "delly-{}{}".format(sv, config.file_exts.bcf),
             )
@@ -147,13 +151,15 @@ rule delly_merge:  # used by both modes
         ],
     output:
         os.path.join(
-            "{path}/{tumor}--{normal}",
+            "{path}",
+            "{tumor}--{normal}",
             get_outdir("delly"),
             "delly{}".format(config.file_exts.vcf),
         )
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else os.path.join(
-            "{path}/{sample}",
+            "{path}",
+            "{sample}",
             get_outdir("delly"),
             "delly{}".format(config.file_exts.vcf),
         ),

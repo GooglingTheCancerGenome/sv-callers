@@ -6,7 +6,7 @@ rule viola:  # used by both modes
             "{outdir}",
             "{}{}".format("{prefix}", config.file_exts.vcf),
         )
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else os.path.join(
             "{path}",
             "{sample}",
@@ -21,7 +21,7 @@ rule viola:  # used by both modes
             "viola",
             "{}{}".format("{prefix}", config.file_exts.vcf),
         )
-        if config.mode.PAIRED_SAMPLE is True
+        if config.mode is config.mode.PAIRED_SAMPLE
         else os.path.join(
             "{path}",
             "{sample}",

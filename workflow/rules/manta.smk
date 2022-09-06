@@ -11,7 +11,8 @@ rule manta_p:  # paired-samples analysis
         outfile="results/variants/somaticSV.vcf.gz",
     output:
         os.path.join(
-            "{path}/{tumor}--{normal}",
+            "{path}",
+            "{tumor}--{normal}",
             get_outdir("manta"),
             "manta{}".format(config.file_exts.vcf),
         ),
@@ -66,7 +67,8 @@ rule manta_s:  # single-sample analysis: germline or tumor-only
         else "results/variants/diploidSV.vcf.gz",
     output:
         os.path.join(
-            "{path}/{sample}",
+            "{path}",
+            "{sample}",
             get_outdir("manta"),
             "manta{}".format(config.file_exts.vcf),
         ),
