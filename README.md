@@ -97,7 +97,7 @@ snakemake  --use-conda --latency-wait 30 --jobs \
 --cluster "xenon scheduler $SCH --location local:// submit --name smk.{rule} --inherit-env --cores-per-task {threads} --max-run-time 1 --max-memory {resources.mem_mb} --working-directory . --stderr stderr-%j.log --stdout stdout-%j.log" &>smk.log&
 ```
 
-Note: One sample or a tumor/normal pair generates in total 18 SV calling and post-processing. See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
+Note: One sample or a tumor/normal pair generates in total 18 SV calling and post-processing jobs. See the workflow instance of [single-sample](doc/sv-callers_single.svg) (germline) or [paired-sample](doc/sv-callers_paired.svg) (somatic) analysis.
 
 To perform SV calling:
 -   edit (default) parameters in `analysis.yaml`
