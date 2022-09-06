@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.1] - 2022-09-06
+- fixed named wildcards in s/p modes (#76)
+
 ## [1.2.0] - 2022-06-23
 - integrate Viola-SV into the post-processing step to harmonize SV types (#75)
 
