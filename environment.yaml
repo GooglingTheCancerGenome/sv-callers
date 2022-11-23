@@ -5,6 +5,7 @@ channels:
   - nlesc
 dependencies:
   - snakemake=6.15.3
+  - tabulate=0.8.10
   - xenon-cli=3.0.5
   - jq=1.6
   - pip
