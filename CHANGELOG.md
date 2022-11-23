@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.2] - 2022-11-23
+- hotfix (#78)
+
 ## [1.2.1] - 2022-09-06
 - fixed named wildcards in s/p modes (#76)
 - updated to Viola-SV v1.0.2
